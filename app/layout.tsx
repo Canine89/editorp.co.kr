@@ -20,20 +20,9 @@ export default function RootLayout({
         <Providers>
           <div className="layout-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             {/* Top Navigation */}
-            <header
-              style={{
-                height: '64px',
-                backgroundColor: 'var(--colors-canvas)',
-                borderBottom: '1px solid var(--colors-hairline)',
-                position: 'sticky',
-                top: 0,
-                zIndex: 50,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <header className="main-header">
+              <div className="container header-container">
+                <Link href="/" className="header-logo">
                   <img
                     src="/p.png"
                     alt="편집자P 캐릭터"
@@ -45,54 +34,22 @@ export default function RootLayout({
                       border: '1px solid var(--colors-hairline)',
                     }}
                   />
-                  <span
-                    className="serif-display"
-                    style={{
-                      fontSize: '20px',
-                      fontWeight: 500,
-                      color: 'var(--colors-ink)',
-                      letterSpacing: '-0.03em',
-                    }}
-                  >
+                  <span className="serif-display header-logo-text">
                     편집자P 로드맵
                   </span>
                 </Link>
 
-                <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-                  <Link
-                    href="/"
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: 500,
-                      color: 'var(--colors-muted)',
-                      transition: 'color var(--transition-fast)',
-                    }}
-                    className="nav-link"
-                  >
+                <nav className="main-nav">
+                  <Link href="/" className="nav-link">
                     로드맵 목록
                   </Link>
-                  <Link
-                    href="/about"
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: 500,
-                      color: 'var(--colors-muted)',
-                      transition: 'color var(--transition-fast)',
-                    }}
-                    className="nav-link"
-                  >
+                  <Link href="/about" className="nav-link">
                     소개 & 강의 문의
                   </Link>
                   <a
                     href="https://www.youtube.com/@editorp89"
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: 500,
-                      color: 'var(--colors-muted)',
-                      transition: 'color var(--transition-fast)',
-                    }}
                     className="nav-link"
                   >
                     유튜브 채널

@@ -306,3 +306,75 @@ a {
 .card-dark ::-webkit-scrollbar-thumb:hover {
   background: var(--colors-muted);
 }
+
+/* Responsive Navigation Header */
+.main-header {
+  height: 64px;
+  background-color: var(--colors-canvas);
+  border-bottom: 1px solid var(--colors-hairline);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-logo-text {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--colors-ink);
+  letter-spacing: -0.03em;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--colors-muted);
+  transition: color var(--transition-fast);
+}
+
+.nav-link:hover {
+  color: var(--colors-ink);
+}
+
+@media (max-width: 640px) {
+  .header-logo-text {
+    font-size: 16px;
+  }
+  .main-nav {
+    gap: 12px;
+  }
+  .nav-link {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-logo-text {
+    font-size: 14px;
+  }
+  .main-nav {
+    gap: 8px;
+  }
+  .nav-link {
+    font-size: 12px;
+  }
+}
