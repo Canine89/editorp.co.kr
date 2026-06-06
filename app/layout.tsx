@@ -71,6 +71,18 @@ export default function RootLayout({
                   >
                     로드맵 목록
                   </Link>
+                  <Link
+                    href="/about"
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      color: 'var(--colors-muted)',
+                      transition: 'color var(--transition-fast)',
+                    }}
+                    className="nav-link"
+                  >
+                    소개 & 강의 문의
+                  </Link>
                   <a
                     href="https://www.youtube.com/@editorp89"
                     target="_blank"
