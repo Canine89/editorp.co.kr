@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from '@/components/Providers';
+import { Header } from '@/components/Header';
 import Link from 'next/link';
-import { AuthButton } from '@/components/AuthButton';
 
 export const metadata: Metadata = {
   title: '편집자P의 AI & 에이전트 유튜브 로드맵',
@@ -20,44 +20,7 @@ export default function RootLayout({
         <Providers>
           <div className="layout-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             {/* Top Navigation */}
-            <header className="main-header">
-              <div className="container header-container">
-                <Link href="/" className="header-logo">
-                  <img
-                    src="/p.png"
-                    alt="편집자P 캐릭터"
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      border: '1px solid var(--colors-hairline)',
-                    }}
-                  />
-                  <span className="serif-display header-logo-text">
-                    편집자P 로드맵
-                  </span>
-                </Link>
-
-                <nav className="main-nav">
-                  <Link href="/" className="nav-link">
-                    로드맵 목록
-                  </Link>
-                  <Link href="/about" className="nav-link">
-                    소개 & 강의 문의
-                  </Link>
-                  <a
-                    href="https://www.youtube.com/@editorp89"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="nav-link"
-                  >
-                    유튜브 채널
-                  </a>
-                  <AuthButton />
-                </nav>
-              </div>
-            </header>
+            <Header />
 
             {/* Main Content Area */}
             <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>{children}</main>
