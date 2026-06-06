@@ -509,9 +509,9 @@ export default function AboutPage() {
 
         {/* Contact/Inquiry Section */}
         <div className="contact-box">
-          <h3 style={{ fontSize: '18px', fontWeight: 500, color: 'var(--colors-on-dark)' }}>강의 및 홍보 문의</h3>
+          <h3 style={{ fontSize: '18px', fontWeight: 500, color: 'var(--colors-on-dark)' }}>강의 문의 & 연락처</h3>
           <p style={{ fontSize: '13.5px', color: 'var(--colors-on-dark-soft)', marginTop: '8px', marginBottom: '20px' }}>
-            다양한 기업 출강, 기관 특강, 도서 기획 및 협업 제안을 환영합니다.
+            강의 문의나 궁금하신 점이 있다면 편하게 이메일 남겨주세요.
           </p>
           <div>
             <a href="mailto:hgpark@goldenrabbit.co.kr" className="btn-link btn-link-primary">
