@@ -55,6 +55,17 @@
           "x": 555,
           "y": 320,
           "parentId": "vibe-node-2"
+        },
+        {
+          "id": "node-1780833107492",
+          "title": "테스트",
+          "description": "강의에 대한 간략한 설명입니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+          "youtubeId": "zjkBMFhNj_g",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 435,
+          "parentId": "node-1780758187504"
         }
       ]
     },
