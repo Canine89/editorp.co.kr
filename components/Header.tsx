@@ -23,7 +23,7 @@ export function Header() {
             }}
           />
           <span className="serif-display header-logo-text">
-            편집자P 로드맵
+            편집자P의 AI 편집실
           </span>
         </Link>
 

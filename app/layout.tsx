@@ -2,11 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from '@/components/Providers';
 import { Header } from '@/components/Header';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: '편집자P의 AI & 에이전트 유튜브 로드맵',
-  description: '편집자P의 AI, 에이전트, 바이브 코딩 강의를 로드맵으로 시각화하여 순서대로 따라올 수 있는 유튜브 학습 가이드입니다.',
+  title: '편집자P의 AI & 에이전트 무료 강의 로드맵',
+  description: '편집자P의 AI, 에이전트, 바이브 코딩 무료 유튜브 강의를 입문자도 순서대로 따라갈 수 있게 정리한 학습 로드맵입니다.',
 };
 
 export default function RootLayout({
@@ -61,7 +60,7 @@ export default function RootLayout({
                       </span>
                     </div>
                     <p style={{ fontSize: '13px', color: 'var(--colors-on-dark-soft)', lineHeight: 1.6 }}>
-                      편집자P의 AI, 에이전트, 바이브 코딩 강의를 누구나 쉽게 학습할 수 있도록 단계별 시각 자료로 정리한 교육 로드맵입니다.
+                      무료 강의가 많아도 헤매지 않도록, 입문자의 눈높이에 맞춰 볼 순서와 흐름을 정리했습니다.
                     </p>
                   </div>
                   <div>
@@ -76,49 +75,17 @@ export default function RootLayout({
                         letterSpacing: '0.05em',
                       }}
                     >
-                      강의 카테고리
+                      함께 보기
                     </h4>
                     <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px' }}>
                       <li>
-                        <Link href={`/?cat=${encodeURIComponent('AI 기초')}`} style={{ color: 'inherit' }}>
-                          AI 기초 및 프롬프트 엔지니어링
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href={`/?cat=${encodeURIComponent('AI 에이전트')}`} style={{ color: 'inherit' }}>
-                          자율형 AI 에이전트 개발
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href={`/?cat=${encodeURIComponent('바이브 코딩')}`} style={{ color: 'inherit' }}>
-                          노코드 & 바이브 코딩 실습
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4
-                      style={{
-                        fontSize: '14px',
-                        color: 'var(--colors-on-dark)',
-                        marginBottom: '16px',
-                        fontFamily: 'var(--font-sans)',
-                        fontWeight: 500,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                      }}
-                    >
-                      추천 링크
-                    </h4>
-                    <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px' }}>
-                      <li>
-                        <a href="https://goldenrabbit.co.kr" target="_blank" rel="noopener noreferrer">
-                          골든래빗 출판사
+                        <a href="https://www.youtube.com/@editorp89" target="_blank" rel="noopener noreferrer">
+                          편집자P 유튜브 채널
                         </a>
                       </li>
                       <li>
-                        <a href="https://roadmap.sh" target="_blank" rel="noopener noreferrer">
-                          roadmap.sh 공식 사이트
+                        <a href="https://open.kakao.com/o/ggK7EAJh" target="_blank" rel="noopener noreferrer">
+                          내 코드를 부탁해 오픈카톡방
                         </a>
                       </li>
                     </ul>
@@ -136,7 +103,7 @@ export default function RootLayout({
                   }}
                 >
                   <span>© {new Date().getFullYear()} 편집자P. All rights reserved.</span>
-                  <span>Designed in warm-editorial style.</span>
+                  <span>무료 강의를 헤매지 않도록 차근차근 엮었습니다.</span>
                 </div>
               </div>
             </footer>
