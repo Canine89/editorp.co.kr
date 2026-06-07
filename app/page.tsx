@@ -267,7 +267,7 @@ export default async function HomePage({
                 <div className={idx % 2 === 0 ? "marquee-track" : "marquee-track-reverse"}>
                   {rowLoop.map((file, fileIdx) => (
                     <div key={`bg-row-${idx}-${file}-${fileIdx}`} className="thumbnail-card">
-                      <img src={`/youtube_thumbnails/${file}`} alt="유튜브 강의 섬네일" loading="lazy" />
+                      <img src={`/youtube_thumbnails/${encodeURIComponent(file)}`} alt="유튜브 강의 섬네일" loading="lazy" />
                     </div>
                   ))}
                 </div>
