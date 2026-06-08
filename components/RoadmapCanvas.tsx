@@ -99,13 +99,9 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
         .roadmap-layout {
           display: flex;
           flex: 1;
-          max-width: 1440px;
-          margin: 0 auto;
           width: 100%;
           height: calc(100vh - 180px);
           background: var(--colors-canvas);
-          border-left: 1px solid var(--colors-hairline);
-          border-right: 1px solid var(--colors-hairline);
         }
 
         /* ── Left Sidebar ── */
@@ -265,21 +261,25 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
         }
 
         .video-wrapper {
-          padding: 0;
-          background: #0f0e0d;
+          padding: 20px 24px;
+          background: var(--colors-surface-soft);
           display: flex;
           justify-content: center;
           align-items: center;
           flex-shrink: 0;
           border-bottom: 1px solid var(--colors-hairline-soft);
+          width: 100%;
         }
 
         .video-container {
           position: relative;
           width: 100%;
-          max-width: 1080px;
+          max-width: 1800px;
           aspect-ratio: 16 / 9;
           background: #0f0e0d;
+          box-shadow: 0 4px 20px rgba(20, 20, 19, 0.06);
+          border-radius: var(--rounded-md);
+          overflow: hidden;
         }
 
         .video-container iframe {
@@ -295,6 +295,14 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
           overflow-y: auto;
           padding: 28px 36px;
           background: var(--colors-canvas);
+        }
+
+        .video-details-inner {
+          max-width: 960px;
+          margin: 0 auto;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
         }
 
         .video-meta-row {
@@ -547,63 +555,65 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
               </div>
 
               <div className="video-details">
-                <div className="video-meta-row">
-                  <span
-                    className="video-badge"
-                    style={{
-                      backgroundColor: difficultyConfig[selectedNode.difficulty].bg,
-                      color: difficultyConfig[selectedNode.difficulty].color,
-                    }}
-                  >
-                    {difficultyConfig[selectedNode.difficulty].label} · {currentIndex + 1}/{totalNodes}강
-                  </span>
-                  <a
-                    href={selectedNode.youtubeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="video-external-link"
-                  >
-                    YouTube에서 보기 <ExternalLink size={12} />
-                  </a>
-                </div>
-
-                <h2 className="video-title">{selectedNode.title}</h2>
-
-                {selectedNode.description && (
-                  <p className="video-description">{selectedNode.description}</p>
-                )}
-
-                {selectedNode.timeline && selectedNode.timeline.length > 0 && (
-                  <div className="timeline-section">
-                    <h3 className="timeline-heading">타임라인</h3>
-                    <div className="timeline-list">
-                      {selectedNode.timeline.map((item, idx) => (
-                        <div key={idx} className="timeline-item">
-                          <div className="timeline-dot" />
-                          <span className="timeline-time">{item.time}</span>
-                          <span className="timeline-text">{item.title}</span>
-                        </div>
-                      ))}
-                    </div>
+                <div className="video-details-inner">
+                  <div className="video-meta-row">
+                    <span
+                      className="video-badge"
+                      style={{
+                        backgroundColor: difficultyConfig[selectedNode.difficulty].bg,
+                        color: difficultyConfig[selectedNode.difficulty].color,
+                      }}
+                    >
+                      {difficultyConfig[selectedNode.difficulty].label} · {currentIndex + 1}/{totalNodes}강
+                    </span>
+                    <a
+                      href={selectedNode.youtubeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="video-external-link"
+                    >
+                      YouTube에서 보기 <ExternalLink size={12} />
+                    </a>
                   </div>
-                )}
 
-                <div className="action-area">
-                  <button
-                    className={`btn-complete ${completedNodes.includes(selectedNode.id) ? 'done' : 'pending'}`}
-                    onClick={() => toggleCompletion(selectedNode.id)}
-                  >
-                    <CheckCircle2 size={18} />
-                    {completedNodes.includes(selectedNode.id) ? '학습 완료됨 ✓' : '학습 완료로 표시'}
-                  </button>
+                  <h2 className="video-title">{selectedNode.title}</h2>
 
-                  <div className="nav-row">
-                    <button className="btn-nav" onClick={() => navigateNode('prev')} disabled={!hasPrev}>
-                      <SkipBack size={14} /> 이전 강의
+                  {selectedNode.description && (
+                    <p className="video-description">{selectedNode.description}</p>
+                  )}
+
+                  {selectedNode.timeline && selectedNode.timeline.length > 0 && (
+                    <div className="timeline-section">
+                      <h3 className="timeline-heading">타임라인</h3>
+                      <div className="timeline-list">
+                        {selectedNode.timeline.map((item, idx) => (
+                          <div key={idx} className="timeline-item">
+                            <div className="timeline-dot" />
+                            <span className="timeline-time">{item.time}</span>
+                            <span className="timeline-text">{item.title}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="action-area">
+                    <button
+                      className={`btn-complete ${completedNodes.includes(selectedNode.id) ? 'done' : 'pending'}`}
+                      onClick={() => toggleCompletion(selectedNode.id)}
+                    >
+                      <CheckCircle2 size={18} />
+                      {completedNodes.includes(selectedNode.id) ? '학습 완료됨 ✓' : '학습 완료로 표시'}
                     </button>
-                    <button className="btn-nav" onClick={() => navigateNode('next')} disabled={!hasNext}>
-                      다음 강의 <SkipForward size={14} />
-                    </button>
+
+                    <div className="nav-row">
+                      <button className="btn-nav" onClick={() => navigateNode('prev')} disabled={!hasPrev}>
+                        <SkipBack size={14} /> 이전 강의
+                      </button>
+                      <button className="btn-nav" onClick={() => navigateNode('next')} disabled={!hasNext}>
+                        다음 강의 <SkipForward size={14} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
