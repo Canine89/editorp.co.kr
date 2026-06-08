@@ -81,57 +81,12 @@
       ]
     },
     {
-      "id": "ai-agent-roadmap",
-      "title": "AI 에이전트 개발자 로드맵",
-      "description": "챗봇을 넘어 도구를 쓰는 AI 에이전트의 개념과 활용 흐름을 차근차근 따라가는 로드맵입니다.",
-      "category": "AI 에이전트",
+      "id": "roadmap-1780928354939",
+      "title": "《바로바로 바이브 코딩 with 커서 AI》 도서 강의 로드맵",
+      "description": "제가 집필한 도서 《바로바로 바이브 코딩 with 커서 AI》의 강의 로드맵입니다. 바이브 코딩도 처음이고 컴퓨터 과학에 대한 지식이 없으신 분들이 보면 좋은 책과 영상입니다.\n\n[도서 구매][Yes24] : https://www.yes24.com/product/goods/183530330\n[도서 구매][교보] : https://product.kyobobook.co.kr/detail/S000219518985\n오픈카톡방 : https://open.kakao.com/o/ggK7EAJh",
+      "category": "바이브 코딩",
       "isActive": true,
-      "nodes": [
-        {
-          "id": "agent-node-1",
-          "title": "LLM API 활용 기초",
-          "description": "OpenAI, Anthropic 등의 API 기초 사용법과 System Prompt 제어 기술을 배웁니다.",
-          "youtubeUrl": "https://www.youtube.com/watch?v=aircAruvnKk",
-          "youtubeId": "aircAruvnKk",
-          "difficulty": "BEGINNER",
-          "x": 300,
-          "y": 80,
-          "parentId": null
-        },
-        {
-          "id": "agent-node-2",
-          "title": "RAG 시스템 구축",
-          "description": "Vector DB와 Embeddings을 활용하여 자체 지식을 기반으로 응답하는 RAG 챗봇을 만듭니다.",
-          "youtubeUrl": "https://www.youtube.com/watch?v=zjkBMFhNj_g",
-          "youtubeId": "zjkBMFhNj_g",
-          "difficulty": "INTERMEDIATE",
-          "x": 180,
-          "y": 200,
-          "parentId": "agent-node-1"
-        },
-        {
-          "id": "agent-node-3",
-          "title": "Tool Call & Action 에이전트",
-          "description": "AI가 외부 웹 API를 호출하거나 연산을 직접 실행해 결과를 가져오도록 연동합니다.",
-          "youtubeUrl": "https://www.youtube.com/watch?v=aircAruvnKk",
-          "youtubeId": "aircAruvnKk",
-          "difficulty": "INTERMEDIATE",
-          "x": 420,
-          "y": 200,
-          "parentId": "agent-node-1"
-        },
-        {
-          "id": "agent-node-4",
-          "title": "Multi-Agent 자율 협업 프레임워크",
-          "description": "CrewAI, LangGraph 등을 사용해 기획자, 개발자, 테스터 역할을 하는 AI들이 서로 협업해 일하게 만듭니다.",
-          "youtubeUrl": "https://www.youtube.com/watch?v=zjkBMFhNj_g",
-          "youtubeId": "zjkBMFhNj_g",
-          "difficulty": "ADVANCED",
-          "x": 300,
-          "y": 320,
-          "parentId": "agent-node-2"
-        }
-      ]
+      "nodes": []
     }
   ]
 }
