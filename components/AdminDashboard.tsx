@@ -150,8 +150,8 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string; isError: boolean } | null>(null);
 
-  // Resizable sidebar states & logic
-  const [sidebarWidth, setSidebarWidth] = useState(340);
+  // Resizable React Flow editor width states & logic
+  const [flowWidth, setFlowWidth] = useState(800);
   const [isResizing, setIsResizing] = useState(false);
 
   const startResizing = (mouseDownEvent: React.MouseEvent) => {
@@ -162,9 +162,9 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
   useEffect(() => {
     const handleMouseMove = (mouseMoveEvent: MouseEvent) => {
       if (!isResizing) return;
-      const newWidth = window.innerWidth - mouseMoveEvent.clientX;
-      if (newWidth > 260 && newWidth < 600) {
-        setSidebarWidth(newWidth);
+      const newWidth = mouseMoveEvent.clientX - 240;
+      if (newWidth > 320 && newWidth < 1200) {
+        setFlowWidth(newWidth);
       }
     };
 
@@ -643,7 +643,7 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '260px 1fr auto',
+          gridTemplateColumns: `240px ${flowWidth}px 1fr`,
           flex: 1,
           backgroundColor: 'var(--colors-canvas)',
         }}
@@ -657,6 +657,8 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
             display: 'flex',
             flexDirection: 'column',
             gap: '16px',
+            width: '240px',
+            overflow: 'hidden',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -732,8 +734,25 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
             flexDirection: 'column',
             borderRight: '1px solid var(--colors-hairline)',
             overflow: 'hidden',
+            position: 'relative',
           }}
         >
+          {/* React Flow 패널 우측 리사이저 */}
+          <div
+            onMouseDown={startResizing}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: '-4px',
+              width: '8px',
+              height: '100%',
+              cursor: 'col-resize',
+              zIndex: 50,
+              backgroundColor: isResizing ? 'var(--colors-primary)' : 'transparent',
+              transition: 'background-color 0.2s',
+            }}
+            title="드래그하여 에디터 너비 조절"
+          />
           <div
             style={{
               padding: '12px 16px',
@@ -744,16 +763,16 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
               alignItems: 'center',
             }}
           >
-            <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--colors-muted)' }}>
-              비주얼 드래그 에디터 (드래그하여 배치 조절, 노드 클릭 시 편집)
+            <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--colors-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              순서 편집 (React Flow)
             </span>
             <button
               onClick={handleAddNode}
               disabled={!selectedRoadmapId}
               className="btn btn-secondary"
-              style={{ height: '28px', fontSize: '12px', padding: '0 10px' }}
+              style={{ height: '28px', fontSize: '12px', padding: '0 10px', flexShrink: 0 }}
             >
-              <Plus size={14} style={{ marginRight: '4px' }} /> 새 노드 추가
+              <Plus size={14} style={{ marginRight: '4px' }} /> 추가
             </button>
           </div>
 
@@ -789,37 +808,20 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
         {/* 3. Right Column: Configuration Forms (Tabbed Layout) */}
         <div
           style={{
-            width: `${sidebarWidth}px`,
             position: 'relative',
-            borderLeft: '1px solid var(--colors-hairline)',
             backgroundColor: 'var(--colors-canvas)',
             display: 'flex',
             flexDirection: 'column',
+            overflow: 'hidden',
           }}
         >
-          {/* Draggable resize handler splitter on the left border line */}
-          <div
-            onMouseDown={startResizing}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: '-4px',
-              width: '8px',
-              height: '100%',
-              cursor: 'col-resize',
-              zIndex: 50,
-              backgroundColor: isResizing ? 'var(--colors-primary)' : 'transparent',
-              transition: 'background-color 0.2s',
-            }}
-            title="드래그하여 패널 너비 조절"
-          />
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               gap: '16px',
               height: '100%',
-              padding: '16px',
+              padding: '24px',
               overflow: 'hidden',
             }}
           >
@@ -890,7 +892,7 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
                       <label className="form-label">간단 설명</label>
                       <textarea
                         className="input-text"
-                        style={{ height: '80px', padding: '8px 12px', resize: 'both' }}
+                        style={{ height: '140px', padding: '12px 14px', resize: 'vertical' }}
                         value={selectedRoadmap.description}
                         onChange={(e) => handleUpdateRoadmapField('description', e.target.value)}
                       />
@@ -969,7 +971,7 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
                         <label className="form-label">강의 요약</label>
                         <textarea
                           className="input-text"
-                          style={{ height: '80px', padding: '8px 12px', resize: 'both' }}
+                          style={{ height: '180px', padding: '12px 14px', resize: 'vertical' }}
                           value={selectedNode.description || ''}
                           onChange={(e) => handleUpdateNodeField(selectedNode.id, 'description', e.target.value)}
                         />
@@ -1055,13 +1057,13 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
                           </div>
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                           {(selectedNode.timeline || []).map((item, idx) => (
-                            <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                            <div key={idx} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                               <input
                                 type="text"
                                 className="input-text"
-                                style={{ width: '75px', padding: '4px 6px', textAlign: 'center', fontSize: '12px' }}
+                                style={{ width: '90px', padding: '8px 12px', textAlign: 'center', fontSize: '13px', height: '36px' }}
                                 value={item.time}
                                 placeholder="00:00"
                                 onChange={(e) => {
@@ -1074,7 +1076,7 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
                               <input
                                 type="text"
                                 className="input-text"
-                                style={{ flex: 1, padding: '4px 6px', fontSize: '12px' }}
+                                style={{ flex: 1, padding: '8px 12px', fontSize: '13px', height: '36px' }}
                                 value={item.title}
                                 placeholder="챕터 제목"
                                 onChange={(e) => {
@@ -1089,9 +1091,10 @@ export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
                                   const updated = (selectedNode.timeline || []).filter((_, i) => i !== idx);
                                   handleUpdateNodeField(selectedNode.id, 'timeline', updated);
                                 }}
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--colors-error)', padding: '4px' }}
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--colors-error)', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                title="챕터 삭제"
                               >
-                                <Trash2 size={13} />
+                                <Trash2 size={15} />
                               </button>
                             </div>
                           ))}
