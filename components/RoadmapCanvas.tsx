@@ -99,7 +99,7 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
         .roadmap-layout {
           display: flex;
           flex: 1;
-          max-width: 1280px;
+          max-width: 1440px;
           margin: 0 auto;
           width: 100%;
           height: calc(100vh - 180px);
@@ -110,7 +110,7 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
 
         /* ── Left Sidebar ── */
         .roadmap-sidebar {
-          width: 320px;
+          width: 360px;
           flex-shrink: 0;
           display: flex;
           flex-direction: column;
@@ -265,8 +265,8 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
         }
 
         .video-wrapper {
-          padding: 24px;
-          background: var(--colors-surface-soft);
+          padding: 0;
+          background: #0f0e0d;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -277,12 +277,9 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
         .video-container {
           position: relative;
           width: 100%;
-          max-width: 860px;
+          max-width: 1080px;
           aspect-ratio: 16 / 9;
           background: #0f0e0d;
-          box-shadow: 0 4px 20px rgba(20, 20, 19, 0.08);
-          border-radius: var(--rounded-md);
-          overflow: hidden;
         }
 
         .video-container iframe {
