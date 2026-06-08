@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
+import { RoadmapDescription } from '@/components/RoadmapDescription';
+
 
 interface Node {
   id: string;
@@ -506,16 +508,7 @@ export default async function HomePage({
                     >
                       {roadmap.title}
                     </h3>
-                    <p
-                      style={{
-                        fontSize: '13.5px',
-                        color: 'var(--colors-body)',
-                        lineHeight: 1.55,
-                        margin: 0,
-                      }}
-                    >
-                      {roadmap.description}
-                    </p>
+                    <RoadmapDescription description={roadmap.description} isCompact={true} />
                   </div>
 
                   <div

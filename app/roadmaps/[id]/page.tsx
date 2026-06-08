@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { notFound } from 'next/navigation';
 import { RoadmapCanvas } from '@/components/RoadmapCanvas';
+import { RoadmapDescription } from '@/components/RoadmapDescription';
+
 
 interface Node {
   id: string;
@@ -75,16 +77,9 @@ export default async function RoadmapDetailPage({
           >
             {roadmap.title}
           </h1>
-          <p
-            style={{
-              fontSize: '15px',
-              color: 'var(--colors-body)',
-              maxWidth: '800px',
-              lineHeight: 1.6,
-            }}
-          >
-            {roadmap.description}
-          </p>
+          <div style={{ maxWidth: '800px' }}>
+            <RoadmapDescription description={roadmap.description} />
+          </div>
         </div>
       </section>
 
