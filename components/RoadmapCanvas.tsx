@@ -241,7 +241,9 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
           font-size: 13.5px;
           font-weight: 400;
           color: var(--colors-body);
-          white-space: nowrap;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
           overflow: hidden;
           text-overflow: ellipsis;
           line-height: 1.4;
