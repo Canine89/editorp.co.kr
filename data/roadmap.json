@@ -77,6 +77,28 @@
           "x": 300,
           "y": 675,
           "parentId": "node-1780834647994"
+        },
+        {
+          "id": "vibe-node-7",
+          "title": "클로드 코드 쓰고 싶은데... 너무 무섭다면? How to use 클로드 코드(5) PPT 만들기의 모든 것",
+          "description": "Claude Code와 VS Code를 사용하여 마크다운 문서 기반의 프레젠테이션 슬라이드(Marp)를 실시간으로 빌드하고, PPT 파일을 자동 생성하는 기술을 익힙니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=3kw019nHoPw",
+          "youtubeId": "3kw019nHoPw",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 795,
+          "parentId": "node-1780834671120"
+        },
+        {
+          "id": "vibe-node-8",
+          "title": "[미립자 팁] 입문자가 알아야 할 스킬의 모든 것",
+          "description": "AI 에이전트의 반복 작업을 자동화하는 핵심 단위인 '스킬(Skills)'의 기본 개념과 심볼릭 링크 구조를 이해하고, 커스텀 스킬을 제작해 업무에 바로 도입해 봅니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=3g0p7qCvbJA",
+          "youtubeId": "3g0p7qCvbJA",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 915,
+          "parentId": "vibe-node-7"
         }
       ]
     },
