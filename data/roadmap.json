@@ -297,6 +297,114 @@
           "parentId": "vibe-book-node-18"
         }
       ]
+    },
+    {
+      "id": "roadmap-barobaro-claude",
+      "title": "《바로바로 클로드》 도서 강의 로드맵",
+      "description": "제가 집필한 도서 《바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인》의 강의 로드맵입니다. 클로드의 기본 사용법부터 커넥터, 스킬, 그리고 코워크를 활용한 업무 자동화까지 체계적으로 학습할 수 있는 책과 영상입니다.\n\n[도서 구매][Yes24] : https://www.yes24.com/Product/Goods/185790472\n[도서 구매][교보] : https://product.kyobobook.co.kr/detail/S000219660520\n오픈카톡방 : https://open.kakao.com/o/ggK7EAJh",
+      "category": "AI 에이전트",
+      "isActive": true,
+      "nodes": [
+        {
+          "id": "claude-node-1",
+          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 01장 처음 만나는 클로드",
+          "description": "클로드 입문 필수 기초로, LLM과 LMM의 차이점, 요금제 및 모델 비교, 데스크톱 앱 세팅과 효율적 활용 팁을 정리합니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=r5aAeBk0JaA",
+          "youtubeId": "r5aAeBk0JaA",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 75,
+          "parentId": null
+        },
+        {
+          "id": "claude-node-2",
+          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 02장 클로드로 문서 작업하기",
+          "description": "마크다운 기반의 세련된 문서 작성 방법, 리서치 모드 및 프로젝트 지침을 설계하고 다양한 데이터를 클로드에 연동하는 법을 학습합니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=wKaEIVg7IcY",
+          "youtubeId": "wKaEIVg7IcY",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 195,
+          "parentId": "claude-node-1"
+        },
+        {
+          "id": "claude-node-3",
+          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 03장 아티팩트 활용하기",
+          "description": "결과물의 시각화를 극대화하는 '아티팩트' 기능을 심층적으로 다룹니다. 투두리스트 앱 개발, 다이어그램 구축 및 공유 방법을 배웁니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=_B10KZAkDUg",
+          "youtubeId": "_B10KZAkDUg",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 315,
+          "parentId": "claude-node-2"
+        },
+        {
+          "id": "claude-node-4",
+          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 04.1 커넥터 연결하기",
+          "description": "MCP(모델 컨텍스트 프로토콜)에서 명칭이 개선된 '커넥터(Connector)'의 개념과 구글 드라이브, 지메일 등 기본 도구를 연동하는 기초를 다룹니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=NVODlW4C5A4",
+          "youtubeId": "NVODlW4C5A4",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 435,
+          "parentId": "claude-node-3"
+        },
+        {
+          "id": "claude-node-5",
+          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 04.2 매일 쓰는 도구 연결하기",
+          "description": "Notion, Canva, Apify 및 다이소 MCP 등 실제 업무와 생활에서 활용되는 핵심 외부 API 및 서비스를 클로드 데스크톱과 연동해 봅니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=zShWl65OHKs",
+          "youtubeId": "zShWl65OHKs",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 555,
+          "parentId": "claude-node-4"
+        },
+        {
+          "id": "claude-node-6",
+          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 04.3 엑셀에서 클로드 사용하기",
+          "description": "엑셀 및 구글 스프레드시트 환경 안에서 클로드를 직접 불러와 복잡한 수식 작성, 조건부 서식 부여, 시각화 대시보드를 구축합니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=rm6ShFKNKXM",
+          "youtubeId": "rm6ShFKNKXM",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 675,
+          "parentId": "claude-node-5"
+        },
+        {
+          "id": "claude-node-7",
+          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 05.1 스킬 시작하기",
+          "description": "에이전트 작업을 패키지화하여 자동화하는 '스킬(Skills)'의 기본 개념을 정립하고, 캔버스와 DOCX 스킬 등을 설정해 업무 효율을 개선합니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=cYfgSbu9yXU",
+          "youtubeId": "cYfgSbu9yXU",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 795,
+          "parentId": "claude-node-6"
+        },
+        {
+          "id": "claude-node-8",
+          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 05.2~3 스킬 다운로드하거나 만들어 활용하기",
+          "description": "커뮤니티 및 오픈소스 허브에서 스킬을 탐색하고 내 로컬 환경에 다운로드하여 적용하거나, 비즈니스 요건에 맞춰 커스텀 스킬을 개발하는 방법을 다룹니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=DACQTo8qqHw",
+          "youtubeId": "DACQTo8qqHw",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 915,
+          "parentId": "claude-node-7"
+        },
+        {
+          "id": "claude-node-9",
+          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 06.1 코워크 시작하기~06.3 PDF 문서 편집하기",
+          "description": "클로드 코워크(Cowork) 기능을 이용해 PC 로컬 폴더 제어, PDF 파일 수정, 지능형 스케줄러와 커넥터를 결합한 종합 자동화 워크플로를 실습합니다.",
+          "youtubeUrl": "https://www.youtube.com/watch?v=Ps5F9ND3hUA",
+          "youtubeId": "Ps5F9ND3hUA",
+          "difficulty": "ADVANCED",
+          "x": 300,
+          "y": 1035,
+          "parentId": "claude-node-8"
+        }
+      ]
     }
   ]
 }
