@@ -36,7 +36,7 @@
         },
         {
           "id": "vibe-node-3",
-          "title": "클로드 코드 입문 가이드 - 1편",
+          "title": "클로드 코드 입문 가이드 - 1편 : 터미널 사용",
           "description": "클로드 코드 입문자라면 왜 다들 터미널부터 배우라고 하는지,  이 영상 하나로 흐름을 잡으실 수 있습니다. GUI보다 터미널이 왜 더 유리한지부터, 정말 최소한으로 알아야 할 기본 명령어까지 초보자 기준으로 정리했습니다.",
           "youtubeUrl": "https://youtu.be/R9YZp1tlTRo",
           "youtubeId": "R9YZp1tlTRo",
@@ -47,7 +47,7 @@
         },
         {
           "id": "node-1780833107492",
-          "title": "클로드 코드 입문 가이드 - 2편",
+          "title": "클로드 코드 입문 가이드 - 2편 : 클로드 코드 환경 세팅 및 기본 가이드",
           "description": "클로드 코드, 어렵게 시작할 필요 없습니다. 이번 영상에서는 초보자 기준으로 Claude Code를 더 편하게 쓰기 위한 환경 세팅을 정리했습니다. Warp 터미널 설치부터 상태 표시줄, 슬래시 메뉴, 이미지 붙여넣기, 플랜 모드까지! 처음 시작할 때 꼭 알아야 할 기능만 실습 중심으로 빠르게 정리해드립니다. 다음 영상부터는 본격적으로 바이브 코딩 실전으로 넘어갑니다.",
           "youtubeUrl": "https://youtu.be/ia0ATCpGL4Y",
           "youtubeId": "ia0ATCpGL4Y",
@@ -58,7 +58,7 @@
         },
         {
           "id": "node-1780834647994",
-          "title": "클로드 코드 입문 가이드 - 3편",
+          "title": "클로드 코드 입문 가이드 - 3편 : 컨텍스트 관리 방법(AGENTS.md, 스킬)",
           "description": "에이전트를 잘 쓰는 핵심은 프롬프트보다 컨텍스트 관리입니다. 이번 영상에서는 클로드 코드 입문 3편으로, 컨텍스트와 컨텍스트 윈도우를 어떻게 이해해야 하는지 먼저 정리합니다. 왜 Agent.MD, Skills 같은 개념이 나왔는지 흐름으로 연결해서 설명하고, 마지막에는 한글 문서 작성 스킬을 직접 설치하고 써보는 실습까지 보여드립니다.",
           "youtubeUrl": "https://youtu.be/sirFkEB4k5c",
           "youtubeId": "sirFkEB4k5c",
@@ -69,7 +69,7 @@
         },
         {
           "id": "node-1780834671120",
-          "title": "클로드 코드 입문 가이드 - 4편",
+          "title": "클로드 코드 입문 가이드 - 4편 : VSCode 세팅",
           "description": "VS Code에서 Claude Code를 붙여 문서 작업하는 흐름을 한 번에 정리했습니다. 이번 영상에서는 왜 이 조합을 보조적으로 써야 하는지, 언제 유용한지, 그리고 Markdown 문서를 보고서/PDF/Word까지 확장하는 과정을 실제로 보여드립니다. 바이브 코딩으로 넘어가기 전에 꼭 알아야 할 기본기와 스킬 활용법까지 함께 다룹니다.",
           "youtubeUrl": "https://youtu.be/mY_X51F0-XU",
           "youtubeId": "mY_X51F0-XU",
@@ -80,7 +80,7 @@
         },
         {
           "id": "vibe-node-7",
-          "title": "클로드 코드 쓰고 싶은데... 너무 무섭다면? How to use 클로드 코드(5) PPT 만들기의 모든 것",
+          "title": "클로드 코드 입문 가이드 - 5편 : PPT",
           "description": "Claude Code와 VS Code를 사용하여 마크다운 문서 기반의 프레젠테이션 슬라이드(Marp)를 실시간으로 빌드하고, PPT 파일을 자동 생성하는 기술을 익힙니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=3kw019nHoPw",
           "youtubeId": "3kw019nHoPw",
@@ -91,7 +91,7 @@
         },
         {
           "id": "vibe-node-8",
-          "title": "[미립자 팁] 입문자가 알아야 할 스킬의 모든 것",
+          "title": "클로드 코드 입문 가이드 - 6편 : 스킬",
           "description": "AI 에이전트의 반복 작업을 자동화하는 핵심 단위인 '스킬(Skills)'의 기본 개념과 심볼릭 링크 구조를 이해하고, 커스텀 스킬을 제작해 업무에 바로 도입해 봅니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=3g0p7qCvbJA",
           "youtubeId": "3g0p7qCvbJA",
