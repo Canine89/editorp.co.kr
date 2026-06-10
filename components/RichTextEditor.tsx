@@ -2,7 +2,6 @@
 
 import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
 import { Placeholder } from '@tiptap/extensions';
 import {
   Bold,
@@ -17,7 +16,6 @@ import {
   Code2,
   Link2,
   Link2Off,
-  Image as ImageIcon,
   Undo2,
   Redo2,
 } from 'lucide-react';
@@ -60,12 +58,6 @@ function Toolbar({ editor }: { editor: Editor }) {
       return;
     }
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
-  };
-
-  const addImage = () => {
-    const url = window.prompt('이미지 주소(URL)를 입력해 주세요', 'https://');
-    if (!url || url === 'https://') return;
-    editor.chain().focus().setImage({ src: url }).run();
   };
 
   return (
@@ -115,9 +107,6 @@ function Toolbar({ editor }: { editor: Editor }) {
       <ToolbarButton label="링크 해제" disabled={!editor.isActive('link')} onClick={() => editor.chain().focus().unsetLink().run()}>
         <Link2Off size={15} />
       </ToolbarButton>
-      <ToolbarButton label="이미지 (URL)" onClick={addImage}>
-        <ImageIcon size={15} />
-      </ToolbarButton>
 
       <span className="rte-divider" />
 
@@ -146,7 +135,6 @@ export function RichTextEditor({
         heading: { levels: [2, 3] },
         link: { openOnClick: false },
       }),
-      Image,
       Placeholder.configure({ placeholder: placeholder ?? '' }),
     ],
     content: value,

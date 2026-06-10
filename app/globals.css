@@ -447,15 +447,6 @@ a {
   text-underline-offset: 3px;
 }
 
-.rich-content img {
-  max-width: 100%;
-  height: auto;
-  border-radius: var(--rounded-md);
-  border: 1px solid var(--colors-hairline);
-  margin: 0.5em 0;
-  display: block;
-}
-
 .rich-content hr {
   border: none;
   border-top: 1px solid var(--colors-hairline);
