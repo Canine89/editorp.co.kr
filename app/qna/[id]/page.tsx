@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
 import { isFirebaseConfigured } from '@/lib/firebase-admin';
 import { ADMIN_EMAIL, getPost, listComments, incrementViews } from '@/lib/qna';
+import { sanitizePostHtml } from '@/lib/sanitize';
 import { CommentForm, DeleteCommentButton, DeletePostButton } from '@/components/QnaActions';
 
 export const revalidate = 0;
@@ -64,9 +65,17 @@ export default async function QnaDetailPage({
 
           {/* 본문 */}
           <div style={{ padding: '28px 4px', borderBottom: '1px solid var(--colors-hairline)' }}>
-            <p style={{ fontSize: '15px', lineHeight: 1.75, whiteSpace: 'pre-wrap', margin: 0 }}>
-              {post.body}
-            </p>
+            {post.format === 'html' ? (
+              <div
+                className="rich-content"
+                /* 저장 시 정화된 HTML이지만, 렌더 직전에 한 번 더 정화한다 (이중 방어) */
+                dangerouslySetInnerHTML={{ __html: sanitizePostHtml(post.body) }}
+              />
+            ) : (
+              <p style={{ fontSize: '15px', lineHeight: 1.75, whiteSpace: 'pre-wrap', margin: 0 }}>
+                {post.body}
+              </p>
+            )}
             {(isAdmin || userEmail === post.authorEmail) && (
               <div style={{ marginTop: '20px', textAlign: 'right' }}>
                 <DeletePostButton postId={post.id} />

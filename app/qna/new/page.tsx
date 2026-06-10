@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { RichTextEditor } from '@/components/RichTextEditor';
 
 const CATEGORIES = ['질문', '정보', '잡담'] as const;
 
@@ -18,6 +19,10 @@ export default function QnaNewPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!body.trim()) {
+      setError('내용을 입력해 주세요.');
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -87,16 +92,11 @@ export default function QnaNewPage() {
                 </div>
               </div>
               <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label" htmlFor="qna-body">내용</label>
-                <textarea
-                  id="qna-body"
-                  className="input-text"
+                <label className="form-label">내용</label>
+                <RichTextEditor
                   value={body}
-                  onChange={(e) => setBody(e.target.value)}
+                  onChange={setBody}
                   placeholder="질문이라면 어떤 강의의 어느 부분에서 막혔는지 적어 주시면 더 정확한 답변을 받을 수 있어요."
-                  maxLength={10000}
-                  required
-                  style={{ height: 'auto', minHeight: '260px', resize: 'vertical', lineHeight: 1.6 }}
                 />
               </div>
 

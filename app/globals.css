@@ -376,6 +376,166 @@ a {
   box-shadow: 0 0 0 3px rgba(204, 120, 92, 0.15);
 }
 
+/* Rich text content — 게시글 본문 렌더링과 에디터가 공유하는 타이포그래피 */
+.rich-content {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--colors-body);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.rich-content p {
+  margin: 0 0 0.6em 0;
+  font-size: inherit;
+}
+
+.rich-content h2,
+.rich-content h3 {
+  margin: 1.2em 0 0.5em 0;
+  line-height: 1.3;
+}
+
+.rich-content h2 { font-size: 20px; }
+.rich-content h3 { font-size: 17px; }
+
+.rich-content ul,
+.rich-content ol {
+  margin: 0 0 0.6em 0;
+  padding-left: 1.5em;
+}
+
+.rich-content li { margin-bottom: 0.2em; }
+
+.rich-content blockquote {
+  margin: 0.8em 0;
+  padding: 2px 0 2px 14px;
+  border-left: 3px solid var(--colors-primary);
+  color: var(--colors-muted);
+}
+
+.rich-content pre {
+  margin: 0.8em 0;
+  padding: 14px 16px;
+  background-color: var(--colors-surface-dark);
+  color: var(--colors-on-dark);
+  border-radius: var(--rounded-md);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.rich-content code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background-color: var(--colors-surface-cream-strong);
+  padding: 1px 5px;
+  border-radius: var(--rounded-xs);
+}
+
+.rich-content pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.rich-content a {
+  color: var(--colors-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rich-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--rounded-md);
+  border: 1px solid var(--colors-hairline);
+  margin: 0.5em 0;
+  display: block;
+}
+
+.rich-content hr {
+  border: none;
+  border-top: 1px solid var(--colors-hairline);
+  margin: 1.2em 0;
+}
+
+/* Rich text editor chrome */
+.rte-wrapper {
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-md);
+  background-color: var(--colors-canvas);
+  overflow: hidden;
+}
+
+.rte-wrapper:focus-within {
+  border-color: var(--colors-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--colors-primary) 15%, transparent);
+}
+
+.rte-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--colors-hairline-soft);
+  background-color: var(--colors-surface-soft);
+}
+
+.rte-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  border-radius: var(--rounded-sm);
+  color: var(--colors-muted);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.rte-btn:hover:not(:disabled) {
+  background-color: var(--colors-surface-cream-strong);
+  color: var(--colors-ink);
+}
+
+.rte-btn.active {
+  background-color: color-mix(in srgb, var(--colors-primary) 14%, transparent);
+  color: var(--colors-primary);
+}
+
+.rte-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.rte-divider {
+  width: 1px;
+  height: 18px;
+  background-color: var(--colors-hairline);
+  margin: 0 4px;
+}
+
+.rte-area {
+  min-height: 260px;
+  padding: 14px 16px;
+  outline: none;
+  cursor: text;
+}
+
+.rte-area p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--colors-muted-soft);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
 /* Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;

@@ -14,6 +14,8 @@ export interface Post {
   id: string;
   title: string;
   body: string;
+  /** 'html': 리치텍스트(정화된 HTML) · 'text': 구버전 일반 텍스트 */
+  format: 'html' | 'text';
   category: PostCategory;
   authorEmail: string;
   authorName: string;
@@ -50,6 +52,7 @@ function toPost(id: string, data: FirebaseFirestore.DocumentData): Post {
     id,
     title: data.title ?? '',
     body: data.body ?? '',
+    format: data.format === 'html' ? 'html' : 'text',
     category: POST_CATEGORIES.includes(data.category) ? data.category : '질문',
     authorEmail: data.authorEmail ?? '',
     authorName: data.authorName ?? '익명',
@@ -117,6 +120,7 @@ export async function incrementViews(id: string): Promise<void> {
 export async function createPost(input: {
   title: string;
   body: string;
+  format: 'html' | 'text';
   category: PostCategory;
   authorEmail: string;
   authorName: string;
