@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { BookOpen, MessageCircle, Link2 } from 'lucide-react';
+import { BookOpen, Link2 } from 'lucide-react';
+import { KakaoTalkIcon } from './BrandIcons';
 
 interface RoadmapDescriptionProps {
   description: string;
@@ -120,7 +121,7 @@ export function RoadmapDescription({ description, isCompact = false }: RoadmapDe
             if (link.rawType === 'book') {
               icon = <BookOpen size={iconSize} color="var(--colors-primary)" />;
             } else if (link.rawType === 'kakao') {
-              icon = <MessageCircle size={iconSize} color="#E6CF00" fill="#FEE500" />;
+              icon = <KakaoTalkIcon size={iconSize} />;
             }
 
             return (

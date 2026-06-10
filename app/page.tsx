@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
-import { ArrowRight, CirclePlay, MessageCircle } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { YouTubeIcon, KakaoTalkIcon } from '@/components/BrandIcons';
 import { RoadmapDescription } from '@/components/RoadmapDescription';
 
 
@@ -371,7 +372,7 @@ export default async function HomePage({
               rel="noopener noreferrer"
               className="btn-ghost"
             >
-              <CirclePlay size={18} color="#FF0033" /> 유튜브 채널
+              <YouTubeIcon size={18} /> 유튜브 채널
             </a>
             <a
               href="https://open.kakao.com/o/ggK7EAJh"
@@ -379,7 +380,7 @@ export default async function HomePage({
               rel="noopener noreferrer"
               className="btn-ghost"
             >
-              <MessageCircle size={17} color="#E6CF00" fill="#FEE500" /> 오픈카톡방
+              <KakaoTalkIcon size={16} /> 오픈카톡방
             </a>
           </div>
 
