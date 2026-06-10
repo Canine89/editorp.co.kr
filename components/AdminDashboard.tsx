@@ -1,22 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Plus, Trash2, Save, Move, Eye } from 'lucide-react';
-import Link from 'next/link';
-import ReactFlow, {
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  Node as RFNode,
-  Edge as RFEdge,
-  NodeTypes,
-  Handle,
-  Position,
-  Connection,
-  NodeChange,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+import { useState, useEffect, useCallback } from 'react';
+import {
+  Plus,
+  Trash2,
+  Save,
+  ChevronUp,
+  ChevronDown,
+  ExternalLink,
+  EyeOff,
+  ListVideo,
+  Wand2,
+  X,
+} from 'lucide-react';
+import { AuthButton } from './AuthButton';
 
 interface TimelineItem {
   time: string;
@@ -50,1075 +47,1152 @@ interface RoadmapData {
   roadmaps: Roadmap[];
 }
 
-// 1. Custom Node definition for React Flow using project CSS variables
-const CustomNode = ({ data, selected }: { data: any; selected: boolean }) => {
-  return (
-    <div
-      style={{
-        padding: '8px 12px',
-        borderRadius: 'var(--rounded-md)',
-        border: selected ? '2px solid var(--colors-primary)' : '1px solid var(--colors-hairline)',
-        backgroundColor: selected ? 'var(--colors-surface-soft)' : 'var(--colors-surface-card)',
-        boxShadow: '0 2px 6px rgba(20, 20, 19, 0.02)',
-        width: '220px',
-        height: '65px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        textAlign: 'left',
-        cursor: 'grab',
-        position: 'relative',
-      }}
-    >
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        style={{ background: 'var(--colors-primary)', width: '8px', height: '8px' }} 
-      />
-      <span
-        style={{
-          fontSize: '10px',
-          fontWeight: 600,
-          color: 'var(--colors-primary)',
-          marginBottom: '2px',
-        }}
-      >
-        {data.difficulty}
-      </span>
-      {selected ? (
-        <input
-          type="text"
-          value={data.title}
-          onChange={(e) => data.onTitleChange(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              (e.target as HTMLInputElement).blur();
-            }
-          }}
-          placeholder="노드 제목 입력..."
-          style={{
-            fontSize: '12px',
-            fontWeight: 500,
-            color: 'var(--colors-ink)',
-            width: '100%',
-            border: '1px solid var(--colors-primary)',
-            borderRadius: '4px',
-            padding: '2px 4px',
-            backgroundColor: '#fff',
-            outline: 'none',
-            fontFamily: 'inherit',
-          }}
-          autoFocus
-        />
-      ) : (
-        <span
-          style={{
-            fontSize: '12px',
-            fontWeight: 500,
-            color: 'var(--colors-ink)',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            width: '190px',
-          }}
-        >
-          {data.title || '(제목 없음)'}
-        </span>
-      )}
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        style={{ background: 'var(--colors-primary)', width: '8px', height: '8px' }} 
-      />
-    </div>
-  );
-};
+const difficultyConfig = {
+  BEGINNER: { label: '초급', color: '#5db8a6' },
+  INTERMEDIATE: { label: '중급', color: '#e8a55a' },
+  ADVANCED: { label: '고급', color: '#c64545' },
+} as const;
 
-const nodeTypes: NodeTypes = {
-  custom: CustomNode,
-};
+function getYouTubeId(url: string): string {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : '';
+}
+
+// The public site plays lectures in array order; keep parentId/x/y consistent
+// with that order so the viewer's root-node detection keeps working.
+function chainNodes(nodes: Node[]): Node[] {
+  return nodes.map((n, i) => ({
+    ...n,
+    parentId: i === 0 ? null : nodes[i - 1].id,
+    x: 300,
+    y: 75 + i * 150,
+  }));
+}
 
 export function AdminDashboard({ initialData }: { initialData: RoadmapData }) {
   const [data, setData] = useState<RoadmapData>(initialData);
   const [selectedRoadmapId, setSelectedRoadmapId] = useState<string>(
-    data.roadmaps[0]?.id || ''
+    initialData.roadmaps[0]?.id || ''
   );
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  
-  // Status feedback
+
+  const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string; isError: boolean } | null>(null);
 
-  // Resizable React Flow editor width states & logic
-  const [flowWidth, setFlowWidth] = useState(800);
-  const [isResizing, setIsResizing] = useState(false);
-
-  const startResizing = (mouseDownEvent: React.MouseEvent) => {
-    mouseDownEvent.preventDefault();
-    setIsResizing(true);
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (mouseMoveEvent: MouseEvent) => {
-      if (!isResizing) return;
-      const newWidth = mouseMoveEvent.clientX - 240;
-      if (newWidth > 320 && newWidth < 1200) {
-        setFlowWidth(newWidth);
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsResizing(false);
-    };
-
-    if (isResizing) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isResizing]);
-
-  // React Flow states
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [newVideoUrl, setNewVideoUrl] = useState('');
+  const [isAddingVideo, setIsAddingVideo] = useState(false);
+  const [newCategory, setNewCategory] = useState('');
 
   const selectedRoadmap = data.roadmaps.find((r) => r.id === selectedRoadmapId);
   const selectedNode = selectedRoadmap?.nodes.find((n) => n.id === selectedNodeId);
 
-  // Sync React Flow nodes and edges with selectedRoadmap data
-  useEffect(() => {
-    if (!selectedRoadmap) {
-      setNodes([]);
-      setEdges([]);
-      return;
-    }
-
-    const rfNodes: RFNode[] = selectedRoadmap.nodes.map((node) => ({
-      id: node.id,
-      type: 'custom',
-      position: { x: node.x, y: node.y },
-      selected: selectedNodeId === node.id,
-      data: {
-        title: node.title,
-        difficulty: node.difficulty === 'ADVANCED' ? '고급' : node.difficulty === 'INTERMEDIATE' ? '중급' : '초급',
-        onTitleChange: (newTitle: string) => handleUpdateNodeField(node.id, 'title', newTitle),
-        timeline: node.timeline,
-      },
-    }));
-
-    const rfEdges: RFEdge[] = selectedRoadmap.nodes
-      .filter((node) => node.parentId)
-      .map((node) => ({
-        id: `e-${node.parentId}-${node.id}`,
-        source: node.parentId!,
-        target: node.id,
-        animated: true,
-        style: { stroke: 'var(--colors-primary)', strokeWidth: 2 },
-      }));
-
-    setNodes(rfNodes);
-    setEdges(rfEdges);
-  }, [selectedRoadmapId, selectedRoadmap?.nodes, selectedNodeId]);
-
-  // Helper to extract YouTube video ID
-  const getYouTubeId = (url: string): string => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : '';
-  };
-
   const showNotification = (text: string, isError = false) => {
     setMessage({ text, isError });
-    setTimeout(() => setMessage(null), 5000);
+    setTimeout(() => setMessage(null), 4000);
   };
 
-  // 1. Roadmap level operations
+  // Every data mutation goes through here so dirty tracking can't be missed
+  const mutate = (updater: (prev: RoadmapData) => RoadmapData) => {
+    setData(updater);
+    setIsDirty(true);
+  };
+
+  // Warn before closing the tab with unsaved changes
+  useEffect(() => {
+    if (!isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [isDirty]);
+
+  // ─── Save ───
+  const handleSaveData = useCallback(async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    setMessage(null);
+    try {
+      // Normalize ordering metadata across every roadmap before persisting
+      const normalized: RoadmapData = {
+        ...data,
+        roadmaps: data.roadmaps.map((r) => ({ ...r, nodes: chainNodes(r.nodes) })),
+      };
+      const res = await fetch('/api/admin/save-roadmap', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(normalized),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result.error || '저장에 실패했습니다.');
+      }
+      setData(normalized);
+      setIsDirty(false);
+      showNotification(result.message || '변경사항이 저장되었습니다.');
+    } catch (err) {
+      showNotification(err instanceof Error ? err.message : '저장 중 오류가 발생했습니다.', true);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [data, isSaving]);
+
+  // Cmd/Ctrl+S saves
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        handleSaveData();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [handleSaveData]);
+
+  // ─── Roadmap operations ───
   const handleAddRoadmap = () => {
     const newId = `roadmap-${Date.now()}`;
     const newRoadmap: Roadmap = {
       id: newId,
-      title: '새로운 편집자P 로드맵',
+      title: '새로운 로드맵',
       description: '로드맵에 대한 설명을 적어주세요.',
-      category: data.categories[0] || 'AI',
-      isActive: true,
+      category: data.categories[0] || 'AI 기초',
+      isActive: false,
       nodes: [],
     };
-    
-    setData({
-      ...data,
-      roadmaps: [...data.roadmaps, newRoadmap],
-    });
+    mutate((prev) => ({ ...prev, roadmaps: [...prev.roadmaps, newRoadmap] }));
     setSelectedRoadmapId(newId);
     setSelectedNodeId(null);
   };
 
   const handleDeleteRoadmap = (id: string) => {
-    if (!confirm('정말 이 로드맵을 삭제하시겠습니까? 관련 노드가 전부 삭제됩니다.')) return;
-    
+    const target = data.roadmaps.find((r) => r.id === id);
+    if (!target) return;
+    if (!confirm(`'${target.title}' 로드맵을 삭제할까요?\n강의 ${target.nodes.length}개가 함께 삭제됩니다.`)) return;
+
     const nextRoadmaps = data.roadmaps.filter((r) => r.id !== id);
-    setData({
-      ...data,
-      roadmaps: nextRoadmaps,
-    });
-    
+    mutate((prev) => ({ ...prev, roadmaps: prev.roadmaps.filter((r) => r.id !== id) }));
     if (selectedRoadmapId === id) {
       setSelectedRoadmapId(nextRoadmaps[0]?.id || '');
       setSelectedNodeId(null);
     }
   };
 
-  const handleUpdateRoadmapField = (field: keyof Roadmap, value: any) => {
+  const handleUpdateRoadmapField = <K extends keyof Roadmap>(field: K, value: Roadmap[K]) => {
     if (!selectedRoadmapId) return;
-    
-    setData({
-      ...data,
-      roadmaps: data.roadmaps.map((r) => {
-        if (r.id === selectedRoadmapId) {
-          return { ...r, [field]: value };
-        }
-        return r;
-      }),
-    });
+    mutate((prev) => ({
+      ...prev,
+      roadmaps: prev.roadmaps.map((r) =>
+        r.id === selectedRoadmapId ? { ...r, [field]: value } : r
+      ),
+    }));
   };
 
-  // 2. Node level operations
-  const handleAddNode = () => {
-    if (!selectedRoadmapId || !selectedRoadmap) return;
-    
-    const newNodeId = `node-${Date.now()}`;
-    const defaultY = selectedRoadmap.nodes.length > 0 
-      ? Math.max(...selectedRoadmap.nodes.map(n => n.y)) + 120 
-      : 80;
+  // ─── Category operations ───
+  const handleAddCategory = () => {
+    const name = newCategory.trim();
+    if (!name) return;
+    if (data.categories.includes(name)) {
+      showNotification('이미 있는 카테고리입니다.', true);
+      return;
+    }
+    mutate((prev) => ({ ...prev, categories: [...prev.categories, name] }));
+    setNewCategory('');
+  };
 
-    const newNode: Node = {
-      id: newNodeId,
-      title: '새로운 강의 노드',
-      description: '강의에 대한 간략한 설명입니다.',
-      youtubeUrl: 'https://www.youtube.com/watch?v=zjkBMFhNj_g',
-      youtubeId: 'zjkBMFhNj_g',
-      difficulty: 'BEGINNER',
-      x: 300,
-      y: defaultY,
-      parentId: selectedRoadmap.nodes[selectedRoadmap.nodes.length - 1]?.id || null,
-    };
+  const handleDeleteCategory = (name: string) => {
+    const inUse = data.roadmaps.filter((r) => r.category === name).length;
+    if (inUse > 0) {
+      showNotification(`'${name}' 카테고리를 쓰는 로드맵이 ${inUse}개 있어 삭제할 수 없습니다.`, true);
+      return;
+    }
+    mutate((prev) => ({ ...prev, categories: prev.categories.filter((c) => c !== name) }));
+  };
 
-    setData({
-      ...data,
-      roadmaps: data.roadmaps.map((r) => {
-        if (r.id === selectedRoadmapId) {
-          return { ...r, nodes: [...r.nodes, newNode] };
-        }
-        return r;
-      }),
-    });
+  // ─── Node operations ───
+  const updateNodes = (transform: (nodes: Node[]) => Node[]) => {
+    if (!selectedRoadmapId) return;
+    mutate((prev) => ({
+      ...prev,
+      roadmaps: prev.roadmaps.map((r) =>
+        r.id === selectedRoadmapId ? { ...r, nodes: chainNodes(transform(r.nodes)) } : r
+      ),
+    }));
+  };
+
+  const handleAddVideo = async () => {
+    const url = newVideoUrl.trim();
+    if (!url || !selectedRoadmapId) return;
+    const videoId = getYouTubeId(url);
+    if (!videoId) {
+      showNotification('유효한 유튜브 링크가 아닙니다.', true);
+      return;
+    }
+    if (selectedRoadmap?.nodes.some((n) => n.youtubeId === videoId)) {
+      showNotification('이미 이 로드맵에 추가된 영상입니다.', true);
+      return;
+    }
+
+    setIsAddingVideo(true);
+    let title = '새 강의 (제목을 입력해주세요)';
+    try {
+      const res = await fetch(`/api/admin/youtube-meta?videoId=${videoId}`);
+      if (res.ok) {
+        const meta = await res.json();
+        if (meta.title) title = meta.title;
+      }
+    } catch {
+      // title fetch is best-effort; node is still created with a placeholder
+    }
+
+    // Deterministic id: duplicate videos within a roadmap are already rejected above
+    const newNodeId = `node-${videoId}`;
+    updateNodes((nodes) => [
+      ...nodes,
+      {
+        id: newNodeId,
+        title,
+        description: '',
+        youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
+        youtubeId: videoId,
+        difficulty: 'BEGINNER',
+        x: 0,
+        y: 0,
+        parentId: null,
+      },
+    ]);
     setSelectedNodeId(newNodeId);
+    setNewVideoUrl('');
+    setIsAddingVideo(false);
+    showNotification('강의가 추가되었습니다. 제목과 난이도를 확인해주세요.');
   };
 
   const handleDeleteNode = (nodeId: string) => {
-    if (!selectedRoadmapId || !selectedRoadmap) return;
-    
-    setData({
-      ...data,
-      roadmaps: data.roadmaps.map((r) => {
-        if (r.id === selectedRoadmapId) {
-          return {
-            ...r,
-            nodes: r.nodes
-              .filter((n) => n.id !== nodeId)
-              .map((n) => (n.parentId === nodeId ? { ...n, parentId: null } : n)),
-          };
-        }
-        return r;
-      }),
-    });
-
-    if (selectedNodeId === nodeId) {
-      setSelectedNodeId(null);
-    }
+    const target = selectedRoadmap?.nodes.find((n) => n.id === nodeId);
+    if (!target) return;
+    if (!confirm(`'${target.title}' 강의를 삭제할까요?`)) return;
+    updateNodes((nodes) => nodes.filter((n) => n.id !== nodeId));
+    if (selectedNodeId === nodeId) setSelectedNodeId(null);
   };
 
-  const handleUpdateNodeField = (nodeId: string, field: keyof Node, value: any) => {
+  const handleMoveNode = (nodeId: string, direction: 'up' | 'down') => {
+    updateNodes((nodes) => {
+      const idx = nodes.findIndex((n) => n.id === nodeId);
+      const swapWith = direction === 'up' ? idx - 1 : idx + 1;
+      if (idx === -1 || swapWith < 0 || swapWith >= nodes.length) return nodes;
+      const next = [...nodes];
+      [next[idx], next[swapWith]] = [next[swapWith], next[idx]];
+      return next;
+    });
+  };
+
+  const handleUpdateNodeField = <K extends keyof Node>(nodeId: string, field: K, value: Node[K]) => {
     if (!selectedRoadmapId) return;
-
-    let updatedValue = value;
-    let extraFields = {};
-    if (field === 'youtubeUrl') {
-      const extractedId = getYouTubeId(value);
-      extraFields = { youtubeId: extractedId };
+    let extraFields: Partial<Node> = {};
+    if (field === 'youtubeUrl' && typeof value === 'string') {
+      extraFields = { youtubeId: getYouTubeId(value) };
     }
-
-    setData({
-      ...data,
-      roadmaps: data.roadmaps.map((r) => {
-        if (r.id === selectedRoadmapId) {
-          return {
-            ...r,
-            nodes: r.nodes.map((n) => {
-              if (n.id === nodeId) {
-                return { ...n, [field]: updatedValue, ...extraFields };
-              }
-              return n;
-            }),
-          };
-        }
-        return r;
-      }),
-    });
-  };
-
-  // Sync positions when node is dragged in React Flow and snap to nearest 15px grid upon dropping, with smart alignment guides to neighbor nodes
-  const onNodeDragStop = (event: React.MouseEvent, node: RFNode) => {
-    let snappedX = Math.round(node.position.x / 15) * 15;
-    let snappedY = Math.round(node.position.y / 15) * 15;
-
-    // Smart Alignment Guide Snapping: alignment with other nodes
-    const otherNodes = selectedRoadmap?.nodes.filter((n) => n.id !== node.id) || [];
-    const ALIGN_THRESHOLD = 25; // Snap range in pixels
-
-    // Find closest horizontal alignment (X column alignment)
-    let minDiffX = ALIGN_THRESHOLD;
-    otherNodes.forEach((n) => {
-      const diff = Math.abs(node.position.x - n.x);
-      if (diff < minDiffX) {
-        minDiffX = diff;
-        snappedX = n.x; // Snaps exactly to match neighbor's X coordinate
-      }
-    });
-
-    // Find closest vertical alignment (Y row alignment)
-    let minDiffY = ALIGN_THRESHOLD;
-    otherNodes.forEach((n) => {
-      const diff = Math.abs(node.position.y - n.y);
-      if (diff < minDiffY) {
-        minDiffY = diff;
-        snappedY = n.y; // Snaps exactly to match neighbor's Y coordinate
-      }
-    });
-
-    // 1. Force the React Flow local node element state to snap immediately in UI
-    setNodes((prevNodes) =>
-      prevNodes.map((n) =>
-        n.id === node.id
-          ? { ...n, position: { x: snappedX, y: snappedY } }
-          : n
-      )
-    );
-
-    // 2. Save snapped coordinates to the database dataset
-    setData((prev) => ({
+    mutate((prev) => ({
       ...prev,
-      roadmaps: prev.roadmaps.map((r) => {
-        if (r.id === selectedRoadmapId) {
-          return {
-            ...r,
-            nodes: r.nodes.map((n) => {
-              if (n.id === node.id) {
-                return { 
-                  ...n, 
-                  x: snappedX, 
-                  y: snappedY 
-                };
-              }
-              return n;
-            }),
-          };
-        }
-        return r;
-      }),
+      roadmaps: prev.roadmaps.map((r) =>
+        r.id === selectedRoadmapId
+          ? {
+              ...r,
+              nodes: r.nodes.map((n) => (n.id === nodeId ? { ...n, [field]: value, ...extraFields } : n)),
+            }
+          : r
+      ),
     }));
   };
 
-  // Handle new connection setup by dragging edges
-  const onConnect = (connection: Connection) => {
-    const { source, target } = connection;
-    if (!source || !target) return;
-
-    setData((prev) => ({
-      ...prev,
-      roadmaps: prev.roadmaps.map((r) => {
-        if (r.id === selectedRoadmapId) {
-          return {
-            ...r,
-            nodes: r.nodes.map((n) => {
-              if (n.id === target) {
-                return { ...n, parentId: source };
-              }
-              return n;
-            }),
-          };
-        }
-        return r;
-      }),
-    }));
-  };
-
-  // Handle reconnecting existing edges to different nodes
-  const onEdgeUpdate = (oldEdge: RFEdge, newConnection: Connection) => {
-    const { source, target } = newConnection;
-    if (!source || !target) return;
-
-    setData((prev) => ({
-      ...prev,
-      roadmaps: prev.roadmaps.map((r) => {
-        if (r.id === selectedRoadmapId) {
-          return {
-            ...r,
-            nodes: r.nodes.map((n) => {
-              if (n.id === target) {
-                return { ...n, parentId: source };
-              }
-              if (n.id === oldEdge.target && oldEdge.target !== target) {
-                return { ...n, parentId: null };
-              }
-              return n;
-            }),
-          };
-        }
-        return r;
-      }),
-    }));
-  };
-
-
-
-
-  // 3. Auto Layout Spacing (Clean Tree Spacing)
-  const handleAutoLayout = () => {
-    if (!selectedRoadmap || selectedRoadmap.nodes.length === 0) return;
-
-    const nodes = [...selectedRoadmap.nodes];
-    const adjMap: { [key: string]: string[] } = {};
-    const roots: string[] = [];
-
-    nodes.forEach((n) => {
-      if (!n.parentId) {
-        roots.push(n.id);
-      } else {
-        if (!adjMap[n.parentId]) adjMap[n.parentId] = [];
-        adjMap[n.parentId].push(n.id);
-      }
-    });
-
-    const levels: { [key: string]: number } = {};
-    const levelNodes: { [level: number]: string[] } = {};
-
-    const traverse = (nodeId: string, depth: number) => {
-      levels[nodeId] = depth;
-      if (!levelNodes[depth]) levelNodes[depth] = [];
-      if (!levelNodes[depth].includes(nodeId)) {
-        levelNodes[depth].push(nodeId);
-      }
-
-      const children = adjMap[nodeId] || [];
-      children.forEach((childId) => traverse(childId, depth + 1));
-    };
-
-    roots.forEach((r) => traverse(r, 0));
-
-    // Handle any unreachable nodes from roots (cycles/islands)
-    nodes.forEach((n) => {
-      if (levels[n.id] === undefined) {
-        levels[n.id] = 0;
-        if (!levelNodes[0]) levelNodes[0] = [];
-        levelNodes[0].push(n.id);
-      }
-    });
-
-    const updatedNodes = nodes.map((n) => {
-      const depth = levels[n.id] || 0;
-      // Standard vertical height gap of 150px (multiple of 15)
-      const y = depth * 150 + 75; // 75 is also a multiple of 15 (15 * 5)
-
-      const idxList = levelNodes[depth] || [n.id];
-      const idx = idxList.indexOf(n.id);
-      const totalInLevel = idxList.length;
-
-      // Centered horizontal spacing of 270px (multiple of 15)
-      const startX = 300 - ((totalInLevel - 1) * 270) / 2; // 300 and 135 are multiples of 15, yielding multiples of 15
-      const x = startX + idx * 270;
-
-      return { ...n, x, y };
-    });
-
-    setData((prev) => ({
-      ...prev,
-      roadmaps: prev.roadmaps.map((r) => {
-        if (r.id === selectedRoadmapId) {
-          return { ...r, nodes: updatedNodes };
-        }
-        return r;
-      }),
-    }));
-    showNotification('노드들의 간격이 자동으로 맞추어졌습니다.');
-  };
-
-  // 4. Save to backend (API call)
-  const handleSaveData = async () => {
-    setIsSaving(true);
-    setMessage(null);
+  const handleFetchTimeline = async () => {
+    if (!selectedNode) return;
+    if (!selectedNode.youtubeId) {
+      showNotification('유튜브 링크를 먼저 정확하게 입력해주세요.', true);
+      return;
+    }
     try {
-      const res = await fetch('/api/admin/save-roadmap', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await res.json();
-      if (!res.ok) {
-        throw new Error(result.error || '저장에 실패했습니다.');
+      const res = await fetch(`/api/admin/youtube-timeline?videoId=${selectedNode.youtubeId}`);
+      if (!res.ok) throw new Error();
+      const fetched = await res.json();
+      if (fetched.error || !Array.isArray(fetched)) {
+        showNotification(fetched.error || '타임라인을 가져오지 못했습니다.', true);
+        return;
       }
-      showNotification(result.message || '변경사항이 정상 저장되었습니다.');
-    } catch (err: any) {
-      showNotification(err.message, true);
-    } finally {
-      setIsSaving(false);
+      if (fetched.length === 0) {
+        showNotification('영상 설명란에서 00:00 형식의 타임라인을 찾지 못했습니다.', true);
+        return;
+      }
+      handleUpdateNodeField(selectedNode.id, 'timeline', fetched);
+      showNotification(`타임라인 ${fetched.length}개 챕터를 불러왔습니다.`);
+    } catch {
+      showNotification('타임라인을 가져오는 도중 오류가 발생했습니다.', true);
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 'calc(100vh - 64px)' }}>
-      {/* Admin Action Bar */}
-      <div
-        style={{
-          borderBottom: '1px solid var(--colors-hairline)',
-          backgroundColor: 'var(--colors-surface-soft)',
-          padding: '12px var(--spacing-lg)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          position: 'sticky',
-          top: 0,
-          zIndex: 40,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <h2 style={{ fontSize: '24px', margin: 0, fontWeight: 600 }}>
-            관리자 대시보드
-          </h2>
-          {message && (
-            <span
-              style={{
-                fontSize: '13px',
-                padding: '4px 12px',
-                borderRadius: 'var(--rounded-md)',
-                backgroundColor: message.isError ? '#fde8e8' : '#eafaf1',
-                color: message.isError ? 'var(--colors-error)' : 'var(--colors-success)',
-                border: `1px solid ${message.isError ? '#fcd4d4' : '#d1f2e1'}`,
-              }}
-            >
-              {message.text}
-            </span>
-          )}
+    <div className="adm-root">
+      <style>{`
+        .adm-root {
+          display: flex;
+          flex-direction: column;
+          height: calc(100dvh - 64px);
+          background: var(--colors-canvas);
+        }
+
+        /* ── Top bar ── */
+        .adm-topbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          padding: 10px 20px;
+          border-bottom: 1px solid var(--colors-hairline);
+          background: var(--colors-surface-soft);
+          flex-shrink: 0;
+        }
+        .adm-topbar-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          min-width: 0;
+        }
+        .adm-title {
+          font-size: 17px;
+          font-weight: 700;
+          color: var(--colors-ink);
+          margin: 0;
+          white-space: nowrap;
+        }
+        .adm-dirty-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          padding: 4px 10px;
+          border-radius: var(--rounded-pill);
+          white-space: nowrap;
+        }
+        .adm-dirty-badge.dirty {
+          color: var(--colors-warning);
+          background: color-mix(in srgb, var(--colors-warning) 12%, transparent);
+        }
+        .adm-dirty-badge.clean {
+          color: var(--colors-muted-soft);
+          background: var(--colors-surface-card);
+        }
+        .adm-topbar-right {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-shrink: 0;
+        }
+
+        /* ── 3-pane grid ── */
+        .adm-grid {
+          display: grid;
+          grid-template-columns: 250px minmax(380px, 1fr) 400px;
+          flex: 1;
+          min-height: 0;
+        }
+        .adm-col {
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+          border-right: 1px solid var(--colors-hairline);
+        }
+        .adm-col:last-child { border-right: none; }
+        .adm-col-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 16px;
+          border-bottom: 1px solid var(--colors-hairline-soft);
+          flex-shrink: 0;
+        }
+        .adm-col-title {
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--colors-ink);
+          margin: 0;
+        }
+        .adm-col-body {
+          flex: 1;
+          overflow-y: auto;
+          min-height: 0;
+        }
+
+        /* ── Roadmap list ── */
+        .adm-roadmap-item {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding: 12px 16px;
+          border: none;
+          border-bottom: 1px solid var(--colors-hairline-soft);
+          background: transparent;
+          cursor: pointer;
+          text-align: left;
+          font-family: inherit;
+          transition: background var(--transition-fast);
+        }
+        .adm-roadmap-item:hover { background: var(--colors-surface-soft); }
+        .adm-roadmap-item.active {
+          background: var(--colors-surface-card);
+          border-left: 3px solid var(--colors-primary);
+          padding-left: 13px;
+        }
+        .adm-roadmap-item-title {
+          font-size: 13.5px;
+          font-weight: 600;
+          color: var(--colors-ink);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          line-height: 1.35;
+        }
+        .adm-roadmap-item-meta {
+          font-size: 11.5px;
+          color: var(--colors-muted-soft);
+        }
+
+        /* ── Lecture list ── */
+        .adm-lecture-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          width: 100%;
+          padding: 10px 16px;
+          border: none;
+          border-bottom: 1px solid var(--colors-hairline-soft);
+          background: transparent;
+          cursor: pointer;
+          text-align: left;
+          font-family: inherit;
+          transition: background var(--transition-fast);
+        }
+        .adm-lecture-row:hover { background: var(--colors-surface-soft); }
+        .adm-lecture-row.active {
+          background: var(--colors-surface-card);
+          border-left: 3px solid var(--colors-primary);
+          padding-left: 13px;
+        }
+        .adm-lecture-num {
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--colors-muted-soft);
+          font-family: var(--font-mono);
+          width: 20px;
+          text-align: right;
+          flex-shrink: 0;
+        }
+        .adm-lecture-thumb {
+          width: 80px;
+          aspect-ratio: 16 / 9;
+          object-fit: cover;
+          border-radius: var(--rounded-xs);
+          border: 1px solid var(--colors-hairline);
+          background: var(--colors-surface-card);
+          flex-shrink: 0;
+        }
+        .adm-lecture-info {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .adm-lecture-title {
+          font-size: 13px;
+          font-weight: 500;
+          color: var(--colors-body-strong);
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          line-height: 1.35;
+        }
+        .adm-lecture-diff {
+          font-size: 11px;
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .adm-row-actions {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          flex-shrink: 0;
+        }
+        .adm-icon-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 26px;
+          height: 26px;
+          border: none;
+          border-radius: var(--rounded-xs);
+          background: transparent;
+          color: var(--colors-muted-soft);
+          cursor: pointer;
+          transition: all var(--transition-fast);
+        }
+        .adm-icon-btn:hover:not(:disabled) {
+          background: var(--colors-surface-cream-strong);
+          color: var(--colors-ink);
+        }
+        .adm-icon-btn:disabled { opacity: 0.25; cursor: default; }
+        .adm-icon-btn.danger:hover:not(:disabled) {
+          background: color-mix(in srgb, var(--colors-error) 12%, transparent);
+          color: var(--colors-error);
+        }
+
+        /* ── Add-video bar ── */
+        .adm-add-video {
+          display: flex;
+          gap: 8px;
+          padding: 12px 16px;
+          border-top: 1px solid var(--colors-hairline);
+          background: var(--colors-surface-soft);
+          flex-shrink: 0;
+        }
+
+        /* ── Inspector ── */
+        .adm-inspector {
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+        .adm-section-label {
+          font-size: 11px;
+          font-weight: 700;
+          color: var(--colors-muted);
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+        }
+        .adm-node-thumb {
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          object-fit: cover;
+          border-radius: var(--rounded-md);
+          border: 1px solid var(--colors-hairline);
+          background: var(--colors-surface-card);
+        }
+        .adm-hint { font-size: 11.5px; color: var(--colors-muted-soft); }
+        .adm-hint.ok { color: var(--colors-success); }
+        .adm-divider {
+          border: none;
+          border-top: 1px solid var(--colors-hairline-soft);
+          margin: 4px 0;
+        }
+        .adm-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12.5px;
+          font-weight: 500;
+          padding: 5px 8px 5px 12px;
+          border-radius: var(--rounded-pill);
+          background: var(--colors-surface-card);
+          border: 1px solid var(--colors-hairline);
+          color: var(--colors-body-strong);
+        }
+        .adm-chip button {
+          display: inline-flex;
+          border: none;
+          background: none;
+          cursor: pointer;
+          color: var(--colors-muted-soft);
+          padding: 0;
+        }
+        .adm-chip button:hover { color: var(--colors-error); }
+
+        .adm-timeline-row {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+        }
+
+        .adm-empty {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          padding: 48px 24px;
+          color: var(--colors-muted);
+          text-align: center;
+          font-size: 13.5px;
+        }
+
+        /* ── Toast ── */
+        .adm-toast {
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          z-index: 100;
+          padding: 12px 18px;
+          border-radius: var(--rounded-md);
+          font-size: 13.5px;
+          font-weight: 600;
+          box-shadow: 0 8px 24px rgba(20, 20, 19, 0.18);
+          max-width: 380px;
+        }
+        .adm-toast.success {
+          background: var(--colors-success);
+          color: #fff;
+        }
+        .adm-toast.error {
+          background: var(--colors-error);
+          color: #fff;
+        }
+
+        @media (max-width: 1100px) {
+          .adm-grid { grid-template-columns: 210px minmax(320px, 1fr) 340px; }
+        }
+        @media (max-width: 900px) {
+          .adm-root { height: auto; }
+          .adm-grid { display: flex; flex-direction: column; }
+          .adm-col { border-right: none; border-bottom: 1px solid var(--colors-hairline); }
+          .adm-col-body { overflow-y: visible; }
+        }
+      `}</style>
+
+      {/* ─── Top bar ─── */}
+      <div className="adm-topbar">
+        <div className="adm-topbar-left">
+          <h2 className="adm-title">관리자 대시보드</h2>
+          <span className={`adm-dirty-badge ${isDirty ? 'dirty' : 'clean'}`}>
+            {isDirty ? '● 저장되지 않은 변경' : '모든 변경사항 저장됨'}
+          </span>
         </div>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button
-            onClick={handleAutoLayout}
+        <div className="adm-topbar-right">
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="btn btn-secondary"
             style={{ height: '36px', gap: '6px' }}
           >
-            ✨ 간격 자동 정렬
-          </button>
-          <Link href="/" className="btn btn-secondary" style={{ height: '36px' }}>
-            <Eye size={16} style={{ marginRight: '6px' }} /> 실제 사이트 보기
-          </Link>
+            <ExternalLink size={15} /> 사이트 미리보기
+          </a>
           <button
             onClick={handleSaveData}
-            disabled={isSaving}
+            disabled={isSaving || !isDirty}
             className="btn btn-primary"
             style={{ height: '36px', gap: '8px' }}
+            title="⌘S / Ctrl+S"
           >
-            <Save size={16} /> {isSaving ? '저장 중...' : '변경사항 저장'}
+            <Save size={16} /> {isSaving ? '저장 중...' : '저장'}
           </button>
+          <AuthButton />
         </div>
       </div>
 
-      {/* Editor Layout Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `240px ${flowWidth}px 1fr`,
-          flex: 1,
-          backgroundColor: 'var(--colors-canvas)',
-        }}
-      >
-        {/* 1. Left Column: Roadmaps list */}
-        <div
-          style={{
-            borderRight: '1px solid var(--colors-hairline)',
-            padding: '16px',
-            backgroundColor: 'var(--colors-canvas)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-            width: '240px',
-            overflow: 'hidden',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--colors-ink)' }}>로드맵 목록</h3>
+      {/* ─── 3-pane editor ─── */}
+      <div className="adm-grid">
+
+        {/* 1. Roadmap list */}
+        <div className="adm-col">
+          <div className="adm-col-header">
+            <h3 className="adm-col-title">로드맵</h3>
             <button
               onClick={handleAddRoadmap}
               className="btn btn-secondary"
-              style={{ padding: '0 8px', height: '28px', fontSize: '12px' }}
+              style={{ padding: '0 10px', height: '28px', fontSize: '12px', gap: '4px' }}
             >
-              <Plus size={14} /> 추가
+              <Plus size={13} /> 추가
             </button>
           </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', flex: 1 }}>
-            {data.roadmaps.map((r) => {
-              const isSelected = r.id === selectedRoadmapId;
-              return (
-                <div
-                  key={r.id}
-                  onClick={() => {
-                    setSelectedRoadmapId(r.id);
-                    setSelectedNodeId(null);
-                  }}
-                  style={{
-                    padding: '10px 12px',
-                    borderRadius: 'var(--rounded-md)',
-                    backgroundColor: isSelected ? 'var(--colors-surface-card)' : 'transparent',
-                    border: '1px solid ' + (isSelected ? 'var(--colors-hairline)' : 'transparent'),
-                    cursor: 'pointer',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    transition: 'all var(--transition-fast)',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '13px',
-                      fontWeight: isSelected ? 600 : 400,
-                      color: 'var(--colors-ink)',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      maxWidth: '160px',
-                    }}
-                  >
-                    {r.title}
-                  </span>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteRoadmap(r.id);
-                    }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      color: 'var(--colors-muted-soft)',
-                    }}
-                  >
-                    <Trash2 size={13} className="btn-text" />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 2. Middle Column: Live React Flow Canvas */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            borderRight: '1px solid var(--colors-hairline)',
-            overflow: 'hidden',
-            position: 'relative',
-          }}
-        >
-          {/* React Flow 패널 우측 리사이저 */}
-          <div
-            onMouseDown={startResizing}
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: '-4px',
-              width: '8px',
-              height: '100%',
-              cursor: 'col-resize',
-              zIndex: 50,
-              backgroundColor: isResizing ? 'var(--colors-primary)' : 'transparent',
-              transition: 'background-color 0.2s',
-            }}
-            title="드래그하여 에디터 너비 조절"
-          />
-          <div
-            style={{
-              padding: '12px 16px',
-              borderBottom: '1px solid var(--colors-hairline-soft)',
-              backgroundColor: 'var(--colors-surface-soft)',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--colors-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              순서 편집 (React Flow)
-            </span>
-            <button
-              onClick={handleAddNode}
-              disabled={!selectedRoadmapId}
-              className="btn btn-secondary"
-              style={{ height: '28px', fontSize: '12px', padding: '0 10px', flexShrink: 0 }}
-            >
-              <Plus size={14} style={{ marginRight: '4px' }} /> 추가
-            </button>
-          </div>
-
-          {selectedRoadmap ? (
-            <div style={{ flex: 1, position: 'relative', width: '100%', height: '100%' }}>
-              <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                nodeTypes={nodeTypes}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onNodeClick={(event, node) => setSelectedNodeId(node.id)}
-                onPaneClick={() => setSelectedNodeId(null)}
-                onNodeDragStop={onNodeDragStop}
-                onConnect={onConnect}
-                onEdgeUpdate={onEdgeUpdate}
-                snapToGrid={true}
-                snapGrid={[15, 15]}
-                fitView
-                fitViewOptions={{ padding: 0.2 }}
-              >
-                <Background color="var(--colors-hairline)" gap={16} size={1} />
-                <Controls />
-              </ReactFlow>
-            </div>
-          ) : (
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <p style={{ color: 'var(--colors-muted)' }}>로드맵을 선택하거나 추가해주세요.</p>
-            </div>
-          )}
-        </div>
-
-        {/* 3. Right Column: Configuration Forms (Tabbed Layout) */}
-        <div
-          style={{
-            position: 'relative',
-            backgroundColor: 'var(--colors-canvas)',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              height: '100%',
-              padding: '24px',
-              overflow: 'hidden',
-            }}
-          >
-          {selectedRoadmap ? (
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-              {/* Form switching tabs */}
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  borderBottom: '1px solid var(--colors-hairline-soft)', 
-                  marginBottom: '16px',
-                  gap: '4px'
+          <div className="adm-col-body">
+            {data.roadmaps.map((r) => (
+              <button
+                key={r.id}
+                className={`adm-roadmap-item${r.id === selectedRoadmapId ? ' active' : ''}`}
+                onClick={() => {
+                  setSelectedRoadmapId(r.id);
+                  setSelectedNodeId(null);
                 }}
               >
-                <button
-                  onClick={() => setSelectedNodeId(null)}
-                  style={{
-                    flex: 1,
-                    padding: '8px 12px',
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    border: 'none',
-                    borderBottom: !selectedNodeId ? '2px solid var(--colors-primary)' : '2px solid transparent',
-                    backgroundColor: 'transparent',
-                    color: !selectedNodeId ? 'var(--colors-ink)' : 'var(--colors-muted-soft)',
-                    cursor: 'pointer',
-                    transition: 'all var(--transition-fast)',
-                  }}
-                >
-                  로드맵 설정
-                </button>
-                <button
-                  disabled={!selectedNodeId}
-                  onClick={() => {}}
-                  style={{
-                    flex: 1,
-                    padding: '8px 12px',
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    border: 'none',
-                    borderBottom: selectedNodeId ? '2px solid var(--colors-primary)' : '2px solid transparent',
-                    backgroundColor: 'transparent',
-                    color: selectedNodeId ? 'var(--colors-ink)' : 'var(--colors-muted-soft)',
-                    opacity: !selectedNodeId ? 0.4 : 1,
-                    cursor: selectedNodeId ? 'pointer' : 'not-allowed',
-                    transition: 'all var(--transition-fast)',
-                  }}
-                >
-                  노드 설정 {selectedNodeId ? '✦' : ''}
-                </button>
+                <span className="adm-roadmap-item-title">
+                  {r.isActive === false && (
+                    <EyeOff size={13} style={{ color: 'var(--colors-muted-soft)', flexShrink: 0 }} />
+                  )}
+                  {r.title}
+                </span>
+                <span className="adm-roadmap-item-meta">
+                  {r.category} · 강의 {r.nodes.length}개{r.isActive === false ? ' · 비공개' : ''}
+                </span>
+              </button>
+            ))}
+            {data.roadmaps.length === 0 && (
+              <div className="adm-empty">
+                <p>아직 로드맵이 없어요.<br />위의 추가 버튼으로 시작하세요.</p>
               </div>
+            )}
+          </div>
+        </div>
 
-              {/* Scrollable Form Content Area */}
-              <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
-                {!selectedNodeId ? (
-                  /* Roadmap Settings */
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <div className="form-group">
-                      <label className="form-label">로드맵 타이틀</label>
-                      <input
-                        type="text"
-                        className="input-text"
-                        value={selectedRoadmap.title}
-                        onChange={(e) => handleUpdateRoadmapField('title', e.target.value)}
+        {/* 2. Lecture list (order = learning order) */}
+        <div className="adm-col">
+          <div className="adm-col-header">
+            <h3 className="adm-col-title">
+              강의 목록 {selectedRoadmap ? `(${selectedRoadmap.nodes.length}개)` : ''}
+            </h3>
+            <span className="adm-hint">위에서 아래 순서가 곧 학습 순서예요</span>
+          </div>
+          <div className="adm-col-body">
+            {selectedRoadmap ? (
+              <>
+                {selectedRoadmap.nodes.map((node, idx) => (
+                  <div
+                    key={node.id}
+                    className={`adm-lecture-row${node.id === selectedNodeId ? ' active' : ''}`}
+                    onClick={() => setSelectedNodeId(node.id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') setSelectedNodeId(node.id);
+                    }}
+                  >
+                    <span className="adm-lecture-num">{idx + 1}</span>
+                    {node.youtubeId ? (
+                      <img
+                        className="adm-lecture-thumb"
+                        src={`https://i.ytimg.com/vi/${node.youtubeId}/mqdefault.jpg`}
+                        alt=""
+                        loading="lazy"
                       />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">간단 설명</label>
-                      <textarea
-                        className="input-text"
-                        style={{ height: '140px', padding: '12px 14px', resize: 'vertical' }}
-                        value={selectedRoadmap.description}
-                        onChange={(e) => handleUpdateRoadmapField('description', e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">카테고리</label>
-                      <select
-                        className="input-text"
-                        style={{ padding: '0 8px' }}
-                        value={selectedRoadmap.category}
-                        onChange={(e) => handleUpdateRoadmapField('category', e.target.value)}
+                    ) : (
+                      <div className="adm-lecture-thumb" />
+                    )}
+                    <div className="adm-lecture-info">
+                      <span className="adm-lecture-title">{node.title || '(제목 없음)'}</span>
+                      <span
+                        className="adm-lecture-diff"
+                        style={{ color: difficultyConfig[node.difficulty].color }}
                       >
-                        {data.categories.map((cat) => (
-                          <option key={cat} value={cat}>
-                            {cat}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="form-group" style={{ display: 'flex', alignItems: 'center', paddingTop: '8px' }}>
-                      <label style={{ fontSize: '13px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                        <input
-                          type="checkbox"
-                          checked={selectedRoadmap.isActive !== false}
-                          onChange={(e) => handleUpdateRoadmapField('isActive', e.target.checked)}
-                          style={{ width: '16px', height: '16px', accentColor: 'var(--colors-primary)' }}
+                        <span
+                          style={{
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            backgroundColor: difficultyConfig[node.difficulty].color,
+                          }}
                         />
-                        노출 활성화
-                      </label>
+                        {difficultyConfig[node.difficulty].label}
+                      </span>
+                    </div>
+                    <div className="adm-row-actions" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        className="adm-icon-btn"
+                        disabled={idx === 0}
+                        onClick={() => handleMoveNode(node.id, 'up')}
+                        title="위로 이동"
+                      >
+                        <ChevronUp size={15} />
+                      </button>
+                      <button
+                        className="adm-icon-btn"
+                        disabled={idx === selectedRoadmap.nodes.length - 1}
+                        onClick={() => handleMoveNode(node.id, 'down')}
+                        title="아래로 이동"
+                      >
+                        <ChevronDown size={15} />
+                      </button>
+                      <button
+                        className="adm-icon-btn danger"
+                        onClick={() => handleDeleteNode(node.id)}
+                        title="강의 삭제"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
                   </div>
-                ) : (
-                  /* Selected Node Settings */
-                  selectedNode && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontSize: '12px', color: 'var(--colors-muted)', fontWeight: 500 }}>
-                          ID: {selectedNode.id}
-                        </span>
-                        <button
-                          onClick={() => handleDeleteNode(selectedNode.id)}
-                          className="btn-text"
-                          style={{ color: 'var(--colors-error)', fontSize: '12px', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                        >
-                          <Trash2 size={13} /> 노드 삭제
-                        </button>
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">노드 제목</label>
-                        <input
-                          type="text"
-                          className="input-text"
-                          value={selectedNode.title}
-                          onChange={(e) => handleUpdateNodeField(selectedNode.id, 'title', e.target.value)}
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">유튜브 링크</label>
-                        <input
-                          type="text"
-                          className="input-text"
-                          placeholder="https://www.youtube.com/..."
-                          value={selectedNode.youtubeUrl}
-                          onChange={(e) => handleUpdateNodeField(selectedNode.id, 'youtubeUrl', e.target.value)}
-                        />
-                        {selectedNode.youtubeId && (
-                          <div style={{ fontSize: '11px', color: 'var(--colors-success)', marginTop: '4px' }}>
-                            ID 자동 추출: {selectedNode.youtubeId}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">강의 요약</label>
-                        <textarea
-                          className="input-text"
-                          style={{ height: '180px', padding: '12px 14px', resize: 'vertical' }}
-                          value={selectedNode.description || ''}
-                          onChange={(e) => handleUpdateNodeField(selectedNode.id, 'description', e.target.value)}
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">선행 학습 노드 (Parent)</label>
-                        <select
-                          className="input-text"
-                          style={{ padding: '0 8px' }}
-                          value={selectedNode.parentId || ''}
-                          onChange={(e) => handleUpdateNodeField(selectedNode.id, 'parentId', e.target.value || null)}
-                        >
-                          <option value="">(선행 학습 없음)</option>
-                          {selectedRoadmap.nodes
-                            .filter((n) => n.id !== selectedNode.id)
-                            .map((n) => (
-                              <option key={n.id} value={n.id}>
-                                {n.title}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">난이도</label>
-                        <select
-                          className="input-text"
-                          style={{ padding: '0 8px' }}
-                          value={selectedNode.difficulty}
-                          onChange={(e) => handleUpdateNodeField(selectedNode.id, 'difficulty', e.target.value)}
-                        >
-                          <option value="BEGINNER">초급</option>
-                          <option value="INTERMEDIATE">중급</option>
-                          <option value="ADVANCED">고급</option>
-                        </select>
-                      </div>
-
-                      {/* Timeline Items Editor */}
-                      <div style={{ marginTop: '16px', borderTop: '1px solid var(--colors-hairline-soft)', paddingTop: '16px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                          <label className="form-label" style={{ margin: 0 }}>강의 타임라인 (분량 요약)</label>
-                          <div style={{ display: 'flex', gap: '8px' }}>
-                            <button
-                              onClick={async () => {
-                                if (!selectedNode.youtubeId) {
-                                  alert('유튜브 영상 ID 혹은 링크를 먼저 정확하게 입력해주세요.');
-                                  return;
-                                }
-                                try {
-                                  const res = await fetch(`/api/admin/youtube-timeline?videoId=${selectedNode.youtubeId}`);
-                                  if (!res.ok) throw new Error('타임라인 가져오기 실패');
-                                  const fetchedTimeline = await res.json();
-                                  if (fetchedTimeline.error) {
-                                    alert(fetchedTimeline.error);
-                                    return;
-                                  }
-                                  if (fetchedTimeline.length === 0) {
-                                    alert('설명란에서 00:00과 같은 타임라인 형식을 찾지 못했습니다.');
-                                    return;
-                                  }
-                                  handleUpdateNodeField(selectedNode.id, 'timeline', fetchedTimeline);
-                                } catch (e) {
-                                  alert('타임라인을 가져오는 도중 오류가 발생했습니다.');
-                                }
-                              }}
-                              className="btn-text"
-                              style={{ color: 'var(--colors-accent-teal)', fontSize: '12px', border: 'none', background: 'none', cursor: 'pointer', fontWeight: 600 }}
-                            >
-                              🔗 불러오기
-                            </button>
-                            <button
-                              onClick={() => {
-                                const currentTimeline = selectedNode.timeline || [];
-                                const updatedTimeline = [...currentTimeline, { time: '00:00', title: '새 챕터' }];
-                                handleUpdateNodeField(selectedNode.id, 'timeline', updatedTimeline);
-                              }}
-                              className="btn-text"
-                              style={{ color: 'var(--colors-primary)', fontSize: '12px', border: 'none', background: 'none', cursor: 'pointer', fontWeight: 600 }}
-                            >
-                              + 추가
-                            </button>
-                          </div>
-                        </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                          {(selectedNode.timeline || []).map((item, idx) => (
-                            <div key={idx} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                              <input
-                                type="text"
-                                className="input-text"
-                                style={{ width: '90px', padding: '8px 12px', textAlign: 'center', fontSize: '13px', height: '36px' }}
-                                value={item.time}
-                                placeholder="00:00"
-                                onChange={(e) => {
-                                  const updated = (selectedNode.timeline || []).map((t, i) => 
-                                    i === idx ? { ...t, time: e.target.value } : t
-                                  );
-                                  handleUpdateNodeField(selectedNode.id, 'timeline', updated);
-                                }}
-                              />
-                              <input
-                                type="text"
-                                className="input-text"
-                                style={{ flex: 1, padding: '8px 12px', fontSize: '13px', height: '36px' }}
-                                value={item.title}
-                                placeholder="챕터 제목"
-                                onChange={(e) => {
-                                  const updated = (selectedNode.timeline || []).map((t, i) => 
-                                    i === idx ? { ...t, title: e.target.value } : t
-                                  );
-                                  handleUpdateNodeField(selectedNode.id, 'timeline', updated);
-                                }}
-                              />
-                              <button
-                                onClick={() => {
-                                  const updated = (selectedNode.timeline || []).filter((_, i) => i !== idx);
-                                  handleUpdateNodeField(selectedNode.id, 'timeline', updated);
-                                }}
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--colors-error)', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                title="챕터 삭제"
-                              >
-                                <Trash2 size={15} />
-                              </button>
-                            </div>
-                          ))}
-
-                          {(selectedNode.timeline || []).length === 0 && (
-                            <span style={{ fontSize: '12px', color: 'var(--colors-muted-soft)', textAlign: 'center', padding: '8px 0' }}>
-                              등록된 타임라인이 없습니다. 우측 상단 '추가' 버튼을 눌러보세요.
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )
+                ))}
+                {selectedRoadmap.nodes.length === 0 && (
+                  <div className="adm-empty">
+                    <ListVideo size={32} style={{ opacity: 0.35 }} />
+                    <p>
+                      아직 강의가 없어요.
+                      <br />
+                      아래에 유튜브 링크를 붙여넣으면 제목까지 자동으로 채워져요.
+                    </p>
+                  </div>
                 )}
+              </>
+            ) : (
+              <div className="adm-empty">
+                <p>왼쪽에서 로드맵을 선택해주세요.</p>
               </div>
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '48px 0' }}>
-              <p style={{ color: 'var(--colors-muted)' }}>로드맵을 만들어 관리를 시작하세요.</p>
+            )}
+          </div>
+
+          {selectedRoadmap && (
+            <div className="adm-add-video">
+              <input
+                type="text"
+                className="input-text"
+                style={{ flex: 1, height: '38px', fontSize: '13px' }}
+                placeholder="유튜브 링크를 붙여넣고 Enter — 제목 자동 입력"
+                value={newVideoUrl}
+                onChange={(e) => setNewVideoUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleAddVideo();
+                }}
+                disabled={isAddingVideo}
+              />
+              <button
+                onClick={handleAddVideo}
+                disabled={isAddingVideo || !newVideoUrl.trim()}
+                className="btn btn-primary"
+                style={{ height: '38px', gap: '6px', flexShrink: 0 }}
+              >
+                <Plus size={15} /> {isAddingVideo ? '추가 중...' : '강의 추가'}
+              </button>
             </div>
           )}
+        </div>
+
+        {/* 3. Inspector */}
+        <div className="adm-col">
+          <div className="adm-col-header">
+            <h3 className="adm-col-title">{selectedNode ? '강의 설정' : '로드맵 설정'}</h3>
+            {selectedNode && (
+              <button
+                className="btn-text"
+                style={{
+                  border: 'none',
+                  background: 'none',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  color: 'var(--colors-muted)',
+                }}
+                onClick={() => setSelectedNodeId(null)}
+              >
+                로드맵 설정으로 ←
+              </button>
+            )}
+          </div>
+          <div className="adm-col-body">
+            {selectedNode && selectedRoadmap ? (
+              /* ── Lecture form ── */
+              <div className="adm-inspector">
+                {selectedNode.youtubeId && (
+                  <img
+                    className="adm-node-thumb"
+                    src={`https://i.ytimg.com/vi/${selectedNode.youtubeId}/hqdefault.jpg`}
+                    alt="영상 섬네일"
+                  />
+                )}
+
+                <div className="form-group">
+                  <label className="form-label">강의 제목</label>
+                  <input
+                    type="text"
+                    className="input-text"
+                    value={selectedNode.title}
+                    onChange={(e) => handleUpdateNodeField(selectedNode.id, 'title', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">유튜브 링크</label>
+                  <input
+                    type="text"
+                    className="input-text"
+                    placeholder="https://www.youtube.com/..."
+                    value={selectedNode.youtubeUrl}
+                    onChange={(e) => handleUpdateNodeField(selectedNode.id, 'youtubeUrl', e.target.value)}
+                  />
+                  {selectedNode.youtubeId ? (
+                    <div className="adm-hint ok" style={{ marginTop: '4px' }}>
+                      영상 ID 인식됨: {selectedNode.youtubeId}
+                    </div>
+                  ) : (
+                    <div className="adm-hint" style={{ marginTop: '4px', color: 'var(--colors-error)' }}>
+                      영상 ID를 인식하지 못했습니다. 링크를 확인해주세요.
+                    </div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">난이도</label>
+                  <select
+                    className="input-text"
+                    style={{ padding: '0 8px' }}
+                    value={selectedNode.difficulty}
+                    onChange={(e) =>
+                      handleUpdateNodeField(
+                        selectedNode.id,
+                        'difficulty',
+                        e.target.value as Node['difficulty']
+                      )
+                    }
+                  >
+                    <option value="BEGINNER">초급</option>
+                    <option value="INTERMEDIATE">중급</option>
+                    <option value="ADVANCED">고급</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">강의 요약</label>
+                  <textarea
+                    className="input-text"
+                    style={{ height: '120px', padding: '12px 14px', resize: 'vertical' }}
+                    value={selectedNode.description || ''}
+                    onChange={(e) => handleUpdateNodeField(selectedNode.id, 'description', e.target.value)}
+                  />
+                </div>
+
+                <hr className="adm-divider" />
+
+                {/* Timeline editor */}
+                <div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    <span className="adm-section-label">타임라인</span>
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                      <button
+                        onClick={handleFetchTimeline}
+                        className="btn btn-secondary"
+                        style={{ height: '28px', fontSize: '12px', padding: '0 10px', gap: '4px' }}
+                        title="영상 설명란에서 00:00 형식 챕터를 자동으로 가져옵니다"
+                      >
+                        <Wand2 size={13} /> 자동 불러오기
+                      </button>
+                      <button
+                        onClick={() => {
+                          const updated = [...(selectedNode.timeline || []), { time: '00:00', title: '새 챕터' }];
+                          handleUpdateNodeField(selectedNode.id, 'timeline', updated);
+                        }}
+                        className="btn btn-secondary"
+                        style={{ height: '28px', fontSize: '12px', padding: '0 10px', gap: '4px' }}
+                      >
+                        <Plus size={13} /> 추가
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {(selectedNode.timeline || []).map((item, idx) => (
+                      <div key={idx} className="adm-timeline-row">
+                        <input
+                          type="text"
+                          className="input-text"
+                          style={{ width: '80px', padding: '8px 10px', textAlign: 'center', fontSize: '13px', height: '34px' }}
+                          value={item.time}
+                          placeholder="00:00"
+                          onChange={(e) => {
+                            const updated = (selectedNode.timeline || []).map((t, i) =>
+                              i === idx ? { ...t, time: e.target.value } : t
+                            );
+                            handleUpdateNodeField(selectedNode.id, 'timeline', updated);
+                          }}
+                        />
+                        <input
+                          type="text"
+                          className="input-text"
+                          style={{ flex: 1, padding: '8px 10px', fontSize: '13px', height: '34px' }}
+                          value={item.title}
+                          placeholder="챕터 제목"
+                          onChange={(e) => {
+                            const updated = (selectedNode.timeline || []).map((t, i) =>
+                              i === idx ? { ...t, title: e.target.value } : t
+                            );
+                            handleUpdateNodeField(selectedNode.id, 'timeline', updated);
+                          }}
+                        />
+                        <button
+                          className="adm-icon-btn danger"
+                          onClick={() => {
+                            const updated = (selectedNode.timeline || []).filter((_, i) => i !== idx);
+                            handleUpdateNodeField(selectedNode.id, 'timeline', updated);
+                          }}
+                          title="챕터 삭제"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                    {(selectedNode.timeline || []).length === 0 && (
+                      <span className="adm-hint" style={{ textAlign: 'center', padding: '6px 0' }}>
+                        타임라인이 비어 있어요. 자동 불러오기를 먼저 시도해보세요 — 사용자가 챕터를 눌러 해당 시점부터 볼 수 있게 됩니다.
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <hr className="adm-divider" />
+
+                <button
+                  onClick={() => handleDeleteNode(selectedNode.id)}
+                  className="btn"
+                  style={{
+                    border: '1px solid color-mix(in srgb, var(--colors-error) 40%, transparent)',
+                    color: 'var(--colors-error)',
+                    background: 'transparent',
+                    height: '36px',
+                    gap: '6px',
+                  }}
+                >
+                  <Trash2 size={14} /> 이 강의 삭제
+                </button>
+              </div>
+            ) : selectedRoadmap ? (
+              /* ── Roadmap form ── */
+              <div className="adm-inspector">
+                <div className="form-group">
+                  <label className="form-label">로드맵 타이틀</label>
+                  <input
+                    type="text"
+                    className="input-text"
+                    value={selectedRoadmap.title}
+                    onChange={(e) => handleUpdateRoadmapField('title', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">간단 설명</label>
+                  <textarea
+                    className="input-text"
+                    style={{ height: '140px', padding: '12px 14px', resize: 'vertical' }}
+                    value={selectedRoadmap.description}
+                    onChange={(e) => handleUpdateRoadmapField('description', e.target.value)}
+                  />
+                  <div className="adm-hint" style={{ marginTop: '4px' }}>
+                    {'`도서 구매 : https://...` 나 `오픈카톡방 : https://...` 형식의 줄은 버튼으로 표시돼요.'}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">카테고리</label>
+                  <select
+                    className="input-text"
+                    style={{ padding: '0 8px' }}
+                    value={selectedRoadmap.category}
+                    onChange={(e) => handleUpdateRoadmapField('category', e.target.value)}
+                  >
+                    {data.categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <label
+                  style={{
+                    fontSize: '13.5px',
+                    fontWeight: 500,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    cursor: 'pointer',
+                    color: 'var(--colors-body-strong)',
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedRoadmap.isActive !== false}
+                    onChange={(e) => handleUpdateRoadmapField('isActive', e.target.checked)}
+                    style={{ width: '16px', height: '16px', accentColor: 'var(--colors-primary)' }}
+                  />
+                  사이트에 공개
+                </label>
+
+                <a
+                  href={`/roadmaps/${selectedRoadmap.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-secondary"
+                  style={{ height: '36px', gap: '6px', justifyContent: 'center' }}
+                >
+                  <ExternalLink size={14} /> 이 로드맵 미리보기
+                </a>
+
+                <hr className="adm-divider" />
+
+                {/* Category management */}
+                <div>
+                  <span className="adm-section-label">카테고리 관리</span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', margin: '10px 0' }}>
+                    {data.categories.map((cat) => (
+                      <span key={cat} className="adm-chip">
+                        {cat}
+                        <button onClick={() => handleDeleteCategory(cat)} title={`'${cat}' 삭제`}>
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input
+                      type="text"
+                      className="input-text"
+                      style={{ flex: 1, height: '34px', fontSize: '13px' }}
+                      placeholder="새 카테고리 이름"
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleAddCategory();
+                      }}
+                    />
+                    <button
+                      onClick={handleAddCategory}
+                      disabled={!newCategory.trim()}
+                      className="btn btn-secondary"
+                      style={{ height: '34px', fontSize: '12px', padding: '0 12px' }}
+                    >
+                      추가
+                    </button>
+                  </div>
+                </div>
+
+                <hr className="adm-divider" />
+
+                <button
+                  onClick={() => handleDeleteRoadmap(selectedRoadmap.id)}
+                  className="btn"
+                  style={{
+                    border: '1px solid color-mix(in srgb, var(--colors-error) 40%, transparent)',
+                    color: 'var(--colors-error)',
+                    background: 'transparent',
+                    height: '36px',
+                    gap: '6px',
+                  }}
+                >
+                  <Trash2 size={14} /> 이 로드맵 삭제
+                </button>
+              </div>
+            ) : (
+              <div className="adm-empty">
+                <p>로드맵을 만들어 관리를 시작하세요.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* ─── Toast ─── */}
+      {message && (
+        <div className={`adm-toast ${message.isError ? 'error' : 'success'}`}>{message.text}</div>
+      )}
     </div>
   );
 }

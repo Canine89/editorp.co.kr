@@ -58,6 +58,42 @@
   /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
+
+  /* Theme-dependent accents */
+  --hero-orb: rgba(244, 219, 208, 0.5);
+  --marquee-opacity: 0.45;
+
+  color-scheme: light;
+}
+
+/* Warm dark theme — same coral accent, dark warm surfaces from DESIGN.md */
+html[data-theme='dark'] {
+  --colors-canvas: #161512;
+  --colors-surface-soft: #1d1b18;
+  --colors-surface-card: #252320;
+  --colors-surface-cream-strong: #2e2b26;
+  --colors-surface-dark: #100f0d;
+  --colors-surface-dark-elevated: #252320;
+  --colors-surface-dark-soft: #1a1916;
+  --colors-hairline: #312e29;
+  --colors-hairline-soft: #262420;
+
+  --colors-primary: #d98a6d;
+  --colors-primary-active: #e6a288;
+  --colors-primary-disabled: #3a352f;
+
+  --colors-ink: #faf9f5;
+  --colors-body-strong: #e8e5de;
+  --colors-body: #cfccc4;
+  --colors-muted: #a09d96;
+  --colors-muted-soft: #807d75;
+  --colors-on-dark: #faf9f5;
+  --colors-on-dark-soft: #a09d96;
+
+  --hero-orb: rgba(204, 120, 92, 0.14);
+  --marquee-opacity: 0.3;
+
+  color-scheme: dark;
 }
 
 /* CSS Reset */
@@ -69,6 +105,16 @@
 
 button, input, select, textarea {
   font-family: inherit;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid var(--colors-primary);
+  outline-offset: 2px;
 }
 
 
@@ -383,12 +429,22 @@ a {
   color: var(--colors-ink);
 }
 
+.header-mobile-actions {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .menu-toggle-btn {
     display: block;
   }
   .main-nav-desktop {
     display: none;
+  }
+  .header-mobile-actions {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 4px;
   }
 }
 

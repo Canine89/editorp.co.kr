@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { BookOpen, MessageCircle, Link2 } from 'lucide-react';
 
 interface RoadmapDescriptionProps {
   description: string;
@@ -116,22 +117,23 @@ export function RoadmapDescription({ description, isCompact = false }: RoadmapDe
               boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
             };
 
-            let icon = '🔗';
-            
+            const iconSize = isCompact ? 13 : 15;
+            let icon = <Link2 size={iconSize} />;
+
             if (link.rawType === 'book') {
               btnStyle = {
                 ...btnStyle,
                 background: 'linear-gradient(135deg, var(--colors-primary) 0%, #e8987d 100%)',
                 color: '#ffffff',
               };
-              icon = '📖';
+              icon = <BookOpen size={iconSize} />;
             } else if (link.rawType === 'kakao') {
               btnStyle = {
                 ...btnStyle,
                 backgroundColor: '#FEE500',
                 color: '#191919',
               };
-              icon = '💬';
+              icon = <MessageCircle size={iconSize} />;
             } else {
               btnStyle = {
                 ...btnStyle,
@@ -150,7 +152,7 @@ export function RoadmapDescription({ description, isCompact = false }: RoadmapDe
                 style={btnStyle}
                 className="roadmap-link-btn"
               >
-                <span style={{ fontSize: isCompact ? '13px' : '15px' }}>{icon}</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center' }}>{icon}</span>
                 <span>{link.label}</span>
               </a>
             );

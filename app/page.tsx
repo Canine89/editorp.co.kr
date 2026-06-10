@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
+import { ArrowRight, CirclePlay, MessageCircle } from 'lucide-react';
 import { RoadmapDescription } from '@/components/RoadmapDescription';
 
 
@@ -54,6 +55,7 @@ export default async function HomePage({
   const { cat } = await searchParams;
   const data = getRoadmapData();
   const activeRoadmaps = data.roadmaps.filter((r) => r.isActive !== false);
+  const totalLectures = activeRoadmaps.reduce((sum, r) => sum + (r.nodes?.length || 0), 0);
 
   // Filter by category if selected
   const filteredRoadmaps = cat
@@ -101,6 +103,7 @@ export default async function HomePage({
           }
         }
         .roadmap-card {
+          position: relative;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -117,6 +120,28 @@ export default async function HomePage({
           border-color: var(--colors-primary);
           box-shadow: 0 12px 36px rgba(204, 120, 92, 0.08);
         }
+        /* Stretched link: the whole card is clickable while inner buttons stay above it */
+        .card-stretched-link::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          border-radius: var(--rounded-lg);
+        }
+        .roadmap-card .roadmap-link-btn {
+          position: relative;
+          z-index: 2;
+        }
+        .card-thumb {
+          width: calc(100% + 48px);
+          margin: -24px -24px 16px -24px;
+          aspect-ratio: 16 / 9;
+          object-fit: cover;
+          border-radius: var(--rounded-lg) var(--rounded-lg) 0 0;
+          border-bottom: 1px solid var(--colors-hairline-soft);
+          background-color: var(--colors-surface-soft);
+          display: block;
+        }
         .category-tab {
           padding: 8px 18px;
           border-radius: var(--rounded-pill);
@@ -125,8 +150,40 @@ export default async function HomePage({
           text-decoration: none;
           transition: all var(--transition-fast);
           border: 1px solid transparent;
+          color: var(--colors-muted);
         }
-        
+        .category-tab:hover:not(.active) {
+          color: var(--colors-ink);
+          background-color: var(--colors-surface-soft);
+        }
+        .category-tab.active {
+          color: var(--colors-primary);
+          font-weight: 600;
+          background-color: color-mix(in srgb, var(--colors-primary) 10%, transparent);
+          border-color: color-mix(in srgb, var(--colors-primary) 35%, transparent);
+        }
+
+        /* Secondary hero CTAs: quiet buttons, brand color only in the icon */
+        .btn-ghost {
+          height: 48px;
+          padding: 0 24px;
+          font-size: 15px;
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background-color: var(--colors-canvas);
+          color: var(--colors-body-strong);
+          border: 1px solid var(--colors-hairline);
+          border-radius: var(--rounded-md);
+          transition: all var(--transition-fast);
+          box-shadow: 0 2px 8px rgba(20, 20, 19, 0.04);
+        }
+        .btn-ghost:hover {
+          border-color: var(--colors-primary);
+          transform: translateY(-1px);
+        }
+
         /* Thumbnail Showcase Styles */
         .thumbnail-showcase-container {
           position: absolute;
@@ -139,10 +196,33 @@ export default async function HomePage({
           display: flex;
           flex-direction: column;
           gap: 16px;
-          opacity: 0.16;
+          opacity: var(--marquee-opacity);
           pointer-events: none;
           z-index: 0;
           justify-content: center;
+        }
+        /* Cream scrim: keeps the center text zone readable while thumbnails stay vivid at the edges */
+        .hero-scrim {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+          background: radial-gradient(
+            ellipse 62% 58% at 50% 42%,
+            var(--colors-canvas) 38%,
+            color-mix(in srgb, var(--colors-canvas) 72%, transparent) 62%,
+            transparent 82%
+          );
+        }
+        @media (max-width: 768px) {
+          .hero-scrim {
+            background: radial-gradient(
+              ellipse 135% 55% at 50% 42%,
+              var(--colors-canvas) 42%,
+              color-mix(in srgb, var(--colors-canvas) 72%, transparent) 66%,
+              transparent 85%
+            );
+          }
         }
         .marquee-container {
           overflow: hidden;
@@ -197,54 +277,6 @@ export default async function HomePage({
           0% { transform: translateX(-50%); }
           100% { transform: translateX(0); }
         }
-
-        /* Stats Section */
-        .stats-badge-container {
-          display: flex;
-          gap: 20px;
-          justify-content: center;
-          margin-top: 36px;
-          margin-bottom: 8px;
-          flex-wrap: wrap;
-        }
-        .stats-badge {
-          background-color: var(--colors-surface-soft);
-          border: 1px solid var(--colors-hairline-soft);
-          padding: 12px 24px;
-          border-radius: var(--rounded-lg);
-          text-align: center;
-          min-width: 160px;
-          transition: all var(--transition-normal);
-        }
-        .stats-badge:hover {
-          border-color: var(--colors-primary);
-          background-color: var(--colors-canvas);
-          transform: translateY(-2px);
-        }
-        .stats-num {
-          font-size: 26px;
-          font-weight: 700;
-          color: var(--colors-primary);
-          font-family: var(--font-sans);
-        }
-        .stats-label {
-          font-size: 12.5px;
-          color: var(--colors-muted);
-          margin-top: 4px;
-          font-weight: 500;
-        }
-        .hero-readable-text {
-          text-shadow:
-            0 2px 8px rgba(250, 247, 242, 0.88),
-            0 12px 26px rgba(20, 20, 19, 0.24),
-            0 20px 44px rgba(20, 20, 19, 0.16);
-        }
-        .hero-body-copy {
-          text-shadow:
-            0 2px 6px rgba(250, 247, 242, 0.92),
-            0 8px 18px rgba(20, 20, 19, 0.22),
-            0 16px 32px rgba(20, 20, 19, 0.14);
-        }
       `}</style>
 
       {/* Centered Premium Hero Section with dot grid and central glow */}
@@ -278,6 +310,9 @@ export default async function HomePage({
           </div>
         )}
 
+        {/* Readability scrim over the marquee */}
+        <div className="hero-scrim" />
+
         {/* Central warm light orb background */}
         <div
           style={{
@@ -288,7 +323,7 @@ export default async function HomePage({
             width: '800px',
             height: '500px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(244, 219, 208, 0.5) 0%, rgba(244, 219, 208, 0) 70%)',
+            background: `radial-gradient(circle, var(--hero-orb) 0%, transparent 70%)`,
             filter: 'blur(90px)',
             zIndex: 1,
             pointerEvents: 'none',
@@ -300,10 +335,10 @@ export default async function HomePage({
             className="badge badge-coral"
             style={{ marginBottom: '24px', fontWeight: 600, letterSpacing: '0.02em', boxShadow: '0 2px 8px rgba(204, 120, 92, 0.08)' }}
           >
-            ✦ 220여 편의 무료 강의를 순서대로 엮은 친절한 배움터
+            ✦ {totalLectures}편의 무료 강의를 순서대로 엮은 친절한 배움터
           </span>
 
-          <h1 className="serif-display hero-title hero-readable-text" style={{ maxWidth: '900px', margin: '0 auto 20px auto' }}>
+          <h1 className="serif-display hero-title" style={{ maxWidth: '900px', margin: '0 auto 20px auto' }}>
             어떤 것부터 공부할지 모르겠다면? <br />
             <span style={{ position: 'relative', color: 'var(--colors-primary)', display: 'inline-block' }}>
               저와 함께 로드맵으로 시작해보세요!
@@ -332,65 +367,37 @@ export default async function HomePage({
               marginRight: 'auto',
             }}
           >
-            <span className="hero-body-copy">
-              무료 유튜브 강의를 입문자의 눈높이에 맞춰 난이도와 흐름대로 정리한 로드맵으로 누구나 쉽게
-            </span>
+            무료 유튜브 강의를 입문자의 눈높이에 맞춰 난이도와 흐름대로 정리한 로드맵으로 누구나 쉽게
           </p>
 
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
               href="#roadmap-list"
               className="btn btn-primary"
-              style={{ height: '48px', padding: '0 32px', fontSize: '15px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 15px rgba(204, 120, 92, 0.15)' }}
+              style={{ height: '48px', padding: '0 32px', fontSize: '15px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 15px rgba(204, 120, 92, 0.25)' }}
             >
-              무료 로드맵 시작하기 ➔
+              무료 로드맵 시작하기 <ArrowRight size={17} />
             </a>
             <a
               href="https://www.youtube.com/@editorp89"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn"
-              style={{
-                height: '48px',
-                padding: '0 28px',
-                fontSize: '15px',
-                fontWeight: 800,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                backgroundColor: '#FF0033',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
-                boxShadow: '0 5px 16px rgba(255, 0, 51, 0.22)',
-              }}
+              className="btn-ghost"
             >
-              유튜브 채널 이동하기
+              <CirclePlay size={18} color="#FF0033" /> 유튜브 채널
             </a>
             <a
               href="https://open.kakao.com/o/ggK7EAJh"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn"
-              style={{
-                height: '48px',
-                padding: '0 28px',
-                fontSize: '15px',
-                fontWeight: 800,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                backgroundColor: '#FEE500',
-                color: '#191919',
-                border: '1px solid rgba(25, 25, 25, 0.12)',
-                boxShadow: '0 5px 16px rgba(25, 25, 25, 0.14)',
-              }}
+              className="btn-ghost"
             >
-              오픈카톡방 이동하기
+              <MessageCircle size={17} color="#E6CF00" fill="#FEE500" /> 오픈카톡방
             </a>
           </div>
 
           {/* Integrated Centered Image with smooth drop shadow glow */}
-          <div style={{ position: 'relative', width: '100%', maxWidth: '520px', marginTop: '40px', marginBottom: '10px' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '440px', marginTop: '32px', marginBottom: '10px' }}>
             <div
               style={{
                 position: 'absolute',
@@ -437,13 +444,8 @@ export default async function HomePage({
             }}
           >
             <Link
-              href="/"
-              className="category-tab"
-              style={{
-                backgroundColor: !cat ? 'var(--colors-surface-card)' : 'transparent',
-                color: !cat ? 'var(--colors-ink)' : 'var(--colors-muted)',
-                borderColor: !cat ? 'var(--colors-hairline)' : 'transparent',
-              }}
+              href="/#roadmap-list"
+              className={`category-tab${!cat ? ' active' : ''}`}
             >
               전체 로드맵
             </Link>
@@ -452,13 +454,8 @@ export default async function HomePage({
               return (
                 <Link
                   key={category}
-                  href={`/?cat=${encodeURIComponent(category)}`}
-                  className="category-tab"
-                  style={{
-                    backgroundColor: isActive ? 'var(--colors-surface-card)' : 'transparent',
-                    color: isActive ? 'var(--colors-ink)' : 'var(--colors-muted)',
-                    borderColor: isActive ? 'var(--colors-hairline)' : 'transparent',
-                  }}
+                  href={`/?cat=${encodeURIComponent(category)}#roadmap-list`}
+                  className={`category-tab${isActive ? ' active' : ''}`}
                 >
                   {category}
                 </Link>
@@ -469,7 +466,14 @@ export default async function HomePage({
           {/* Roadmaps Grid */}
           {filteredRoadmaps.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '64px 0', border: '1px dashed var(--colors-hairline)', borderRadius: 'var(--rounded-lg)' }}>
-              <p style={{ color: 'var(--colors-muted)', margin: 0 }}>등록된 로드맵이 없습니다.</p>
+              <p style={{ color: 'var(--colors-muted)', margin: '0 0 16px 0' }}>
+                {cat ? `'${cat}' 카테고리에 등록된 로드맵이 아직 없습니다.` : '등록된 로드맵이 없습니다.'}
+              </p>
+              {cat && (
+                <Link href="/#roadmap-list" className="btn" style={{ border: '1px solid var(--colors-hairline)', fontSize: '13px' }}>
+                  전체 로드맵 보기
+                </Link>
+              )}
             </div>
           ) : (
             <div
@@ -479,8 +483,27 @@ export default async function HomePage({
                 gap: '24px',
               }}
             >
-              {filteredRoadmaps.map((roadmap) => (
+              {filteredRoadmaps.map((roadmap) => {
+                const difficultyCounts = { BEGINNER: 0, INTERMEDIATE: 0, ADVANCED: 0 };
+                roadmap.nodes?.forEach((n) => {
+                  difficultyCounts[n.difficulty] += 1;
+                });
+                const difficultyMeta = [
+                  { key: 'BEGINNER' as const, label: '초급', color: '#5db8a6' },
+                  { key: 'INTERMEDIATE' as const, label: '중급', color: '#e8a55a' },
+                  { key: 'ADVANCED' as const, label: '고급', color: '#c64545' },
+                ].filter((d) => difficultyCounts[d.key] > 0);
+
+                return (
                 <div key={roadmap.id} className="roadmap-card">
+                  {roadmap.nodes?.[0]?.youtubeId && (
+                    <img
+                      className="card-thumb"
+                      src={`https://i.ytimg.com/vi/${roadmap.nodes[0].youtubeId}/hqdefault.jpg`}
+                      alt={`${roadmap.title} 첫 강의 섬네일`}
+                      loading="lazy"
+                    />
+                  )}
                   <div style={{ flex: 1, marginBottom: '20px' }}>
                     <div
                       style={{
@@ -526,18 +549,32 @@ export default async function HomePage({
                         color: 'var(--colors-muted)',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '4px',
+                        gap: '10px',
                         fontWeight: 500,
                       }}
                     >
-                      <span style={{ color: 'var(--colors-primary)' }}>✦</span> 무료 강의 로드맵
+                      {difficultyMeta.map((d) => (
+                        <span key={d.key} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <span
+                            style={{
+                              width: '7px',
+                              height: '7px',
+                              borderRadius: '50%',
+                              backgroundColor: d.color,
+                              display: 'inline-block',
+                            }}
+                          />
+                          {d.label} {difficultyCounts[d.key]}
+                        </span>
+                      ))}
                     </span>
-                    <Link href={`/roadmaps/${roadmap.id}`} className="btn btn-primary" style={{ height: '36px', padding: '0 16px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                      로드맵 보기 ➔
+                    <Link href={`/roadmaps/${roadmap.id}`} className="btn btn-primary card-stretched-link" style={{ height: '36px', padding: '0 16px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      로드맵 보기 <ArrowRight size={14} />
                     </Link>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
