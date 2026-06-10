@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { AuthButton } from './AuthButton';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,10 +43,13 @@ export function Header() {
           >
             유튜브 채널
           </a>
-          <AuthButton />
+          <ThemeToggle />
         </nav>
 
-        {/* Hamburger Toggle Button */}
+        {/* Mobile: theme toggle + hamburger */}
+        <div className="header-mobile-actions">
+          <ThemeToggle />
+        </div>
         <button
           className="menu-toggle-btn"
           onClick={() => setIsOpen(!isOpen)}
@@ -94,9 +97,6 @@ export function Header() {
           >
             유튜브 채널
           </a>
-          <div style={{ paddingTop: '8px', borderTop: '1px solid var(--colors-hairline)' }}>
-            <AuthButton />
-          </div>
         </nav>
       </div>
     </header>

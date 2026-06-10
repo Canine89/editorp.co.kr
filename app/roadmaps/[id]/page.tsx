@@ -57,34 +57,60 @@ export default async function RoadmapDetailPage({
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-      {/* Roadmap Title Band */}
+    <div className="roadmap-detail-page">
+      <style>{`
+        .roadmap-detail-page {
+          display: flex;
+          flex-direction: column;
+          /* Fill the viewport below the 64px sticky header so the canvas gets a bounded height */
+          height: calc(100dvh - 64px);
+        }
+        .roadmap-canvas-slot {
+          flex: 1;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        @media (max-width: 900px) {
+          .roadmap-detail-page {
+            height: auto;
+          }
+        }
+      `}</style>
+
+      {/* Compact Roadmap Title Band */}
       <section
         style={{
-          padding: 'var(--spacing-lg) 0',
+          padding: '16px 0',
           borderBottom: '1px solid var(--colors-hairline)',
           backgroundColor: 'var(--colors-canvas)',
+          flexShrink: 0,
         }}
       >
         <div className="container">
-          <h1
-            className="serif-display"
-            style={{
-              fontSize: '32px',
-              marginBottom: '8px',
-              color: 'var(--colors-ink)',
-            }}
-          >
-            {roadmap.title}
-          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '6px' }}>
+            <h1
+              className="serif-display"
+              style={{
+                fontSize: '22px',
+                margin: 0,
+                color: 'var(--colors-ink)',
+              }}
+            >
+              {roadmap.title}
+            </h1>
+            <span className="badge badge-cream" style={{ fontSize: '11px', fontWeight: 600 }}>
+              총 {roadmap.nodes.length}개 강의
+            </span>
+          </div>
           <div style={{ maxWidth: '800px' }}>
-            <RoadmapDescription description={roadmap.description} />
+            <RoadmapDescription description={roadmap.description} isCompact={true} />
           </div>
         </div>
       </section>
 
       {/* Interactive Visual Canvas Container */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="roadmap-canvas-slot">
         <RoadmapCanvas roadmap={roadmap} />
       </div>
     </div>
