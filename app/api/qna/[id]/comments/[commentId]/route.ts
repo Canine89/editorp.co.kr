@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '../../../../auth/[...nextauth]/route';
 import { isFirebaseConfigured } from '@/lib/firebase-admin';
-import { ADMIN_EMAIL, deletePost, getPost } from '@/lib/qna';
+import { ADMIN_EMAIL, deleteComment, getComment } from '@/lib/qna';
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string; commentId: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
@@ -17,19 +17,19 @@ export async function DELETE(
   }
 
   try {
-    const { id } = await params;
-    const post = await getPost(id);
-    if (!post) {
-      return NextResponse.json({ error: '글을 찾을 수 없습니다.' }, { status: 404 });
+    const { id, commentId } = await params;
+    const comment = await getComment(id, commentId);
+    if (!comment) {
+      return NextResponse.json({ error: '댓글을 찾을 수 없습니다.' }, { status: 404 });
     }
 
     const isAdmin = session.user.email === ADMIN_EMAIL;
-    const isAuthor = session.user.email === post.authorEmail;
+    const isAuthor = session.user.email === comment.authorEmail;
     if (!isAdmin && !isAuthor) {
       return NextResponse.json({ error: '삭제 권한이 없습니다.' }, { status: 403 });
     }
 
-    await deletePost(id);
+    await deleteComment(id, commentId);
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });

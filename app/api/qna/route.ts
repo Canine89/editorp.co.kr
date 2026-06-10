@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { isFirebaseConfigured } from '@/lib/firebase-admin';
-import { createQuestion } from '@/lib/qna';
+import { createPost, POST_CATEGORIES, type PostCategory } from '@/lib/qna';
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -14,20 +14,24 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { title, body } = await req.json();
+    const { title, body, category } = await req.json();
     const trimmedTitle = typeof title === 'string' ? title.trim() : '';
     const trimmedBody = typeof body === 'string' ? body.trim() : '';
 
     if (trimmedTitle.length < 2 || trimmedTitle.length > 120) {
       return NextResponse.json({ error: '제목은 2~120자로 입력해 주세요.' }, { status: 400 });
     }
-    if (trimmedBody.length < 2 || trimmedBody.length > 5000) {
-      return NextResponse.json({ error: '내용은 2~5000자로 입력해 주세요.' }, { status: 400 });
+    if (trimmedBody.length < 2 || trimmedBody.length > 10000) {
+      return NextResponse.json({ error: '내용은 2~10000자로 입력해 주세요.' }, { status: 400 });
+    }
+    if (!(POST_CATEGORIES as readonly string[]).includes(category)) {
+      return NextResponse.json({ error: '말머리를 선택해 주세요.' }, { status: 400 });
     }
 
-    const id = await createQuestion({
+    const id = await createPost({
       title: trimmedTitle,
       body: trimmedBody,
+      category: category as PostCategory,
       authorEmail: session.user.email,
       authorName: session.user.name || '익명',
     });
