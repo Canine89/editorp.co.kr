@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { isFirebaseConfigured } from '@/lib/firebase-admin';
-import { createPost, POST_CATEGORIES, type PostCategory } from '@/lib/qna';
+import { createPost, POST_CATEGORIES, RateLimitError, type PostCategory } from '@/lib/qna';
 import { sanitizePostHtml, htmlToText } from '@/lib/sanitize';
 
 export async function POST(req: NextRequest) {
@@ -41,6 +41,9 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json({ success: true, id });
   } catch (error: any) {
+    if (error instanceof RateLimitError) {
+      return NextResponse.json({ error: error.message }, { status: 429 });
+    }
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
