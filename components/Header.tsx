@@ -33,6 +33,9 @@ export function Header() {
           <Link href="/" className="nav-link">
             로드맵 목록
           </Link>
+          <Link href="/books" className="nav-link">
+            무료 도서
+          </Link>
           <Link href="/qna" className="nav-link">
             질문 게시판
           </Link>
@@ -89,6 +92,9 @@ export function Header() {
         <nav className={`main-nav-mobile ${isOpen ? 'open' : ''}`}>
           <Link href="/" className="nav-link" onClick={() => setIsOpen(false)}>
             로드맵 목록
+          </Link>
+          <Link href="/books" className="nav-link" onClick={() => setIsOpen(false)}>
+            무료 도서
           </Link>
           <Link href="/qna" className="nav-link" onClick={() => setIsOpen(false)}>
             질문 게시판

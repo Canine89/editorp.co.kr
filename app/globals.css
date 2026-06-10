@@ -527,6 +527,209 @@ a {
   pointer-events: none;
 }
 
+/* ───────────────────────────────────────────────
+   무료 도서 읽기 페이지 (마당 > 장 > 절)
+   ─────────────────────────────────────────────── */
+
+/* 본문 타이포그래피: .rich-content 위에 도서 전용 확장 */
+.book-content {
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.book-content h2 {
+  font-size: 23px;
+  margin: 1.6em 0 0.6em 0;
+}
+
+.book-content h3 {
+  font-size: 19px;
+  margin: 1.4em 0 0.5em 0;
+}
+
+.book-content h4 {
+  font-size: 16.5px;
+  margin: 1.2em 0 0.4em 0;
+}
+
+.book-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--rounded-md);
+  border: 1px solid var(--colors-hairline);
+  margin: 0.6em 0;
+}
+
+.book-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-size: 14px;
+}
+
+.book-content th,
+.book-content td {
+  border: 1px solid var(--colors-hairline);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.book-content th {
+  background-color: var(--colors-surface-soft);
+  color: var(--colors-body-strong);
+  font-weight: 600;
+}
+
+/* 읽기 페이지 레이아웃: 데스크톱 = 목차 사이드바 + 본문 2단 */
+.book-layout {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+  padding-top: 40px;
+}
+
+.book-toc-toggle {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-md);
+  background-color: var(--colors-surface-soft);
+  color: var(--colors-ink);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.book-toc-nav {
+  position: sticky;
+  top: 88px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.book-toc-booktitle {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--colors-ink);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--colors-hairline);
+  word-break: keep-all;
+}
+
+.book-toc-booktitle:hover {
+  color: var(--colors-primary);
+}
+
+.book-toc-part { margin-bottom: 16px; }
+
+.book-toc-part-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--colors-primary);
+  margin: 14px 0 6px 0;
+  word-break: keep-all;
+}
+
+.book-toc-chapter-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--colors-body-strong);
+  margin: 10px 0 4px 0;
+  word-break: keep-all;
+}
+
+.book-toc-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.book-toc-section {
+  display: block;
+  font-size: 13px;
+  color: var(--colors-muted);
+  padding: 5px 8px;
+  border-radius: var(--rounded-sm);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  word-break: keep-all;
+}
+
+.book-toc-section:hover {
+  color: var(--colors-ink);
+  background-color: var(--colors-surface-soft);
+}
+
+.book-toc-section.active {
+  color: var(--colors-primary);
+  font-weight: 600;
+  background-color: color-mix(in srgb, var(--colors-primary) 10%, transparent);
+}
+
+/* 이전/다음 절 버튼 */
+.book-pager {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-md);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.book-pager:hover {
+  background-color: var(--colors-surface-soft);
+  border-color: var(--colors-primary);
+}
+
+.book-pager-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+
+.book-pager-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--colors-ink);
+  word-break: keep-all;
+}
+
+/* 모바일: 1단 + 접이식 목차 */
+@media (max-width: 900px) {
+  .book-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-top: 20px;
+  }
+  .book-toc-toggle {
+    display: flex;
+  }
+  .book-toc-nav {
+    display: none;
+    position: static;
+    max-height: none;
+    border: 1px solid var(--colors-hairline);
+    border-radius: var(--rounded-md);
+    padding: 14px;
+    margin-top: 8px;
+    background-color: var(--colors-canvas);
+  }
+  .book-toc-nav.open {
+    display: block;
+  }
+}
+
 /* Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
