@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     '/books/[bookId]': ['./content/books/**'],
     '/books/[bookId]/[sectionId]': ['./content/books/**'],
     '/admin/books': ['./content/books/**'],
+    '/admin/books/[bookId]': ['./content/books/**'],
     '/api/admin/books/section': ['./content/books/**'],
     '/api/admin/books/publish': ['./content/books/**'],
   },

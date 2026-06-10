@@ -1,8 +1,8 @@
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
-import { listBooks } from '@/lib/books';
-import { BookAdminDashboard } from '@/components/BookAdminDashboard';
+import { listBooks, countSections } from '@/lib/books';
+import { BookAdminList } from '@/components/BookAdminList';
 
 export const revalidate = 0;
 
@@ -13,5 +13,6 @@ export default async function AdminBooksPage() {
   }
 
   const books = await listBooks(true); // 비공개 책 포함
-  return <BookAdminDashboard initialBooks={books} />;
+  const withCounts = books.map((book) => ({ ...book, sectionCount: countSections(book) }));
+  return <BookAdminList initialBooks={withCounts} />;
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -184,8 +185,15 @@ export function BookSectionEditor({
   onChange,
 }: {
   initialHtml: string;
-  onChange: (html: string) => void;
+  /** dirty = 사용자가 실제로 내용을 바꿨는지 (에디터 내부 정규화는 제외) */
+  onChange: (html: string, dirty: boolean) => void;
 }) {
+  // 에디터/플러그인이 로드 직후 스스로 문서를 정규화하는 경우(표 구조 보정 등)가 있어
+  // 단순히 onUpdate 발생 여부로 "수정됨"을 판단하면 오탐이 난다.
+  // 사용자가 에디터에 포커스하기 전의 변경은 기준선(baseline)으로 흡수한다.
+  const baseline = useRef<string>(initialHtml);
+  const userInteracted = useRef(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -198,8 +206,20 @@ export function BookSectionEditor({
     ],
     content: initialHtml,
     immediatelyRender: false,
+    onCreate: ({ editor: e }) => {
+      baseline.current = e.getHTML();
+    },
+    onFocus: () => {
+      userInteracted.current = true;
+    },
     onUpdate: ({ editor: e }) => {
-      onChange(e.getHTML());
+      const html = e.getHTML();
+      if (!userInteracted.current) {
+        baseline.current = html;
+        onChange(html, false);
+        return;
+      }
+      onChange(html, html !== baseline.current);
     },
     editorProps: {
       attributes: {
