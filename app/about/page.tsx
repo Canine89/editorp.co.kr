@@ -294,9 +294,6 @@ export default function AboutPage() {
           <div className="profile-label">성명 / 나이</div>
           <div className="profile-value">박현규 / 만 36세</div>
 
-          <div className="profile-label">연락처</div>
-          <div className="profile-value" style={{ fontFamily: 'var(--font-mono)' }}>010-4500-6675</div>
-
           <div className="profile-label">이메일</div>
           <div className="profile-value">
             <a href="mailto:hgpark@goldenrabbit.co.kr" style={{ color: 'var(--colors-primary)', textDecoration: 'underline' }}>
