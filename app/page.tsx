@@ -432,16 +432,6 @@ export default async function HomePage({
               }}
             >
               {filteredRoadmaps.map((roadmap) => {
-                const difficultyCounts = { BEGINNER: 0, INTERMEDIATE: 0, ADVANCED: 0 };
-                roadmap.nodes?.forEach((n) => {
-                  difficultyCounts[n.difficulty] += 1;
-                });
-                const difficultyMeta = [
-                  { key: 'BEGINNER' as const, label: '초급', color: '#5db8a6' },
-                  { key: 'INTERMEDIATE' as const, label: '중급', color: '#e8a55a' },
-                  { key: 'ADVANCED' as const, label: '고급', color: '#c64545' },
-                ].filter((d) => difficultyCounts[d.key] > 0);
-
                 return (
                 <div key={roadmap.id} className="roadmap-card">
                   {roadmap.nodes?.[0]?.youtubeId && (
@@ -485,37 +475,12 @@ export default async function HomePage({
                   <div
                     style={{
                       display: 'flex',
-                      justifyContent: 'space-between',
+                      justifyContent: 'flex-end',
                       alignItems: 'center',
                       borderTop: '1px solid var(--colors-hairline-soft)',
                       paddingTop: '16px',
                     }}
                   >
-                    <span
-                      style={{
-                        fontSize: '12px',
-                        color: 'var(--colors-muted)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        fontWeight: 500,
-                      }}
-                    >
-                      {difficultyMeta.map((d) => (
-                        <span key={d.key} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                          <span
-                            style={{
-                              width: '7px',
-                              height: '7px',
-                              borderRadius: '50%',
-                              backgroundColor: d.color,
-                              display: 'inline-block',
-                            }}
-                          />
-                          {d.label} {difficultyCounts[d.key]}
-                        </span>
-                      ))}
-                    </span>
                     <Link href={`/roadmaps/${roadmap.id}`} className="btn btn-primary card-stretched-link" style={{ height: '36px', padding: '0 16px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                       로드맵 보기 <ArrowRight size={14} />
                     </Link>

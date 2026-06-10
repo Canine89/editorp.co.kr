@@ -30,12 +30,6 @@ interface Roadmap {
   nodes: Node[];
 }
 
-const difficultyConfig = {
-  BEGINNER: { label: '초급', color: '#5db8a6', bg: 'rgba(93, 184, 166, 0.12)' },
-  INTERMEDIATE: { label: '중급', color: '#e8a55a', bg: 'rgba(232, 165, 90, 0.12)' },
-  ADVANCED: { label: '고급', color: '#c64545', bg: 'rgba(198, 69, 69, 0.12)' },
-};
-
 // "1:23" → 83, "1:02:03" → 3723
 function parseTimeToSeconds(time: string): number {
   const parts = time.split(':').map((p) => parseInt(p.trim(), 10));
@@ -720,11 +714,11 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
                     <span
                       className="video-badge"
                       style={{
-                        backgroundColor: difficultyConfig[selectedNode.difficulty].bg,
-                        color: difficultyConfig[selectedNode.difficulty].color,
+                        backgroundColor: 'var(--colors-surface-cream-strong)',
+                        color: 'var(--colors-body-strong)',
                       }}
                     >
-                      {difficultyConfig[selectedNode.difficulty].label} · {currentIndex + 1}/{totalNodes}강
+                      {currentIndex + 1}/{totalNodes}강
                     </span>
                     <a
                       href={selectedNode.youtubeUrl}
