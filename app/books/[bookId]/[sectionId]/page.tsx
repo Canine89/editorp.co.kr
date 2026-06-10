@@ -1,16 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getBook, listBooks, flattenSections, renderSectionHtml } from '@/lib/books';
+import { getBook, flattenSections, renderSectionHtml } from '@/lib/books';
 import { BookToc } from '@/components/BookToc';
 
-export function generateStaticParams() {
-  return listBooks().flatMap((book) =>
-    flattenSections(book).map((flat) => ({ bookId: book.id, sectionId: flat.section.id }))
-  );
-}
-
-export const dynamicParams = false;
+// 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -18,7 +13,7 @@ export async function generateMetadata({
   params: Promise<{ bookId: string; sectionId: string }>;
 }) {
   const { bookId, sectionId } = await params;
-  const book = getBook(bookId);
+  const book = await getBook(bookId);
   const flat = book ? flattenSections(book).find((f) => f.section.id === sectionId) : null;
   if (!book || !flat) return {};
   return {
@@ -33,7 +28,7 @@ export default async function BookSectionPage({
   params: Promise<{ bookId: string; sectionId: string }>;
 }) {
   const { bookId, sectionId } = await params;
-  const book = getBook(bookId);
+  const book = await getBook(bookId);
   if (!book) notFound();
 
   const flat = flattenSections(book);
@@ -44,7 +39,7 @@ export default async function BookSectionPage({
   const prev = index > 0 ? flat[index - 1] : null;
   const next = index < flat.length - 1 ? flat[index + 1] : null;
 
-  const html = renderSectionHtml(book.id, current.section);
+  const html = await renderSectionHtml(book.id, current.section);
   if (html === null) notFound();
 
   return (

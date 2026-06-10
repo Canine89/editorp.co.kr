@@ -59,6 +59,20 @@ export default async function AdminPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+      {/* 관리 메뉴: 로드맵 외 다른 관리 화면으로 이동 */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: '8px 16px',
+          borderBottom: '1px solid var(--colors-hairline)',
+          backgroundColor: 'var(--colors-surface-soft)',
+        }}
+      >
+        <a href="/admin/books" className="btn btn-secondary" style={{ height: '30px', padding: '0 12px', fontSize: '12.5px' }}>
+          📚 도서 관리 →
+        </a>
+      </div>
       <AdminDashboard initialData={initialData} />
     </div>
   );

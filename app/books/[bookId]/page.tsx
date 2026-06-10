@@ -1,17 +1,14 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { BookOpen, ArrowRight, List } from 'lucide-react';
-import { getBook, listBooks, flattenSections } from '@/lib/books';
+import { getBook, flattenSections } from '@/lib/books';
 
-export function generateStaticParams() {
-  return listBooks().map((book) => ({ bookId: book.id }));
-}
-
-export const dynamicParams = false;
+// 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: { params: Promise<{ bookId: string }> }) {
   const { bookId } = await params;
-  const book = getBook(bookId);
+  const book = await getBook(bookId);
   if (!book) return {};
   return {
     title: `${book.title} | 무료 도서`,
@@ -26,7 +23,7 @@ function formatDate(iso?: string): string | null {
 
 export default async function BookTocPage({ params }: { params: Promise<{ bookId: string }> }) {
   const { bookId } = await params;
-  const book = getBook(bookId);
+  const book = await getBook(bookId);
   if (!book) notFound();
 
   const flat = flattenSections(book);

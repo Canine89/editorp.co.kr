@@ -7,13 +7,16 @@ export const metadata = {
   description: '공공의 이익을 위해 무료로 공개하는 책들을 블로그처럼 읽어 보세요.',
 };
 
+// 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
+export const revalidate = 0;
+
 function formatDate(iso?: string): string | null {
   if (!iso) return null;
   return new Intl.DateTimeFormat('ko-KR', { dateStyle: 'long' }).format(new Date(iso));
 }
 
-export default function BooksPage() {
-  const books = listBooks();
+export default async function BooksPage() {
+  const books = await listBooks();
 
   return (
     <div style={{ backgroundColor: 'var(--colors-canvas)', minHeight: '100vh', paddingBottom: '80px' }}>
