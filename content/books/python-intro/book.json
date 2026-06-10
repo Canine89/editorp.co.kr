@@ -4,6 +4,7 @@
   "description": "파이썬을 처음 시작하는 분을 위한 입문서입니다. 변수와 자료형부터 제어문, 함수까지 기초 문법을 천천히, 그러나 빠짐없이 다룹니다.",
   "author": "윤혜민·박현규",
   "publishedAt": "2026-06-10",
+  "cover": "/covers/python-intro.png",
   "parts": [
     {
       "id": "part-1",

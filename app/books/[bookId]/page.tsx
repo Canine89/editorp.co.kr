@@ -46,6 +46,21 @@ export default async function BookTocPage({ params }: { params: Promise<{ bookId
         }}
       >
         <div className="container" style={{ maxWidth: '760px' }}>
+          {book.cover && (
+            <img
+              src={book.cover}
+              alt={`${book.title} 표지`}
+              style={{
+                display: 'block',
+                height: '260px',
+                width: 'auto',
+                margin: '0 auto 28px auto',
+                borderRadius: 'var(--rounded-md)',
+                border: '1px solid var(--colors-hairline)',
+                boxShadow: '0 16px 40px rgba(20, 20, 19, 0.18)',
+              }}
+            />
+          )}
           <span className="badge badge-coral" style={{ marginBottom: '20px', fontWeight: 600 }}>
             무료 공개 도서
           </span>

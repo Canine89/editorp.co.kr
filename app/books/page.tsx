@@ -65,13 +65,26 @@ export default function BooksPage() {
           justify-content: center;
           color: var(--colors-primary);
         }
-        .book-cover-img {
+        /* 세로형 책 표지: 크림 배경 위에 책이 놓인 느낌으로 */
+        .book-cover-wrap {
           width: calc(100% + 48px);
           margin: -24px -24px 16px -24px;
-          aspect-ratio: 16 / 7;
-          object-fit: cover;
+          padding: 24px 0;
           border-radius: var(--rounded-lg) var(--rounded-lg) 0 0;
           border-bottom: 1px solid var(--colors-hairline-soft);
+          background:
+            radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--colors-primary) 14%, transparent) 0%, transparent 60%),
+            var(--colors-surface-soft);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .book-cover-img {
+          height: 190px;
+          width: auto;
+          border-radius: var(--rounded-sm);
+          border: 1px solid var(--colors-hairline);
+          box-shadow: 0 10px 24px rgba(20, 20, 19, 0.16);
           display: block;
         }
       `}</style>
@@ -104,7 +117,9 @@ export default function BooksPage() {
                 return (
                   <div key={book.id} className="book-card">
                     {book.cover ? (
-                      <img className="book-cover-img" src={book.cover} alt={`${book.title} 표지`} loading="lazy" />
+                      <div className="book-cover-wrap">
+                        <img className="book-cover-img" src={book.cover} alt={`${book.title} 표지`} loading="lazy" />
+                      </div>
                     ) : (
                       <div className="book-cover-placeholder" aria-hidden="true">
                         <BookOpen size={36} strokeWidth={1.5} />
