@@ -111,7 +111,7 @@
       "nodes": [
         {
           "id": "vibe-book-node-1",
-          "title": "[특강] 바로 바로 바이브코딩 cursor ai 북콘서트 설명회 (출간기념 라이브)",
+          "title": "바로 바로 바이브코딩 cursor ai 북콘서트 설명회 (출간기념 라이브)",
           "description": "Cursor AI 기반의 바이브 코딩 도서 출간을 기념하여 전반적인 집필 배경 및 핵심 공부법을 다룬 라이브 녹화본입니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=pIbH0RVwvBs",
           "youtubeId": "pIbH0RVwvBs",
@@ -122,7 +122,7 @@
         },
         {
           "id": "vibe-book-node-2",
-          "title": "[특강] 1~51쪽 커서 가입, 구독, 해지, 50% 할인 꿀팁, 인터페이스 기초",
+          "title": "1~51쪽 커서 가입, 구독, 해지, 50% 할인 꿀팁, 인터페이스 기초",
           "description": "1~51쪽 진도. Cursor AI 에디터 가입 방법, 구독 및 해지 방법, 50% 할인 팁 및 프로그램 UI 기본 작동법을 설명합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=OheQZAzZUfI",
           "youtubeId": "OheQZAzZUfI",
@@ -133,7 +133,7 @@
         },
         {
           "id": "vibe-book-node-3",
-          "title": "[특강] 51~60쪽 컨텍스트 기초, 플랜 모드 사용법, 애플 사이트 클론",
+          "title": "51~60쪽 컨텍스트 기초, 플랜 모드 사용법, 애플 사이트 클론",
           "description": "51~60쪽 진도. AI 프롬프트 제어의 핵심인 컨텍스트의 기본 개념, 플랜 모드(Plan Mode) 활용법 및 Apple 사이트 모작 실습을 진행합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=se5-IIKV6-Y",
           "youtubeId": "se5-IIKV6-Y",
@@ -144,7 +144,7 @@
         },
         {
           "id": "vibe-book-node-4",
-          "title": "[무료 강의] 61~71쪽 커서, 안티그래비티, 클로드 코드 실습",
+          "title": "61~71쪽 커서, 안티그래비티, 클로드 코드 실습",
           "description": "61~71쪽 진도. Cursor AI에 내장된 Antigravity 에이전트 및 터미널용 AI인 Claude Code의 실전 구동 환경을 실습합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=SY-RthFUEjw",
           "youtubeId": "SY-RthFUEjw",
@@ -155,7 +155,7 @@
         },
         {
           "id": "vibe-book-node-5",
-          "title": "[무료 강의] 76~103쪽 터미널 개념 이해와 문서, 발표자료 작업",
+          "title": "76~103쪽 터미널 개념 이해와 문서, 발표자료 작업",
           "description": "76~103쪽 진도. 비전공자 기준으로 터미널 쉘 명령어의 필수 개념을 익히고, 이를 활용한 문서화 작업 및 PPT 자료 자동화 흐름을 잡습니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=CiT2g7ztTMI",
           "youtubeId": "CiT2g7ztTMI",
@@ -166,7 +166,7 @@
         },
         {
           "id": "vibe-book-node-6",
-          "title": "[무료 강의] 104~113쪽 마크다운으로 하는 일들! 마인드맵, 플로우차트, 수학 차트 그리기",
+          "title": "104~113쪽 마크다운으로 하는 일들! 마인드맵, 플로우차트, 수학 차트 그리기",
           "description": "104~113쪽 진도. 마크다운(Markdown) 문법을 응용하여 마인드맵, 순서도(Flowchart), 수학 공식 차트를 그리는 효율적 문서 스킬을 소개합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=HKH6K1YcsB4",
           "youtubeId": "HKH6K1YcsB4",
@@ -177,7 +177,7 @@
         },
         {
           "id": "vibe-book-node-7",
-          "title": "[무료 강의] 118~131쪽 기본 웹 기술 이해와 자기소개 웹 페이지 만들기",
+          "title": "118~131쪽 기본 웹 기술 이해와 자기소개 웹 페이지 만들기",
           "description": "118~131쪽 진도. HTML, CSS, JavaScript 등 기초 웹 구성 요소를 이해하고, 나만의 첫 포트폴리오용 자기소개 페이지를 기획하고 제작합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=MsUi5RLzCX4",
           "youtubeId": "MsUi5RLzCX4",
@@ -188,7 +188,7 @@
         },
         {
           "id": "vibe-book-node-8",
-          "title": "[무료 강의] 132~141쪽 기본 웹 기술로 나만의 글쓰기 도구 만들기, design.md, util.js 결합",
+          "title": "132~141쪽 기본 웹 기술로 나만의 글쓰기 도구 만들기, design.md, util.js 결합",
           "description": "132~141쪽 진도. 웹 문서 설계서인 design.md와 함수 모음인 util.js를 결합하여 나만의 문서 작성 웹 애플리케이션을 빌드합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=PHP9P0JmZNM",
           "youtubeId": "PHP9P0JmZNM",
@@ -199,7 +199,7 @@
         },
         {
           "id": "vibe-book-node-9",
-          "title": "[무료 강의] 142~151쪽 프런트엔드 기술 리액트 이해하기, '편집자 키우기' 앱 만들기",
+          "title": "142~151쪽 프런트엔드 기술 리액트 이해하기, '편집자 키우기' 앱 만들기",
           "description": "142~151쪽 진도. 현대 웹의 핵심 프레임워크인 React의 컴포넌트 및 상태(State) 개념을 잡고 '편집자 키우기' 클리커 게임을 제작합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=4k8DsN0yUkI",
           "youtubeId": "4k8DsN0yUkI",
@@ -210,7 +210,7 @@
         },
         {
           "id": "vibe-book-node-10",
-          "title": "[무료 강의] 154~162쪽 인테리어 회사용 디자인 입힌 랜딩 페이지 만들기, 플랜 모드 활용해 컴포넌트 설계하기",
+          "title": "154~162쪽 인테리어 회사용 디자인 입힌 랜딩 페이지 만들기, 플랜 모드 활용해 컴포넌트 설계하기",
           "description": "154~162쪽 진도. 전문적인 인테리어 테마의 랜딩 페이지를 기획하고, AI의 플랜 모드를 통해 복잡한 웹 컴포넌트 구조를 설계하는 과정을 배웁니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=dRl9FIr1xvw",
           "youtubeId": "dRl9FIr1xvw",
@@ -221,7 +221,7 @@
         },
         {
           "id": "vibe-book-node-11",
-          "title": "[무료 강의] 162~177쪽 CRUD 개념과 로컬 스토리지 개념 익히고, DESIGN.md를 결합해 나만의 메모 앱 만들기",
+          "title": "162~177쪽 CRUD 개념과 로컬 스토리지 개념 익히고, DESIGN.md를 결합해 나만의 메모 앱 만들기",
           "description": "162~177쪽 진도. 데이터의 생성·조회·수정·삭제(CRUD) 흐름과 브라우저 내 로컬스토리지 저장 기법을 학습하여 나만의 메모 앱을 완성합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=582gmRatC_Y",
           "youtubeId": "582gmRatC_Y",
@@ -232,7 +232,7 @@
         },
         {
           "id": "vibe-book-node-12",
-          "title": "[무료 강의] 178~205쪽 디자인 라이브러리 shadcn, tweakcn 익히고 학생 커리큘럼 페이지 만들기",
+          "title": "178~205쪽 디자인 라이브러리 shadcn, tweakcn 익히고 학생 커리큘럼 페이지 만들기",
           "description": "178~205쪽 진도. 인기 컴포넌트 라이브러리인 shadcn/ui와 tweakcn을 적용하는 법을 학습하고, 커리큘럼 대시보드 페이지를 디자인합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=iCgc853hKLo",
           "youtubeId": "iCgc853hKLo",
@@ -243,7 +243,7 @@
         },
         {
           "id": "vibe-book-node-13",
-          "title": "[무료 강의] 206~216쪽 agents.md 규칙 이해하기, 테트리스 만들기",
+          "title": "206~216쪽 agents.md 규칙 이해하기, 테트리스 만들기",
           "description": "206~216쪽 진도. AI의 코딩 습관과 커스텀 규칙을 설정하는 agents.md 지침의 원리를 공부하고, 고전 테트리스 웹 게임을 개발합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=T4gLbTYysYw",
           "youtubeId": "T4gLbTYysYw",
@@ -254,7 +254,7 @@
         },
         {
           "id": "vibe-book-node-14",
-          "title": "[무료 강의] 217~228쪽 스킬 개념 이해하고 만들고 적용하기",
+          "title": "217~228쪽 스킬 개념 이해하고 만들고 적용하기",
           "description": "217~228쪽 진도. 반복적이고 특화된 에이전트 작업을 자동화하기 위한 스킬(Skill) 패키지 설계 기법과 로컬 주입 방식을 실습합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=tOjtcW8AXMA",
           "youtubeId": "tOjtcW8AXMA",
@@ -265,7 +265,7 @@
         },
         {
           "id": "vibe-book-node-15",
-          "title": "[무료 강의] 229~259쪽 서브에이전트 이해하기, 자기소개 페이지 만들어 배포하기",
+          "title": "229~259쪽 서브에이전트 이해하기, 자기소개 페이지 만들어 배포하기",
           "description": "229~259쪽 진도. 서브에이전트(Sub-agent) 협업 설계를 공부하고 최종 프로필 웹페이지를 빌드하여 배포합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=wuCVrLGuCF0",
           "youtubeId": "wuCVrLGuCF0",
@@ -276,7 +276,7 @@
         },
         {
           "id": "vibe-book-node-16",
-          "title": "[무료 강의] 260~271쪽 구글 스프레드시트 연동해 나만의 프롬프트 저장 사이트 만들기",
+          "title": "260~271쪽 구글 스프레드시트 연동해 나만의 프롬프트 저장 사이트 만들기",
           "description": "260~271쪽 진도. 구글 스프레드시트 API를 데이터베이스처럼 연동하여 언제든 불러와 쓸 수 있는 프롬프트 저장 전용 사이트를 만듭니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=m4PvOWZUkh0",
           "youtubeId": "m4PvOWZUkh0",
@@ -287,7 +287,7 @@
         },
         {
           "id": "vibe-book-node-17",
-          "title": "[무료 강의] 272~283쪽 로컬 DB 기반 회원 가입되는 게시판 만들기",
+          "title": "272~283쪽 로컬 DB 기반 회원 가입되는 게시판 만들기",
           "description": "272~283쪽 진도. 파일 시스템 혹은 로컬 SQLite 환경을 활용하여 회원 가입 및 로그인, 글쓰기가 동작하는 웹 게시판의 골격을 제작합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=IZphP6rSu5E",
           "youtubeId": "IZphP6rSu5E",
@@ -298,7 +298,7 @@
         },
         {
           "id": "vibe-book-node-18",
-          "title": "[무료 강의] 284쪽~ 구글 로그인 붙인 게시판 만들기 (1) ━ 로컬 테스트",
+          "title": "284쪽~ 구글 로그인 붙인 게시판 만들기 (1) ━ 로컬 테스트",
           "description": "284쪽 진도(1). OAuth 2.0 구글 간편 로그인 기능을 연동하고 이를 로컬 개발 서버 환경에서 완벽하게 작동 및 디버깅하는 방법입니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=nFltxQbpu4c",
           "youtubeId": "nFltxQbpu4c",
@@ -309,7 +309,7 @@
         },
         {
           "id": "vibe-book-node-19",
-          "title": "[무료 강의] 284쪽~ 구글 로그인 붙인 게시판 만들기 (2) ━ supabase, vercel 배포",
+          "title": "284쪽~ 구글 로그인 붙인 게시판 만들기 (2) ━ supabase, vercel 배포",
           "description": "284쪽 진도(2). 간편 로그인 인프라와 Supabase 백엔드를 실 서비스 형태로 엮고, Vercel 클라우드를 사용하여 외부에 완전 무료로 배포합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=6aSd4s3Me1U",
           "youtubeId": "6aSd4s3Me1U",
@@ -329,7 +329,7 @@
       "nodes": [
         {
           "id": "claude-node-1",
-          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 01장 처음 만나는 클로드",
+          "title": "01장 처음 만나는 클로드",
           "description": "클로드 입문 필수 기초로, LLM과 LMM의 차이점, 요금제 및 모델 비교, 데스크톱 앱 세팅과 효율적 활용 팁을 정리합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=r5aAeBk0JaA",
           "youtubeId": "r5aAeBk0JaA",
@@ -340,7 +340,7 @@
         },
         {
           "id": "claude-node-2",
-          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 02장 클로드로 문서 작업하기",
+          "title": "02장 클로드로 문서 작업하기",
           "description": "마크다운 기반의 세련된 문서 작성 방법, 리서치 모드 및 프로젝트 지침을 설계하고 다양한 데이터를 클로드에 연동하는 법을 학습합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=wKaEIVg7IcY",
           "youtubeId": "wKaEIVg7IcY",
@@ -351,7 +351,7 @@
         },
         {
           "id": "claude-node-3",
-          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 03장 아티팩트 활용하기",
+          "title": "03장 아티팩트 활용하기",
           "description": "결과물의 시각화를 극대화하는 '아티팩트' 기능을 심층적으로 다룹니다. 투두리스트 앱 개발, 다이어그램 구축 및 공유 방법을 배웁니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=_B10KZAkDUg",
           "youtubeId": "_B10KZAkDUg",
@@ -362,7 +362,7 @@
         },
         {
           "id": "claude-node-4",
-          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 04.1 커넥터 연결하기",
+          "title": "04.1 커넥터 연결하기",
           "description": "MCP(모델 컨텍스트 프로토콜)에서 명칭이 개선된 '커넥터(Connector)'의 개념과 구글 드라이브, 지메일 등 기본 도구를 연동하는 기초를 다룹니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=NVODlW4C5A4",
           "youtubeId": "NVODlW4C5A4",
@@ -373,7 +373,7 @@
         },
         {
           "id": "claude-node-5",
-          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 04.2 매일 쓰는 도구 연결하기",
+          "title": "04.2 매일 쓰는 도구 연결하기",
           "description": "Notion, Canva, Apify 및 다이소 MCP 등 실제 업무와 생활에서 활용되는 핵심 외부 API 및 서비스를 클로드 데스크톱과 연동해 봅니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=zShWl65OHKs",
           "youtubeId": "zShWl65OHKs",
@@ -384,7 +384,7 @@
         },
         {
           "id": "claude-node-6",
-          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 04.3 엑셀에서 클로드 사용하기",
+          "title": "04.3 엑셀에서 클로드 사용하기",
           "description": "엑셀 및 구글 스프레드시트 환경 안에서 클로드를 직접 불러와 복잡한 수식 작성, 조건부 서식 부여, 시각화 대시보드를 구축합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=rm6ShFKNKXM",
           "youtubeId": "rm6ShFKNKXM",
@@ -395,7 +395,7 @@
         },
         {
           "id": "claude-node-7",
-          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 05.1 스킬 시작하기",
+          "title": "05.1 스킬 시작하기",
           "description": "에이전트 작업을 패키지화하여 자동화하는 '스킬(Skills)'의 기본 개념을 정립하고, 캔버스와 DOCX 스킬 등을 설정해 업무 효율을 개선합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=cYfgSbu9yXU",
           "youtubeId": "cYfgSbu9yXU",
@@ -406,7 +406,7 @@
         },
         {
           "id": "claude-node-8",
-          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 05.2~3 스킬 다운로드하거나 만들어 활용하기",
+          "title": "05.2~3 스킬 다운로드하거나 만들어 활용하기",
           "description": "커뮤니티 및 오픈소스 허브에서 스킬을 탐색하고 내 로컬 환경에 다운로드하여 적용하거나, 비즈니스 요건에 맞춰 커스텀 스킬을 개발하는 방법을 다룹니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=DACQTo8qqHw",
           "youtubeId": "DACQTo8qqHw",
@@ -417,7 +417,7 @@
         },
         {
           "id": "claude-node-9",
-          "title": "[바로바로 클로드 with 코워크, 스킬, 클로드 코드, 디자인] 06.1 코워크 시작하기~06.3 PDF 문서 편집하기",
+          "title": "06.1 코워크 시작하기~06.3 PDF 문서 편집하기",
           "description": "클로드 코워크(Cowork) 기능을 이용해 PC 로컬 폴더 제어, PDF 파일 수정, 지능형 스케줄러와 커넥터를 결합한 종합 자동화 워크플로를 실습합니다.",
           "youtubeUrl": "https://www.youtube.com/watch?v=Ps5F9ND3hUA",
           "youtubeId": "Ps5F9ND3hUA",
