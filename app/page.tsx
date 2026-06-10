@@ -101,6 +101,22 @@ export default async function HomePage({
           background-color: var(--colors-surface-soft);
           display: block;
         }
+        /* 로드맵 그리드: 개수와 무관하게 3열 고정 (태블릿 2열, 모바일 1열) */
+        .roadmap-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
+        }
+        @media (max-width: 1024px) {
+          .roadmap-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 640px) {
+          .roadmap-grid {
+            grid-template-columns: 1fr;
+          }
+        }
         .category-tab {
           padding: 8px 18px;
           border-radius: var(--rounded-pill);
@@ -424,13 +440,7 @@ export default async function HomePage({
               )}
             </div>
           ) : (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-                gap: '24px',
-              }}
-            >
+            <div className="roadmap-grid">
               {filteredRoadmaps.map((roadmap) => {
                 return (
                 <div key={roadmap.id} className="roadmap-card">
