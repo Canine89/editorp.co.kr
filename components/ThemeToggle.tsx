@@ -27,19 +27,7 @@ export function ThemeToggle() {
       onClick={toggle}
       aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
       title={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '34px',
-        height: '34px',
-        borderRadius: 'var(--rounded-md)',
-        border: '1px solid var(--colors-hairline)',
-        background: 'transparent',
-        color: 'var(--colors-muted)',
-        cursor: 'pointer',
-        transition: 'all var(--transition-fast)',
-      }}
+      className="icon-btn"
     >
       {/* render both and let CSS-free guard avoid hydration mismatch: icon picked after mount */}
       {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}

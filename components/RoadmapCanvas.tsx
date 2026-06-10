@@ -516,7 +516,7 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
           padding: 14px;
           border-radius: var(--rounded-md);
           border: none;
-          font-weight: 700;
+          font-weight: 500;
           font-size: 14px;
           font-family: inherit;
           cursor: pointer;
@@ -534,12 +534,15 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
         .btn-complete.pending:hover {
           background: var(--colors-primary-active);
         }
+        .btn-complete.pending:active {
+          background: color-mix(in srgb, var(--colors-primary-active) 85%, var(--colors-ink));
+        }
         .btn-complete.done {
           background: var(--colors-success);
           color: #fff;
         }
         .btn-complete.done:hover {
-          opacity: 0.9;
+          background: color-mix(in srgb, var(--colors-success) 88%, var(--colors-ink));
         }
 
         .nav-row {
@@ -566,10 +569,13 @@ export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
         }
         .btn-nav:hover:not(:disabled) {
           background: var(--colors-surface-soft);
-          border-color: var(--colors-primary);
+        }
+        .btn-nav:active:not(:disabled) {
+          background: var(--colors-surface-cream-strong);
         }
         .btn-nav:disabled {
           color: var(--colors-muted-soft);
+          border-color: var(--colors-hairline-soft);
           cursor: not-allowed;
         }
 

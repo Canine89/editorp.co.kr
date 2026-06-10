@@ -103,44 +103,24 @@ export function RoadmapDescription({ description, isCompact = false }: RoadmapDe
           }}
         >
           {links.map((link, idx) => {
-            let btnStyle: React.CSSProperties = {
+            // Outline button for every link type — the brand color lives in the icon only
+            const btnStyle: React.CSSProperties = {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
               fontSize: isCompact ? '12px' : '13px',
               fontWeight: 500,
               padding: isCompact ? '6px 12px' : '8px 16px',
-              borderRadius: 'var(--rounded-md)',
-              transition: 'all var(--transition-fast)',
               cursor: 'pointer',
-              border: 'none',
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
             };
 
             const iconSize = isCompact ? 13 : 15;
-            let icon = <Link2 size={iconSize} />;
+            let icon = <Link2 size={iconSize} color="var(--colors-muted)" />;
 
             if (link.rawType === 'book') {
-              btnStyle = {
-                ...btnStyle,
-                background: 'linear-gradient(135deg, var(--colors-primary) 0%, #e8987d 100%)',
-                color: '#ffffff',
-              };
-              icon = <BookOpen size={iconSize} />;
+              icon = <BookOpen size={iconSize} color="var(--colors-primary)" />;
             } else if (link.rawType === 'kakao') {
-              btnStyle = {
-                ...btnStyle,
-                backgroundColor: '#FEE500',
-                color: '#191919',
-              };
-              icon = <MessageCircle size={iconSize} />;
-            } else {
-              btnStyle = {
-                ...btnStyle,
-                backgroundColor: 'var(--colors-surface-cream-strong)',
-                color: 'var(--colors-ink)',
-                border: '1px solid var(--colors-hairline)',
-              };
+              icon = <MessageCircle size={iconSize} color="#E6CF00" fill="#FEE500" />;
             }
 
             return (

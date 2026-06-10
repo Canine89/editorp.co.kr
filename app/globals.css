@@ -61,7 +61,7 @@
 
   /* Theme-dependent accents */
   --hero-orb: rgba(244, 219, 208, 0.5);
-  --marquee-opacity: 0.45;
+  --marquee-opacity: 0.3;
 
   color-scheme: light;
 }
@@ -91,7 +91,7 @@ html[data-theme='dark'] {
   --colors-on-dark-soft: #a09d96;
 
   --hero-orb: rgba(204, 120, 92, 0.14);
-  --marquee-opacity: 0.3;
+  --marquee-opacity: 0.22;
 
   color-scheme: dark;
 }
@@ -117,6 +117,12 @@ html {
   outline-offset: 2px;
 }
 
+/* Warm coral selection — editorial touch */
+::selection {
+  background: color-mix(in srgb, var(--colors-primary) 25%, transparent);
+  color: var(--colors-ink);
+}
+
 
 body {
   background-color: var(--colors-canvas);
@@ -133,6 +139,9 @@ h1, h2, h3, h4, .serif-display {
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.15;
+  /* Korean headlines wrap at word boundaries, never mid-word */
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 h1 {
@@ -156,6 +165,8 @@ h3 {
 p {
   font-size: 16px;
   color: var(--colors-body);
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 a {
@@ -176,6 +187,10 @@ a {
 }
 
 /* Core Buttons */
+/*
+ * Flat button system: two looks only — coral fill or hairline outline.
+ * Hover darkens one step, active one step further. No shadows, no movement.
+ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -200,8 +215,13 @@ a {
   background-color: var(--colors-primary-active);
 }
 
+.btn-primary:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--colors-primary-active) 85%, var(--colors-ink));
+}
+
 .btn-primary:disabled {
   background-color: var(--colors-primary-disabled);
+  color: var(--colors-muted-soft);
   cursor: not-allowed;
 }
 
@@ -213,6 +233,10 @@ a {
 
 .btn-secondary:hover:not(:disabled) {
   background-color: var(--colors-surface-soft);
+}
+
+.btn-secondary:active:not(:disabled) {
+  background-color: var(--colors-surface-cream-strong);
 }
 
 .btn-secondary-on-dark {
@@ -239,12 +263,39 @@ a {
 .text-link {
   color: var(--colors-primary);
   font-weight: 500;
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--transition-fast);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--transition-fast);
 }
 
 .text-link:hover {
-  border-bottom-color: var(--colors-primary);
+  text-decoration-color: currentColor;
+}
+
+/* Square icon button (theme toggle, small utility actions) */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--rounded-md);
+  border: 1px solid var(--colors-hairline);
+  background: transparent;
+  color: var(--colors-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.icon-btn:hover {
+  color: var(--colors-ink);
+  background-color: var(--colors-surface-soft);
+}
+
+.icon-btn:active {
+  background-color: var(--colors-surface-cream-strong);
 }
 
 /* Core Cards */
@@ -454,15 +505,20 @@ a {
   }
 }
 
-/* Roadmap Link Button Animation */
+/* Roadmap link buttons: outline style, brand color lives in the icon only */
+.roadmap-link-btn {
+  background-color: var(--colors-canvas);
+  color: var(--colors-ink);
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-md);
+  transition: background-color var(--transition-fast);
+}
+
 .roadmap-link-btn:hover {
-  transform: translateY(-1.5px);
-  box-shadow: 0 4px 8px rgba(20, 20, 19, 0.08);
-  filter: brightness(1.04);
+  background-color: var(--colors-surface-soft);
 }
 
 .roadmap-link-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(20, 20, 19, 0.05);
+  background-color: var(--colors-surface-cream-strong);
 }
 

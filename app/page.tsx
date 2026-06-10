@@ -75,15 +75,13 @@ export default async function HomePage({
     }
   }
 
-  // Split thumbnails into six rows to create a dense background wall covering the full height
-  const rowCount = 6;
-  const segmentLength = Math.ceil(thumbnailFiles.length / rowCount);
+  // Three sparse rows; each row is duplicated exactly 2x so the -50% marquee loop is seamless
+  const rowCount = 3;
+  const perRow = 12;
   const rows = Array.from({ length: rowCount }, (_, i) => {
-    const start = i * segmentLength;
-    const slice = thumbnailFiles.slice(start, start + segmentLength);
-    // Duplicate rows for infinite scroll loop
-    return [...slice, ...slice].slice(0, 25);
-  });
+    const slice = thumbnailFiles.slice(i * perRow, (i + 1) * perRow);
+    return [...slice, ...slice];
+  }).filter((row) => row.length > 0);
 
   return (
     <div style={{ backgroundColor: 'var(--colors-canvas)', minHeight: '100vh', paddingBottom: '80px' }}>
@@ -118,7 +116,7 @@ export default async function HomePage({
         .roadmap-card:hover {
           transform: translateY(-6px);
           border-color: var(--colors-primary);
-          box-shadow: 0 12px 36px rgba(204, 120, 92, 0.08);
+          box-shadow: 0 12px 36px color-mix(in srgb, var(--colors-primary) 10%, transparent);
         }
         /* Stretched link: the whole card is clickable while inner buttons stay above it */
         .card-stretched-link::after {
@@ -163,25 +161,34 @@ export default async function HomePage({
           border-color: color-mix(in srgb, var(--colors-primary) 35%, transparent);
         }
 
-        /* Secondary hero CTAs: quiet buttons, brand color only in the icon */
+        /* Primary hero CTA: same flat coral button, one size up */
+        .btn-hero {
+          height: 48px;
+          padding: 0 32px;
+          font-size: 15px;
+          gap: 8px;
+        }
+
+        /* Secondary hero CTAs: hairline outline, brand color only in the icon */
         .btn-ghost {
           height: 48px;
           padding: 0 24px;
           font-size: 15px;
-          font-weight: 600;
+          font-weight: 500;
           display: inline-flex;
           align-items: center;
           gap: 8px;
           background-color: var(--colors-canvas);
-          color: var(--colors-body-strong);
+          color: var(--colors-ink);
           border: 1px solid var(--colors-hairline);
           border-radius: var(--rounded-md);
-          transition: all var(--transition-fast);
-          box-shadow: 0 2px 8px rgba(20, 20, 19, 0.04);
+          transition: background-color var(--transition-fast);
         }
         .btn-ghost:hover {
-          border-color: var(--colors-primary);
-          transform: translateY(-1px);
+          background-color: var(--colors-surface-soft);
+        }
+        .btn-ghost:active {
+          background-color: var(--colors-surface-cream-strong);
         }
 
         /* Thumbnail Showcase Styles */
@@ -195,11 +202,10 @@ export default async function HomePage({
           padding: 40px 0;
           display: flex;
           flex-direction: column;
-          gap: 16px;
           opacity: var(--marquee-opacity);
           pointer-events: none;
           z-index: 0;
-          justify-content: center;
+          justify-content: space-evenly;
         }
         /* Cream scrim: keeps the center text zone readable while thumbnails stay vivid at the edges */
         .hero-scrim {
@@ -233,19 +239,13 @@ export default async function HomePage({
           display: flex;
           width: max-content;
           gap: 16px;
-          animation: marquee 50s linear infinite;
-        }
-        .marquee-track:hover {
-          animation-play-state: paused;
+          animation: marquee 90s linear infinite;
         }
         .marquee-track-reverse {
           display: flex;
           width: max-content;
           gap: 16px;
-          animation: marquee-reverse 50s linear infinite;
-        }
-        .marquee-track-reverse:hover {
-          animation-play-state: paused;
+          animation: marquee-reverse 90s linear infinite;
         }
         .thumbnail-card {
           width: 200px;
@@ -253,21 +253,15 @@ export default async function HomePage({
           border-radius: var(--rounded-md);
           overflow: hidden;
           border: 1px solid var(--colors-hairline);
-          box-shadow: 0 4px 10px rgba(20, 20, 19, 0.04);
-          transition: all var(--transition-normal);
           position: relative;
           background-color: var(--colors-surface-soft);
-        }
-        .thumbnail-card:hover {
-          transform: scale(1.06) translateY(-4px);
-          border-color: var(--colors-primary);
-          box-shadow: 0 10px 20px rgba(204, 120, 92, 0.15);
-          z-index: 10;
         }
         .thumbnail-card img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          /* Tone the loud YouTube colors down into the cream palette */
+          filter: saturate(0.6);
         }
         @keyframes marquee {
           0% { transform: translateX(0); }
@@ -276,6 +270,12 @@ export default async function HomePage({
         @keyframes marquee-reverse {
           0% { transform: translateX(-50%); }
           100% { transform: translateX(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .marquee-track,
+          .marquee-track-reverse {
+            animation: none;
+          }
         }
       `}</style>
 
@@ -295,13 +295,13 @@ export default async function HomePage({
       >
         {/* Infinite Scrolling Thumbnail Cascade Showcase Behind Hero Content */}
         {thumbnailFiles.length > 0 && (
-          <div className="thumbnail-showcase-container">
+          <div className="thumbnail-showcase-container" aria-hidden="true">
             {rows.map((rowLoop, idx) => (
               <div key={`bg-row-${idx}`} className="marquee-container">
                 <div className={idx % 2 === 0 ? "marquee-track" : "marquee-track-reverse"}>
                   {rowLoop.map((file, fileIdx) => (
                     <div key={`bg-row-${idx}-${file}-${fileIdx}`} className="thumbnail-card">
-                      <img src={`/youtube_thumbnails/${encodeURIComponent(file)}`} alt="유튜브 강의 섬네일" loading="lazy" />
+                      <img src={`/youtube_thumbnails/${encodeURIComponent(file)}`} alt="" loading="lazy" />
                     </div>
                   ))}
                 </div>
@@ -333,26 +333,14 @@ export default async function HomePage({
         <div className="container" style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <span
             className="badge badge-coral"
-            style={{ marginBottom: '24px', fontWeight: 600, letterSpacing: '0.02em', boxShadow: '0 2px 8px rgba(204, 120, 92, 0.08)' }}
+            style={{ marginBottom: '24px', fontWeight: 600, letterSpacing: '0.02em' }}
           >
             ✦ {totalLectures}편의 무료 강의를 순서대로 엮은 친절한 배움터
           </span>
 
           <h1 className="serif-display hero-title" style={{ maxWidth: '900px', margin: '0 auto 20px auto' }}>
             어떤 것부터 공부할지 모르겠다면? <br />
-            <span style={{ position: 'relative', color: 'var(--colors-primary)', display: 'inline-block' }}>
-              저와 함께 로드맵으로 시작해보세요!
-              <span style={{
-                position: 'absolute',
-                bottom: '8px',
-                left: 0,
-                width: '100%',
-                height: '8px',
-                backgroundColor: 'rgba(204, 120, 92, 0.15)',
-                borderRadius: '4px',
-                zIndex: -1
-              }} />
-            </span>
+            <span style={{ color: 'var(--colors-primary)' }}>저와 함께 로드맵으로 시작해보세요!</span>
           </h1>
 
           <p
@@ -360,7 +348,7 @@ export default async function HomePage({
               fontSize: '18px',
               color: 'var(--colors-body)',
               lineHeight: 1.65,
-              fontWeight: 500,
+              fontWeight: 400,
               marginBottom: '32px',
               maxWidth: '740px',
               marginLeft: 'auto',
@@ -373,8 +361,7 @@ export default async function HomePage({
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
               href="#roadmap-list"
-              className="btn btn-primary"
-              style={{ height: '48px', padding: '0 32px', fontSize: '15px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 15px rgba(204, 120, 92, 0.25)' }}
+              className="btn btn-primary btn-hero"
             >
               무료 로드맵 시작하기 <ArrowRight size={17} />
             </a>
@@ -406,7 +393,7 @@ export default async function HomePage({
                 transform: 'translate(-50%, -50%)',
                 width: '120%',
                 height: '100%',
-                background: 'radial-gradient(circle, rgba(204, 120, 92, 0.12) 0%, rgba(204, 120, 92, 0) 65%)',
+                background: 'radial-gradient(circle, color-mix(in srgb, var(--colors-primary) 12%, transparent) 0%, transparent 65%)',
                 filter: 'blur(40px)',
                 zIndex: 0,
                 pointerEvents: 'none',
@@ -421,7 +408,7 @@ export default async function HomePage({
                 objectFit: 'contain',
                 position: 'relative',
                 zIndex: 1,
-                filter: 'drop-shadow(0 20px 40px rgba(204, 120, 92, 0.12))',
+                filter: 'drop-shadow(0 20px 40px color-mix(in srgb, var(--colors-primary) 12%, transparent))',
               }}
             />
           </div>
