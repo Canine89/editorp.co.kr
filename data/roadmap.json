@@ -99,6 +99,39 @@
           "x": 300,
           "y": 915,
           "parentId": "vibe-node-7"
+        },
+        {
+          "id": "vibe-node-recap-1",
+          "title": "클로드 코드 입문 recap(1편) ━ 처음부터 코워크까지",
+          "description": "지금까지 배운 내용을 한 번에 복습하는 recap 강의입니다.",
+          "youtubeUrl": "https://youtu.be/V4eBA0AMbm0",
+          "youtubeId": "V4eBA0AMbm0",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 1035,
+          "parentId": "vibe-node-8"
+        },
+        {
+          "id": "vibe-node-recap-2",
+          "title": "클로드 코드 입문 recap(2편) ━ 코워크부터 터미널, 클로드 코드까지",
+          "description": "지금까지 배운 내용을 한 번에 복습하는 recap 강의입니다.",
+          "youtubeUrl": "https://youtu.be/Z1GFQ6HQCLU",
+          "youtubeId": "Z1GFQ6HQCLU",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 1155,
+          "parentId": "vibe-node-recap-1"
+        },
+        {
+          "id": "vibe-node-recap-3",
+          "title": "클로드 코드 입문 recap(3편) ━ 스킬부터 CLAUDE.md까지",
+          "description": "지금까지 배운 내용을 한 번에 복습하는 recap 강의입니다.",
+          "youtubeUrl": "https://youtu.be/QqD7PcyxwvQ",
+          "youtubeId": "QqD7PcyxwvQ",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 1275,
+          "parentId": "vibe-node-recap-2"
         }
       ]
     },
