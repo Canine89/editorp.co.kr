@@ -56,7 +56,10 @@ export const authOptions: NextAuthOptions = {
   pages: {
     error: '/auth/unauthorized',
   },
-  secret: process.env.AUTH_SECRET || 'fallback-secret-for-development-purposes-only-12345',
+  // 운영 환경에서 AUTH_SECRET이 없으면 NextAuth가 기동을 거부하도록 fallback은 개발 모드에만 허용
+  secret:
+    process.env.AUTH_SECRET ||
+    (process.env.NODE_ENV === 'development' ? 'dev-only-secret-not-for-production' : undefined),
 };
 
 const handler = NextAuth(authOptions);
