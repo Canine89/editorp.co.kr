@@ -513,6 +513,125 @@
           "parentId": "harness-node-6"
         }
       ]
+    },
+    {
+      "id": "roadmap-claude-mcp",
+      "title": "클로드 MCP 활용 로드맵",
+      "description": "MCP가 뭔지부터 설치, 오류 대처, 그리고 엑셀·캔바·블렌더까지 도구별 활용법을 단계적으로 익히는 로드맵입니다. 바탕화면 정리부터 보고서 자동화까지 실습 위주로 구성했습니다.",
+      "category": "AI 에이전트",
+      "isActive": true,
+      "nodes": [
+        {
+          "id": "mcp-node-1",
+          "title": "MCP란 무엇인가? 아주 쉽게 설명하는 짤막한 강의",
+          "description": "MCP가 무엇이고 왜 필요한지, 가장 쉬운 눈높이로 개념부터 잡아드립니다.",
+          "youtubeUrl": "https://youtu.be/VBELxjaOWn4",
+          "youtubeId": "VBELxjaOWn4",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 75,
+          "parentId": null
+        },
+        {
+          "id": "mcp-node-2",
+          "title": "MCP에서 커넥터로, MCP 설치 가이드",
+          "description": "MCP와 커넥터의 관계를 이해하고 직접 설치해 보는 가이드입니다.",
+          "youtubeUrl": "https://youtu.be/7eXY1rPBrSg",
+          "youtubeId": "7eXY1rPBrSg",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 195,
+          "parentId": "mcp-node-1"
+        },
+        {
+          "id": "mcp-node-3",
+          "title": "MCP가 설치 오류? 어떻게 해야 할지 모를 때!",
+          "description": "MCP 설치가 안 될 때 스스로 문제를 진단하고 해결하는 방법을 다룹니다.",
+          "youtubeUrl": "https://youtu.be/P1t99e1ZsTk",
+          "youtubeId": "P1t99e1ZsTk",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 315,
+          "parentId": "mcp-node-2"
+        },
+        {
+          "id": "mcp-node-4",
+          "title": "내 바탕화면을 정리해줘! MCP 설치와 사용 방법",
+          "description": "바탕화면 정리를 소재로 MCP 설치부터 첫 사용까지 따라 해 봅니다.",
+          "youtubeUrl": "https://youtu.be/dj0QA2aOz3U",
+          "youtubeId": "dj0QA2aOz3U",
+          "difficulty": "BEGINNER",
+          "x": 300,
+          "y": 435,
+          "parentId": "mcp-node-3"
+        },
+        {
+          "id": "mcp-node-5",
+          "title": "보고서 + 프레젠테이션 자동화",
+          "description": "MCP로 보고서 작성과 프레젠테이션 제작을 자동화하는 실습입니다.",
+          "youtubeUrl": "https://youtu.be/xdtGEy4wA1w",
+          "youtubeId": "xdtGEy4wA1w",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 555,
+          "parentId": "mcp-node-4"
+        },
+        {
+          "id": "mcp-node-6",
+          "title": "엑셀 MCP 설치 5분 가이드",
+          "description": "엑셀 MCP를 5분 만에 설치하고 클로드와 연결합니다.",
+          "youtubeUrl": "https://youtu.be/NTIMBG-G8kU",
+          "youtubeId": "NTIMBG-G8kU",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 675,
+          "parentId": "mcp-node-5"
+        },
+        {
+          "id": "mcp-node-7",
+          "title": "미국 주식 데이터 크롤링 + 엑셀 MCP 주식 알고리즘 시뮬레이션",
+          "description": "주식 데이터를 크롤링해 엑셀 MCP로 알고리즘 시뮬레이션까지 해 보는 실전 활용입니다.",
+          "youtubeUrl": "https://youtu.be/H2AnuR8SKLU",
+          "youtubeId": "H2AnuR8SKLU",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 795,
+          "parentId": "mcp-node-6"
+        },
+        {
+          "id": "mcp-node-8",
+          "title": "캔바 MCP 연결 방법 + 기능 보는 법 설명까지!",
+          "description": "캔바 MCP를 연결하고 어떤 기능을 쓸 수 있는지 살펴봅니다.",
+          "youtubeUrl": "https://youtu.be/Ge6BymHbgoY",
+          "youtubeId": "Ge6BymHbgoY",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 915,
+          "parentId": "mcp-node-7"
+        },
+        {
+          "id": "mcp-node-9",
+          "title": "블렌더 MCP 설치 5분 가이드",
+          "description": "블렌더 MCP를 5분 만에 설치하고 3D 작업에 클로드를 활용해 봅니다.",
+          "youtubeUrl": "https://youtu.be/NrMH6pDxooU",
+          "youtubeId": "NrMH6pDxooU",
+          "difficulty": "INTERMEDIATE",
+          "x": 300,
+          "y": 1035,
+          "parentId": "mcp-node-8"
+        },
+        {
+          "id": "mcp-node-10",
+          "title": "인하우스 MCP, 커넥터! 데스크톱 커맨더와 애플 메모 연동!",
+          "description": "파일 시스템을 다루는 데스크톱 커맨더와 애플 메모를 연동하는 심화 활용입니다.",
+          "youtubeUrl": "https://youtu.be/6VLpPeNXTmo",
+          "youtubeId": "6VLpPeNXTmo",
+          "difficulty": "ADVANCED",
+          "x": 300,
+          "y": 1155,
+          "parentId": "mcp-node-9"
+        }
+      ]
     }
   ]
 }
