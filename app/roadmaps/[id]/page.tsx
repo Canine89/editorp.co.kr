@@ -1,45 +1,11 @@
-import fs from 'fs';
-import path from 'path';
 import { notFound } from 'next/navigation';
 import { RoadmapCanvas } from '@/components/RoadmapCanvas';
 import { RoadmapDescription } from '@/components/RoadmapDescription';
+import { getRoadmapData, type Roadmap } from '@/lib/roadmap-data';
 
-
-interface Node {
-  id: string;
-  title: string;
-  description?: string;
-  youtubeUrl: string;
-  youtubeId: string;
-  difficulty: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
-  x: number;
-  y: number;
-  parentId: string | null;
-}
-
-interface Roadmap {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  isActive: boolean;
-  nodes: Node[];
-}
-
-function getRoadmap(id: string): Roadmap | null {
-  const filePath = path.join(process.cwd(), 'data', 'roadmap.json');
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-  try {
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const data = JSON.parse(fileContents);
-    const roadmap = data.roadmaps.find((r: Roadmap) => r.id === id && r.isActive !== false);
-    return roadmap || null;
-  } catch (error) {
-    console.error('Error fetching roadmap:', error);
-    return null;
-  }
+async function getRoadmap(id: string): Promise<Roadmap | null> {
+  const data = await getRoadmapData();
+  return data.roadmaps.find((r) => r.id === id && r.isActive !== false) || null;
 }
 
 export const revalidate = 0; // Prevent caching
@@ -50,7 +16,7 @@ export default async function RoadmapDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const roadmap = getRoadmap(id);
+  const roadmap = await getRoadmap(id);
 
   if (!roadmap) {
     notFound();

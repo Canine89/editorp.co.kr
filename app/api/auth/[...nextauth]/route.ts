@@ -36,10 +36,9 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      if (user.email === 'hgpark@goldenrabbit.co.kr') {
-        return true;
-      }
-      return false; // Blocks anyone else
+      // 일반 사용자도 구글 로그인 허용 (Q&A 게시판 작성용).
+      // 관리자 영역(/admin, /api/admin)은 middleware에서 이메일로 별도 차단한다.
+      return Boolean(user.email);
     },
     async jwt({ token, user }) {
       if (user) {

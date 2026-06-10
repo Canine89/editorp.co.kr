@@ -4,47 +4,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { YouTubeIcon, KakaoTalkIcon } from '@/components/BrandIcons';
 import { RoadmapDescription } from '@/components/RoadmapDescription';
-
-
-interface Node {
-  id: string;
-  title: string;
-  description?: string;
-  youtubeUrl: string;
-  youtubeId: string;
-  difficulty: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
-  x: number;
-  y: number;
-  parentId: string | null;
-}
-
-interface Roadmap {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  isActive: boolean;
-  nodes: Node[];
-}
-
-interface RoadmapData {
-  categories: string[];
-  roadmaps: Roadmap[];
-}
-
-function getRoadmapData(): RoadmapData {
-  const filePath = path.join(process.cwd(), 'data', 'roadmap.json');
-  if (!fs.existsSync(filePath)) {
-    return { categories: [], roadmaps: [] };
-  }
-  try {
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(fileContents);
-  } catch (error) {
-    console.error('Error reading roadmap JSON:', error);
-    return { categories: [], roadmaps: [] };
-  }
-}
+import { getRoadmapData } from '@/lib/roadmap-data';
 
 export const revalidate = 0; // Disable caching to fetch fresh commits on page load
 
@@ -54,7 +14,7 @@ export default async function HomePage({
   searchParams: Promise<{ cat?: string }>;
 }) {
   const { cat } = await searchParams;
-  const data = getRoadmapData();
+  const data = await getRoadmapData();
   const activeRoadmaps = data.roadmaps.filter((r) => r.isActive !== false);
   const totalLectures = activeRoadmaps.reduce((sum, r) => sum + (r.nodes?.length || 0), 0);
 

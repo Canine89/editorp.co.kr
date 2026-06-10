@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ThemeToggle } from './ThemeToggle';
+import { AuthButton } from './AuthButton';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +33,9 @@ export function Header() {
           <Link href="/" className="nav-link">
             로드맵 목록
           </Link>
+          <Link href="/qna" className="nav-link">
+            질문 게시판
+          </Link>
           <Link href="/about" className="nav-link">
             소개 & 강의 문의
           </Link>
@@ -43,6 +47,7 @@ export function Header() {
           >
             유튜브 채널
           </a>
+          <AuthButton />
           <ThemeToggle />
         </nav>
 
@@ -85,6 +90,9 @@ export function Header() {
           <Link href="/" className="nav-link" onClick={() => setIsOpen(false)}>
             로드맵 목록
           </Link>
+          <Link href="/qna" className="nav-link" onClick={() => setIsOpen(false)}>
+            질문 게시판
+          </Link>
           <Link href="/about" className="nav-link" onClick={() => setIsOpen(false)}>
             소개 & 강의 문의
           </Link>
@@ -97,6 +105,9 @@ export function Header() {
           >
             유튜브 채널
           </a>
+          <div style={{ paddingTop: '8px', borderTop: '1px solid var(--colors-hairline)' }}>
+            <AuthButton />
+          </div>
         </nav>
       </div>
     </header>
