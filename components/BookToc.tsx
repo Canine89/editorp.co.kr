@@ -37,7 +37,7 @@ export function BookToc({ book, currentSectionId }: { book: Book; currentSection
 
         {book.parts.map((part) => (
           <div key={part.id} className="book-toc-part">
-            <div className="book-toc-part-title">{part.title}</div>
+            {part.title && <div className="book-toc-part-title">{part.title}</div>}
             {part.chapters.map((chapter) => (
               <div key={chapter.id}>
                 <div className="book-toc-chapter-title">{chapter.title}</div>

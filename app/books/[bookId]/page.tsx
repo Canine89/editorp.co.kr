@@ -86,21 +86,37 @@ export default async function BookTocPage({ params }: { params: Promise<{ bookId
 
           {book.parts.map((part) => (
             <div key={part.id} style={{ marginBottom: '36px' }}>
-              <h3
-                className="serif-display"
-                style={{
-                  fontSize: '17px',
-                  color: 'var(--colors-primary)',
-                  borderBottom: '2px solid var(--colors-primary)',
-                  paddingBottom: '10px',
-                  marginBottom: '4px',
-                }}
-              >
-                {part.title}
-              </h3>
+              {/* 마당 없이 장만 있는 책은 마당 제목 줄을 생략한다 */}
+              {part.title && (
+                <h3
+                  className="serif-display"
+                  style={{
+                    fontSize: '17px',
+                    color: 'var(--colors-primary)',
+                    borderBottom: '2px solid var(--colors-primary)',
+                    paddingBottom: '10px',
+                    marginBottom: '4px',
+                  }}
+                >
+                  {part.title}
+                </h3>
+              )}
               {part.chapters.map((chapter) => (
                 <div key={chapter.id} style={{ marginTop: '18px' }}>
-                  <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--colors-ink)', margin: '0 0 6px 0' }}>
+                  <h4
+                    style={
+                      part.title
+                        ? { fontSize: '15px', fontWeight: 600, color: 'var(--colors-ink)', margin: '0 0 6px 0' }
+                        : {
+                            fontSize: '16px',
+                            fontWeight: 600,
+                            color: 'var(--colors-ink)',
+                            margin: '0 0 6px 0',
+                            borderBottom: '2px solid var(--colors-primary)',
+                            paddingBottom: '8px',
+                          }
+                    }
+                  >
                     {chapter.title}
                   </h4>
                   <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>

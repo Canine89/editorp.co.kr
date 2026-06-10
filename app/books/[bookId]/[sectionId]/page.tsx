@@ -61,8 +61,12 @@ export default async function BookSectionPage({
             <Link href={`/books/${book.id}`} className="text-link" style={{ fontSize: 'inherit' }}>
               {book.title}
             </Link>
-            <span style={{ color: 'var(--colors-muted-soft)' }}>›</span>
-            <span>{current.part.title}</span>
+            {current.part.title && (
+              <>
+                <span style={{ color: 'var(--colors-muted-soft)' }}>›</span>
+                <span>{current.part.title}</span>
+              </>
+            )}
             <span style={{ color: 'var(--colors-muted-soft)' }}>›</span>
             <span>{current.chapter.title}</span>
           </nav>
