@@ -1,0 +1,371 @@
+{
+  "lostTextboxes": 56,
+  "droppedOverlays": [
+    {
+      "kept": "image109.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image110.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image167.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image130.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image152.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image121.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image115.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image72.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image136.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image76.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image147.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image84.png",
+      "dropped": [
+        "image71.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image184.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image88.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image126.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image183.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image148.png",
+      "dropped": [
+        "image116.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image175.png",
+      "dropped": [
+        "image180.png",
+        "image168.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image131.png",
+      "dropped": [
+        "image124.png",
+        "image119.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image172.png",
+      "dropped": [
+        "image164.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image106.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image160.png",
+      "dropped": [
+        "image161.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image122.png",
+      "dropped": [
+        "image137.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image181.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image96.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image134.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image171.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image178.png",
+      "dropped": [
+        "image166.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image143.png",
+      "dropped": [
+        "image156.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image151.png",
+      "dropped": [
+        "image140.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image83.png",
+      "dropped": [
+        "image86.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image153.png",
+      "dropped": [
+        "image163.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image108.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image113.png",
+      "dropped": [
+        "image107.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image128.png",
+      "dropped": [
+        "image142.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image91.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image100.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image177.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image165.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image159.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image182.png",
+      "dropped": [
+        "image154.png",
+        "image120.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image174.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image95.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image185.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image176.png",
+      "dropped": [
+        "image169.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image117.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image101.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image114.png",
+      "dropped": [
+        "image129.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image89.png",
+      "dropped": [
+        "image82.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image155.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image179.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image138.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image173.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image146.png",
+      "dropped": [
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image157.png",
+      "dropped": [
+        "image149.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image170.png",
+      "dropped": [
+        "image127.png",
+        "image38.png"
+      ]
+    },
+    {
+      "kept": "image158.png",
+      "dropped": [
+        "image162.png",
+        "image38.png"
+      ]
+    }
+  ]
+}
