@@ -82,6 +82,11 @@ export default async function HomePage({
             지금 단계에 맞는 로드맵을 골라 차례대로 따라오세요.
           </p>
 
+          <div className={styles.heroProof} aria-label="유튜브 활동 이력 요약">
+            <span>유튜브 강의 아카이브</span>
+            <strong>{thumbnailFiles.length}개 영상 기록</strong>
+          </div>
+
           <div className={styles.heroActions}>
             <a
               href="#roadmap-list"

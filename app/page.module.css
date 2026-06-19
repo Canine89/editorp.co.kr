@@ -8,8 +8,8 @@
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: clamp(620px, 68vh, 740px);
-  padding: 82px 0 42px;
+  min-height: clamp(650px, 72vh, 780px);
+  padding: 82px 0 52px;
   border-bottom: 1px solid var(--colors-hairline-soft);
   background-color: var(--colors-canvas);
   background-image: radial-gradient(var(--colors-hairline) 1px, transparent 1px);
@@ -21,9 +21,9 @@
   content: "";
   position: absolute;
   inset: auto 0 0;
-  height: 34%;
+  height: 24%;
   pointer-events: none;
-  background: linear-gradient(180deg, transparent, var(--colors-canvas) 72%);
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--colors-canvas) 88%, transparent) 72%);
   z-index: 1;
 }
 
@@ -34,10 +34,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  gap: 36px;
+  gap: 26px;
   overflow: hidden;
-  padding: 72px 0 40px;
-  opacity: 0.2;
+  padding: 90px 0 54px;
+  opacity: 0.54;
   pointer-events: none;
 }
 
@@ -49,17 +49,20 @@
   background:
     linear-gradient(
       90deg,
-      color-mix(in srgb, var(--colors-canvas) 78%, transparent) 0%,
-      color-mix(in srgb, var(--colors-canvas) 28%, transparent) 21%,
-      color-mix(in srgb, var(--colors-canvas) 88%, transparent) 50%,
-      color-mix(in srgb, var(--colors-canvas) 28%, transparent) 79%,
-      color-mix(in srgb, var(--colors-canvas) 78%, transparent) 100%
+      color-mix(in srgb, var(--colors-canvas) 20%, transparent) 0%,
+      color-mix(in srgb, var(--colors-canvas) 42%, transparent) 20%,
+      color-mix(in srgb, var(--colors-canvas) 94%, transparent) 35%,
+      var(--colors-canvas) 45%,
+      var(--colors-canvas) 55%,
+      color-mix(in srgb, var(--colors-canvas) 94%, transparent) 65%,
+      color-mix(in srgb, var(--colors-canvas) 42%, transparent) 80%,
+      color-mix(in srgb, var(--colors-canvas) 20%, transparent) 100%
     ),
     radial-gradient(
-      ellipse 52% 54% at 50% 36%,
+      ellipse 39% 54% at 50% 38%,
       var(--colors-canvas) 0%,
-      color-mix(in srgb, var(--colors-canvas) 96%, transparent) 38%,
-      color-mix(in srgb, var(--colors-canvas) 70%, transparent) 68%,
+      color-mix(in srgb, var(--colors-canvas) 96%, transparent) 44%,
+      color-mix(in srgb, var(--colors-canvas) 58%, transparent) 78%,
       transparent 100%
     );
 }
@@ -74,7 +77,7 @@
 .marqueeTrackReverse {
   display: flex;
   width: max-content;
-  gap: 16px;
+  gap: 18px;
   will-change: transform;
 }
 
@@ -88,19 +91,20 @@
 
 .thumbnailCard {
   position: relative;
-  width: clamp(168px, 14vw, 220px);
+  width: clamp(190px, 15vw, 250px);
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border: 1px solid var(--colors-hairline);
-  border-radius: var(--rounded-md);
+  border: 1px solid color-mix(in srgb, var(--colors-primary) 20%, var(--colors-hairline));
+  border-radius: var(--rounded-lg);
   background-color: var(--colors-surface-soft);
+  box-shadow: 0 16px 36px color-mix(in srgb, var(--colors-ink) 12%, transparent);
 }
 
 .thumbnailCard img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.56) contrast(0.92);
+  filter: saturate(0.88) contrast(0.98);
 }
 
 .heroInner {
@@ -146,12 +150,33 @@
 
 .heroLead {
   max-width: 680px;
-  margin: 0 auto 32px;
+  margin: 0 auto 18px;
   color: var(--colors-body);
   font-size: 18px;
   font-weight: 400;
   line-height: 1.75;
   text-wrap: pretty;
+}
+
+.heroProof {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  padding: 7px 12px;
+  border: 1px solid color-mix(in srgb, var(--colors-primary) 24%, var(--colors-hairline));
+  border-radius: var(--rounded-md);
+  background-color: color-mix(in srgb, var(--colors-canvas) 82%, transparent);
+  color: var(--colors-muted);
+  font-size: 13px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+}
+
+.heroProof strong {
+  color: var(--colors-ink);
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
 }
 
 .heroActions {
@@ -585,15 +610,15 @@
 
 @media (max-width: 768px) {
   .hero {
-    min-height: 640px;
-    padding: 74px 0 28px;
+    min-height: 680px;
+    padding: 72px 0 32px;
   }
 
   .thumbnailShowcase {
     justify-content: end;
-    gap: 28px;
-    padding: 190px 0 30px;
-    opacity: 0.16;
+    gap: 18px;
+    padding: 250px 0 32px;
+    opacity: 0.34;
   }
 
   .heroScrim {
@@ -601,8 +626,8 @@
       linear-gradient(
         180deg,
         color-mix(in srgb, var(--colors-canvas) 98%, transparent) 0%,
-        color-mix(in srgb, var(--colors-canvas) 88%, transparent) 52%,
-        color-mix(in srgb, var(--colors-canvas) 38%, transparent) 100%
+        color-mix(in srgb, var(--colors-canvas) 94%, transparent) 52%,
+        color-mix(in srgb, var(--colors-canvas) 42%, transparent) 100%
       ),
       radial-gradient(
         ellipse 128% 58% at 50% 36%,
@@ -626,9 +651,14 @@
 
   .heroLead {
     max-width: 33ch;
-    margin-bottom: 22px;
+    margin-bottom: 14px;
     font-size: 15.5px;
     line-height: 1.72;
+  }
+
+  .heroProof {
+    margin-bottom: 20px;
+    font-size: 12px;
   }
 
   .heroActions {
@@ -697,7 +727,7 @@
   }
 
   .hero {
-    min-height: 640px;
+    min-height: 680px;
   }
 
   .heroInner {
