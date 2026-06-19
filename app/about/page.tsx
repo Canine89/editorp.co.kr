@@ -396,9 +396,10 @@ export default function AboutPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="badge badge-coral"
+              aria-label="Google Docs에서 전체 강의 이력 보기"
               style={{ cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}
             >
-              강사 소개 자세히 보기 ↗
+              전체 강의 이력 보기 ↗
             </a>
           </div>
           <div className="info-card" style={{ padding: '8px 16px' }}>
