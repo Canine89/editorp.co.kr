@@ -969,25 +969,29 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-lg);
 }
 
 .header-logo {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .header-logo-text {
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 650;
   color: var(--colors-ink);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
 }
 
 .main-nav-desktop {
   display: flex;
   align-items: center;
-  gap: 24px;
+  justify-content: flex-end;
+  gap: 18px;
+  min-width: 0;
 }
 
 .main-nav-mobile {
@@ -1019,10 +1023,11 @@ a {
 }
 
 .nav-link {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 550;
   color: var(--colors-muted);
   transition: color var(--transition-fast);
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -1070,4 +1075,3 @@ a {
 .roadmap-link-btn:active {
   background-color: var(--colors-surface-cream-strong);
 }
-

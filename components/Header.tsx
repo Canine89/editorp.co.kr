@@ -24,7 +24,7 @@ export function Header() {
             }}
           />
           <span className="serif-display header-logo-text">
-            편집자P의 AI 강의·편집실
+            편집자P
           </span>
         </Link>
 
@@ -43,16 +43,8 @@ export function Header() {
             질문 게시판
           </Link>
           <Link href="/about" className="nav-link">
-            소개 & 강의 문의
+            소개
           </Link>
-          <a
-            href="https://www.youtube.com/@editorp89"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-link"
-          >
-            유튜브 채널
-          </a>
           <AuthButton />
           <ThemeToggle />
         </nav>
