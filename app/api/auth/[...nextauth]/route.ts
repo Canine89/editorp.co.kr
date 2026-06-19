@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { ADMIN_EMAIL, isAdminEmail } from '@/lib/admin';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,18 +15,18 @@ export const authOptions: NextAuthOptions = {
           CredentialsProvider({
             name: '로컬 관리자 로그인 (개발 모드 전용)',
             credentials: {
-              email: { label: "이메일", type: "email", placeholder: "hgpark@goldenrabbit.co.kr" },
+              email: { label: "이메일", type: "email", placeholder: ADMIN_EMAIL },
               password: { label: "비밀번호 ('admin' 입력)", type: "password" }
             },
             async authorize(credentials) {
               if (
-                credentials?.email === 'hgpark@goldenrabbit.co.kr' &&
+                credentials?.email === ADMIN_EMAIL &&
                 credentials?.password === 'admin'
               ) {
                 return {
                   id: 'dev-admin',
                   name: 'Master Admin',
-                  email: 'hgpark@goldenrabbit.co.kr',
+                  email: ADMIN_EMAIL,
                 };
               }
               return null;
@@ -49,6 +50,8 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.email = token.email as string;
+        // 클라이언트에서 이메일 문자열 비교 없이 관리자 UI를 분기할 수 있도록 플래그 제공
+        session.user.isAdmin = isAdminEmail(token.email as string);
       }
       return session;
     }

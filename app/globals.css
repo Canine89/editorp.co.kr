@@ -458,7 +458,7 @@ a {
   border: 1px solid var(--colors-hairline);
   border-radius: var(--rounded-md);
   background-color: var(--colors-canvas);
-  overflow: hidden;
+  /* overflow: hidden 금지 — 스티키 툴바가 동작하지 않게 된다 */
 }
 
 .rte-wrapper:focus-within {
@@ -474,6 +474,20 @@ a {
   padding: 6px 8px;
   border-bottom: 1px solid var(--colors-hairline-soft);
   background-color: var(--colors-surface-soft);
+  /* 긴 본문을 스크롤해도 서식/저장 버튼이 항상 보이도록 사이트 헤더(64px) 아래에 고정 */
+  position: sticky;
+  top: 64px;
+  z-index: 30;
+  border-top-left-radius: var(--rounded-md);
+  border-top-right-radius: var(--rounded-md);
+}
+
+.rte-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding-left: 8px;
 }
 
 .rte-btn {
@@ -514,9 +528,67 @@ a {
 
 .rte-area {
   min-height: 260px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   outline: none;
   cursor: text;
+}
+
+/* 에디터 안 타이포그래피는 읽기 페이지보다 조밀하게.
+   (.rich-content/.book-content와 같은 요소에 붙으므로 결합 셀렉터로 우선순위 확보) */
+.rte-area.rich-content {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.rte-area.rich-content p {
+  margin-bottom: 0.45em;
+}
+
+.rte-area.rich-content h2 {
+  font-size: 18px;
+  margin: 1.1em 0 0.4em 0;
+}
+
+.rte-area.rich-content h3 {
+  font-size: 16px;
+  margin: 1em 0 0.35em 0;
+}
+
+.rte-area.rich-content h4 {
+  font-size: 14.5px;
+  margin: 0.9em 0 0.3em 0;
+}
+
+.rte-area.rich-content ul,
+.rte-area.rich-content ol {
+  margin-bottom: 0.45em;
+  padding-left: 1.3em;
+}
+
+.rte-area.rich-content blockquote {
+  margin: 0.6em 0;
+}
+
+.rte-area.rich-content pre {
+  font-size: 12.5px;
+  line-height: 1.55;
+  padding: 10px 12px;
+  margin: 0.6em 0;
+}
+
+.rte-area.rich-content table {
+  font-size: 13px;
+  margin: 0.7em 0;
+}
+
+.rte-area.rich-content th,
+.rte-area.rich-content td {
+  padding: 5px 9px;
+}
+
+.rte-area.rich-content img,
+.rte-area.rich-content .rte-img {
+  margin: 0.4em 0;
 }
 
 .rte-area p.is-editor-empty:first-child::before {
@@ -525,6 +597,129 @@ a {
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+/* 툴바 인라인 팝오버 (링크/이미지 입력) */
+.rte-popover {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-sm);
+  background-color: var(--colors-canvas);
+}
+
+.rte-popover label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 220px;
+  font-size: 12px;
+  color: var(--colors-muted);
+  white-space: nowrap;
+}
+
+.rte-popover input {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  padding: 0 8px;
+  font-size: 13px;
+  font-family: inherit;
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-sm);
+  background-color: var(--colors-canvas);
+  color: var(--colors-ink);
+  outline: none;
+}
+
+.rte-popover input:focus {
+  border-color: var(--colors-primary);
+}
+
+.rte-popover .btn {
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12.5px;
+}
+
+/* 크기 조정 가능한 이미지 노드 */
+.rte-img {
+  position: relative;
+  max-width: 100%;
+  margin: 0.6em 0;
+}
+
+.rte-img img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--rounded-md);
+  border: 1px solid var(--colors-hairline);
+  margin: 0;
+}
+
+.rte-img.selected img {
+  outline: 2px solid var(--colors-primary);
+  outline-offset: 1px;
+}
+
+.rte-img-handle {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 28px;
+  transform: translateY(-50%);
+  border-radius: var(--rounded-pill);
+  background-color: var(--colors-primary);
+  border: 2px solid var(--colors-canvas);
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.rte-img-handle.left {
+  left: -5px;
+}
+
+.rte-img-handle.right {
+  right: -5px;
+}
+
+.rte-img-presets {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--rounded-sm);
+  background-color: color-mix(in srgb, var(--colors-ink) 78%, transparent);
+  backdrop-filter: blur(2px);
+}
+
+.rte-img-presets button {
+  border: none;
+  background: transparent;
+  color: var(--colors-canvas);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 3px 7px;
+  border-radius: var(--rounded-sm);
+  cursor: pointer;
+}
+
+.rte-img-presets button:hover {
+  background-color: color-mix(in srgb, var(--colors-canvas) 20%, transparent);
+}
+
+.rte-img-presets button.active {
+  background-color: var(--colors-primary);
 }
 
 /* ───────────────────────────────────────────────

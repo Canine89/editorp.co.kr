@@ -139,6 +139,8 @@ export function RichTextEditor({
     ],
     content: value,
     immediatelyRender: false,
+    // 트랜잭션마다 리렌더해야 툴바 활성/비활성 상태가 커서 위치를 따라간다 (v3 기본값은 false)
+    shouldRerenderOnTransaction: true,
     onUpdate: ({ editor: e }) => {
       onChange(e.isEmpty ? '' : e.getHTML());
     },

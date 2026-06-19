@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { countEditedBooks, getEditedBooksData } from '@/lib/edited-books';
 
 export const metadata = {
   title: '편집자P 소개 & 강의 문의 | 편집자P 로드맵',
@@ -6,6 +7,8 @@ export const metadata = {
 };
 
 export default function AboutPage() {
+  const totalBooks = countEditedBooks(getEditedBooksData());
+
   return (
     <div style={{ backgroundColor: 'var(--colors-canvas)', minHeight: '100vh', padding: '60px 0' }}>
       {/* Embedded CSS for styling and animations */}
@@ -342,8 +345,21 @@ export default function AboutPage() {
 
         {/* Books Section */}
         <div>
-          <h2 className="section-title">집필 및 편저서</h2>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', borderBottom: '2px solid var(--colors-primary)', paddingBottom: '4px', marginBottom: 'var(--spacing-md)' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--colors-ink)', margin: 0 }}>집필 및 편저서</h2>
+            <Link
+              href="/edited-books"
+              className="badge badge-coral"
+              style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
+            >
+              전체 {totalBooks}권 보기 →
+            </Link>
+          </div>
           <div className="info-card" style={{ padding: '12px' }}>
+            <a href="https://www.yes24.com/product/goods/191479539" target="_blank" rel="noopener noreferrer" className="book-link">
+              <div className="list-item" style={{ margin: 0 }}><strong>바로바로 챗GPT X 덕테이프 X 코덱스</strong></div>
+              <span style={{ fontSize: '12px', color: 'var(--colors-muted)' }}>예스24 ↗</span>
+            </a>
             <a href="https://www.yes24.com/product/goods/183530330" target="_blank" rel="noopener noreferrer" className="book-link">
               <div className="list-item" style={{ margin: 0 }}><strong>바로바로 바이브 코딩 with 커서 AI</strong></div>
               <span style={{ fontSize: '12px', color: 'var(--colors-muted)' }}>예스24 ↗</span>
@@ -358,6 +374,10 @@ export default function AboutPage() {
             </a>
             <a href="https://www.yes24.com/product/goods/167428992" target="_blank" rel="noopener noreferrer" className="book-link">
               <div className="list-item" style={{ margin: 0 }}><strong>요즘 바이브 코딩 깃허브 코파일럿 31가지 프로그램 만들기</strong></div>
+              <span style={{ fontSize: '12px', color: 'var(--colors-muted)' }}>예스24 ↗</span>
+            </a>
+            <a href="https://www.yes24.com/product/goods/147957269" target="_blank" rel="noopener noreferrer" className="book-link">
+              <div className="list-item" style={{ margin: 0 }}><strong>이게 되네? 클로드 MCP 미친 활용법 27제</strong></div>
               <span style={{ fontSize: '12px', color: 'var(--colors-muted)' }}>예스24 ↗</span>
             </a>
             <a href="https://www.yes24.com/product/goods/144868498" target="_blank" rel="noopener noreferrer" className="book-link">

@@ -31,6 +31,69 @@ export interface RoadmapData {
 
 const EMPTY: RoadmapData = { categories: [], roadmaps: [] };
 
+const DIFFICULTIES = new Set(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']);
+// roadmap.id는 Firestore 문서 ID로 그대로 쓰이므로 안전한 문자만 허용한다.
+const SAFE_DOC_ID = /^[A-Za-z0-9_-]{1,128}$/;
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+/** 저장 전 스키마 검증 — 유효하면 null, 아니면 오류 메시지를 반환한다. */
+export function validateRoadmapData(data: unknown): string | null {
+  if (typeof data !== 'object' || data === null) return '데이터가 객체가 아닙니다.';
+  const { categories, roadmaps } = data as Record<string, unknown>;
+
+  if (!Array.isArray(categories) || !categories.every(isNonEmptyString)) {
+    return 'categories는 비어 있지 않은 문자열 배열이어야 합니다.';
+  }
+  if (!Array.isArray(roadmaps)) return 'roadmaps는 배열이어야 합니다.';
+
+  for (const [i, roadmap] of roadmaps.entries()) {
+    const label = `roadmaps[${i}]`;
+    if (typeof roadmap !== 'object' || roadmap === null) return `${label}이 객체가 아닙니다.`;
+    const r = roadmap as Record<string, unknown>;
+
+    if (!isNonEmptyString(r.id) || !SAFE_DOC_ID.test(r.id)) {
+      return `${label}.id가 유효하지 않습니다 (영문/숫자/하이픈/언더스코어, 128자 이내).`;
+    }
+    if (!isNonEmptyString(r.title)) return `${label}.title이 비어 있습니다.`;
+    if (typeof r.description !== 'string') return `${label}.description은 문자열이어야 합니다.`;
+    if (!isNonEmptyString(r.category)) return `${label}.category가 비어 있습니다.`;
+    if (typeof r.isActive !== 'boolean') return `${label}.isActive는 boolean이어야 합니다.`;
+    if (r.order !== undefined && !isFiniteNumber(r.order)) return `${label}.order는 숫자여야 합니다.`;
+    if (!Array.isArray(r.nodes)) return `${label}.nodes는 배열이어야 합니다.`;
+
+    for (const [j, node] of r.nodes.entries()) {
+      const nodeLabel = `${label}.nodes[${j}]`;
+      if (typeof node !== 'object' || node === null) return `${nodeLabel}이 객체가 아닙니다.`;
+      const n = node as Record<string, unknown>;
+
+      if (!isNonEmptyString(n.id)) return `${nodeLabel}.id가 비어 있습니다.`;
+      if (!isNonEmptyString(n.title)) return `${nodeLabel}.title이 비어 있습니다.`;
+      if (n.description !== undefined && typeof n.description !== 'string') {
+        return `${nodeLabel}.description은 문자열이어야 합니다.`;
+      }
+      if (typeof n.youtubeUrl !== 'string') return `${nodeLabel}.youtubeUrl은 문자열이어야 합니다.`;
+      if (typeof n.youtubeId !== 'string') return `${nodeLabel}.youtubeId는 문자열이어야 합니다.`;
+      if (typeof n.difficulty !== 'string' || !DIFFICULTIES.has(n.difficulty)) {
+        return `${nodeLabel}.difficulty는 BEGINNER/INTERMEDIATE/ADVANCED 중 하나여야 합니다.`;
+      }
+      if (!isFiniteNumber(n.x) || !isFiniteNumber(n.y)) {
+        return `${nodeLabel}의 좌표(x, y)는 숫자여야 합니다.`;
+      }
+      if (n.parentId !== null && !isNonEmptyString(n.parentId)) {
+        return `${nodeLabel}.parentId는 null 또는 문자열이어야 합니다.`;
+      }
+    }
+  }
+  return null;
+}
+
 function readLocalRoadmapData(): RoadmapData {
   const filePath = path.join(process.cwd(), 'data', 'roadmap.json');
   if (!fs.existsSync(filePath)) {

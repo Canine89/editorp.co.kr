@@ -50,7 +50,7 @@ export default function UnauthorizedPage() {
             marginBottom: 'var(--spacing-lg)',
           }}
         >
-          이 대시보드는 마스터 관리자 계정(<strong>hgpark@goldenrabbit.co.kr</strong>)으로 로그인한 사용자만 접근할 수 있습니다. 다른 구글 계정으로는 관리자 기능을 이용하실 수 없습니다.
+          이 대시보드는 지정된 관리자 계정으로 로그인한 사용자만 접근할 수 있습니다. 다른 구글 계정으로는 관리자 기능을 이용하실 수 없습니다.
         </p>
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
           <Link href="/" className="btn btn-primary">

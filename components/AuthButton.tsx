@@ -14,7 +14,7 @@ export function AuthButton() {
     );
   }
 
-  const isAdmin = session?.user?.email === 'hgpark@goldenrabbit.co.kr';
+  const isAdmin = Boolean(session?.user?.isAdmin);
 
   if (session) {
     return (

@@ -2,13 +2,16 @@ import { NextResponse } from 'next/server';
 
 export const revalidate = 0; // Prevent caching
 
+// YouTube 영상 ID는 11자의 [A-Za-z0-9_-]만 허용 — URL 조작/SSRF 방지
+const YOUTUBE_ID_REGEX = /^[a-zA-Z0-9_-]{11}$/;
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const videoId = searchParams.get('videoId');
 
-    if (!videoId) {
-      return NextResponse.json({ error: 'Video ID is required' }, { status: 400 });
+    if (!videoId || !YOUTUBE_ID_REGEX.test(videoId)) {
+      return NextResponse.json({ error: '유효한 YouTube 영상 ID가 아닙니다.' }, { status: 400 });
     }
 
     // Fetch YouTube page html

@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../auth/[...nextauth]/route';
 import { setBookPublished } from '@/lib/books';
-
-const ADMIN_EMAIL = 'hgpark@goldenrabbit.co.kr';
+import { ADMIN_EMAIL } from '@/lib/admin';
 
 /** 도서 공개 여부 변경 */
 export async function PUT(req: NextRequest) {

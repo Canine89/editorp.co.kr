@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation';
 import { authOptions } from '../../../api/auth/[...nextauth]/route';
 import { getBook } from '@/lib/books';
 import { BookAdminDetail } from '@/components/BookAdminDetail';
+import { isAdminEmail } from '@/lib/admin';
 
 export const revalidate = 0;
 
@@ -12,7 +13,7 @@ export default async function AdminBookDetailPage({
   params: Promise<{ bookId: string }>;
 }) {
   const session = await getServerSession(authOptions);
-  if (!session || session.user?.email !== 'hgpark@goldenrabbit.co.kr') {
+  if (!session || !isAdminEmail(session.user?.email)) {
     redirect('/auth/unauthorized');
   }
 

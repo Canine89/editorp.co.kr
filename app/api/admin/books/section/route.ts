@@ -10,8 +10,7 @@ import {
 } from '@/lib/books';
 import { sanitizeBookHtml } from '@/lib/sanitize';
 import { htmlToMarkdown } from '@/lib/html-to-md';
-
-const ADMIN_EMAIL = 'hgpark@goldenrabbit.co.kr';
+import { ADMIN_EMAIL } from '@/lib/admin';
 
 async function requireAdmin(): Promise<NextResponse | null> {
   const session = await getServerSession(authOptions);

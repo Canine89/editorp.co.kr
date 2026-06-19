@@ -43,12 +43,18 @@ const BOOK_OPTIONS: sanitizeHtml.IOptions = {
   ],
   allowedAttributes: {
     a: ['href', 'target', 'rel'],
-    img: ['src', 'alt', 'title', 'width', 'height'],
+    img: ['src', 'alt', 'title', 'width', 'height', 'style'],
     code: ['class'],
     pre: ['class'],
     th: ['align'],
     td: ['align'],
     ol: ['start'],
+  },
+  // 에디터의 이미지 크기 조정이 style="width: NN%"로 저장되므로 width(%)만 허용
+  allowedStyles: {
+    img: {
+      width: [/^\d{1,3}(\.\d+)?%$/],
+    },
   },
   allowedSchemes: ['http', 'https', 'mailto'],
   transformTags: {

@@ -2,23 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/route';
 import { isFirebaseConfigured } from '@/lib/firebase-admin';
-import { saveRoadmapData } from '@/lib/roadmap-data';
+import { saveRoadmapData, validateRoadmapData } from '@/lib/roadmap-data';
+import { isAdminEmail } from '@/lib/admin';
 import fs from 'fs';
 import path from 'path';
 
 export async function POST(req: NextRequest) {
   // 1. Session Verification
   const session = await getServerSession(authOptions);
-  if (!session || session.user?.email !== 'hgpark@goldenrabbit.co.kr') {
+  if (!session || !isAdminEmail(session.user?.email)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     const data = await req.json();
 
-    // Validate that the JSON structure matches our schema
-    if (!data.categories || !data.roadmaps) {
-      return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
+    // 스키마 검증 — 구조가 깨진 데이터가 Firestore/로컬 파일을 오염시키지 않도록 차단
+    const validationError = validateRoadmapData(data);
+    if (validationError) {
+      return NextResponse.json(
+        { error: `잘못된 데이터 형식: ${validationError}` },
+        { status: 400 }
+      );
     }
 
     // 2. Firestore가 설정되어 있으면 Firestore에 저장 (재배포 없이 즉시 반영)

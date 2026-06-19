@@ -36,6 +36,9 @@ export function Header() {
           <Link href="/books" className="nav-link">
             무료 도서
           </Link>
+          <Link href="/edited-books" className="nav-link">
+            편집한 도서
+          </Link>
           <Link href="/qna" className="nav-link">
             질문 게시판
           </Link>
@@ -95,6 +98,9 @@ export function Header() {
           </Link>
           <Link href="/books" className="nav-link" onClick={() => setIsOpen(false)}>
             무료 도서
+          </Link>
+          <Link href="/edited-books" className="nav-link" onClick={() => setIsOpen(false)}>
+            편집한 도서
           </Link>
           <Link href="/qna" className="nav-link" onClick={() => setIsOpen(false)}>
             질문 게시판

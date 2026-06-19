@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Eye, EyeOff, Save, RotateCcw, ExternalLink } from 'lucide-react';
 import type { Book } from '@/lib/books';
@@ -88,6 +88,33 @@ export function BookAdminDetail({ initialBook }: { initialBook: Book }) {
       setBusy(false);
     }
   };
+
+  // Cmd/Ctrl+S로 저장 — 핸들러는 한 번만 등록하고 최신 saveSection을 ref로 참조
+  const saveRef = useRef<() => void>(() => {});
+  saveRef.current = () => {
+    if (selected && dirty && !busy) saveSection();
+  };
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        saveRef.current();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  // 저장하지 않은 수정사항이 있으면 탭 닫기/새로고침 전에 경고
+  useEffect(() => {
+    if (!dirty) return;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener('beforeunload', onBeforeUnload);
+    return () => window.removeEventListener('beforeunload', onBeforeUnload);
+  }, [dirty]);
 
   const revertSection = async () => {
     if (!selected) return;
@@ -243,33 +270,13 @@ export function BookAdminDetail({ initialBook }: { initialBook: Book }) {
               </div>
             ) : (
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                <div style={{ marginBottom: '12px' }}>
                   <h2 style={{ fontSize: '17px', margin: 0, wordBreak: 'keep-all' }}>
                     {selected.title}
-                    {dirty && <span style={{ color: 'var(--colors-warning)', fontSize: '12px', marginLeft: '8px' }}>● 수정됨</span>}
                   </h2>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button
-                      type="button"
-                      onClick={revertSection}
-                      disabled={busy}
-                      className="btn btn-secondary"
-                      style={{ height: '34px', padding: '0 12px', fontSize: '13px', gap: '5px' }}
-                    >
-                      <RotateCcw size={13} /> 원본으로 되돌리기
-                    </button>
-                    <button
-                      type="button"
-                      onClick={saveSection}
-                      disabled={busy || !dirty}
-                      className="btn btn-primary"
-                      style={{ height: '34px', padding: '0 16px', fontSize: '13px', gap: '5px' }}
-                    >
-                      <Save size={13} /> {busy ? '처리 중…' : '저장'}
-                    </button>
-                  </div>
                 </div>
-                {/* key로 절 전환 시 에디터를 새로 마운트 */}
+                {/* key로 절 전환 시 에디터를 새로 마운트.
+                    저장/되돌리기는 스크롤해도 따라오도록 스티키 툴바 안에 둔다 */}
                 <BookSectionEditor
                   key={`${book.id}/${selected.sectionId}`}
                   initialHtml={html}
@@ -277,6 +284,33 @@ export function BookAdminDetail({ initialBook }: { initialBook: Book }) {
                     setHtml(nextHtml);
                     setDirty(nextDirty);
                   }}
+                  actions={
+                    <>
+                      {dirty && (
+                        <span style={{ color: 'var(--colors-warning)', fontSize: '12px', whiteSpace: 'nowrap' }}>
+                          ● 수정됨
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={revertSection}
+                        disabled={busy}
+                        className="btn btn-secondary"
+                        style={{ height: '28px', padding: '0 10px', fontSize: '12px', gap: '4px' }}
+                      >
+                        <RotateCcw size={12} /> 되돌리기
+                      </button>
+                      <button
+                        type="button"
+                        onClick={saveSection}
+                        disabled={busy || !dirty}
+                        className="btn btn-primary"
+                        style={{ height: '28px', padding: '0 12px', fontSize: '12px', gap: '4px' }}
+                      >
+                        <Save size={12} /> {busy ? '처리 중…' : '저장 (⌘S)'}
+                      </button>
+                    </>
+                  }
                 />
                 <p style={{ fontSize: '12px', color: 'var(--colors-muted-soft)', marginTop: '10px' }}>
                   저장하면 사이트에 바로 반영됩니다. 본문은 마크다운으로 변환되어 보관되며, 글자색 등

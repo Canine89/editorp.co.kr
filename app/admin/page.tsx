@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
 import { AdminDashboard } from '@/components/AdminDashboard';
+import { isAdminEmail } from '@/lib/admin';
 
 interface Node {
   id: string;
@@ -51,7 +52,7 @@ export default async function AdminPage() {
   // Session check
   const session = await getServerSession(authOptions);
   
-  if (!session || session.user?.email !== 'hgpark@goldenrabbit.co.kr') {
+  if (!session || !isAdminEmail(session.user?.email)) {
     redirect('/auth/unauthorized');
   }
 

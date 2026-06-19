@@ -3,12 +3,13 @@ import { redirect } from 'next/navigation';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
 import { listBooks, countSections } from '@/lib/books';
 import { BookAdminList } from '@/components/BookAdminList';
+import { isAdminEmail } from '@/lib/admin';
 
 export const revalidate = 0;
 
 export default async function AdminBooksPage() {
   const session = await getServerSession(authOptions);
-  if (!session || session.user?.email !== 'hgpark@goldenrabbit.co.kr') {
+  if (!session || !isAdminEmail(session.user?.email)) {
     redirect('/auth/unauthorized');
   }
 

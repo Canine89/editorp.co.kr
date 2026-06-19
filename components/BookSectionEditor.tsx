@@ -1,11 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
 import { TableKit } from '@tiptap/extension-table';
 import { Placeholder } from '@tiptap/extensions';
+import { ResizableImage } from './ResizableImage';
 import {
   Bold,
   Italic,
@@ -24,7 +24,9 @@ import {
   Table as TableIcon,
   Undo2,
   Redo2,
+  Wand2,
 } from 'lucide-react';
+import { normalizeCodeIndent } from '@/lib/code-indent';
 
 /**
  * 도서 절 본문 전용 리치 텍스트 에디터.
@@ -74,27 +76,118 @@ function TextButton({ onClick, label }: { onClick: () => void; label: string }) 
   );
 }
 
-function Toolbar({ editor }: { editor: Editor }) {
-  const setLink = () => {
-    const prev = editor.getAttributes('link').href as string | undefined;
-    const url = window.prompt('링크 주소(URL)를 입력해 주세요', prev || 'https://');
-    if (url === null) return;
-    if (url === '' || url === 'https://') {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run();
-      return;
-    }
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+type PopoverKind = 'link' | 'image';
+
+/** 툴바 아래에 붙는 인라인 입력 폼 — Enter로 적용, Esc로 닫기 */
+function InputPopover({
+  fields,
+  submitLabel,
+  onSubmit,
+  onClose,
+}: {
+  fields: { id: string; label: string; placeholder: string; initial?: string }[];
+  submitLabel: string;
+  onSubmit: (values: Record<string, string>) => void;
+  onClose: () => void;
+}) {
+  const [values, setValues] = useState<Record<string, string>>(() =>
+    Object.fromEntries(fields.map((f) => [f.id, f.initial ?? '']))
+  );
+  const firstInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    firstInputRef.current?.focus();
+    firstInputRef.current?.select();
+  }, []);
+
+  const submit = () => onSubmit(values);
+
+  return (
+    <div className="rte-popover">
+      {fields.map((field, i) => (
+        <label key={field.id}>
+          <span>{field.label}</span>
+          <input
+            ref={i === 0 ? firstInputRef : undefined}
+            type="text"
+            value={values[field.id]}
+            placeholder={field.placeholder}
+            onChange={(e) => setValues((prev) => ({ ...prev, [field.id]: e.target.value }))}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                submit();
+              } else if (e.key === 'Escape') {
+                e.preventDefault();
+                onClose();
+              }
+            }}
+          />
+        </label>
+      ))}
+      <button type="button" className="btn btn-primary" onClick={submit}>
+        {submitLabel}
+      </button>
+      <button type="button" className="btn btn-secondary" onClick={onClose}>
+        취소
+      </button>
+    </div>
+  );
+}
+
+function Toolbar({ editor, actions }: { editor: Editor; actions?: React.ReactNode }) {
+  const [popover, setPopover] = useState<PopoverKind | null>(null);
+
+  const closePopover = () => {
+    setPopover(null);
+    editor.chain().focus().run();
   };
 
-  const addImage = () => {
-    const url = window.prompt(
-      '이미지 주소를 입력해 주세요.\n(public/ 폴더 기준 절대 경로 예: /books/python-intro/04.png)'
-    );
-    if (!url) return;
-    editor.chain().focus().setImage({ src: url }).run();
+  const applyLink = ({ url }: Record<string, string>) => {
+    const href = url.trim();
+    if (!href || href === 'https://') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+    } else {
+      editor.chain().focus().extendMarkRange('link').setLink({ href }).run();
+    }
+    setPopover(null);
+  };
+
+  const applyImage = ({ src, alt }: Record<string, string>) => {
+    const url = src.trim();
+    if (url) {
+      editor.chain().focus().setImage({ src: url, alt: alt.trim() || undefined }).run();
+    }
+    setPopover(null);
+  };
+
+  /** 커서가 있는 코드 블록의 들여쓰기를 2칸 공백으로 정규화 */
+  const formatCodeBlock = () => {
+    const { $from } = editor.state.selection;
+    for (let depth = $from.depth; depth > 0; depth--) {
+      const node = $from.node(depth);
+      if (node.type.name !== 'codeBlock') continue;
+      const formatted = normalizeCodeIndent(node.textContent);
+      if (formatted === node.textContent) return;
+      const pos = $from.before(depth);
+      editor
+        .chain()
+        .focus()
+        .command(({ tr, state }) => {
+          tr.replaceWith(
+            pos + 1,
+            pos + node.nodeSize - 1,
+            formatted ? state.schema.text(formatted) : []
+          );
+          return true;
+        })
+        .run();
+      return;
+    }
   };
 
   const inTable = editor.isActive('table');
+  const inCodeBlock = editor.isActive('codeBlock');
 
   return (
     <div className="rte-toolbar">
@@ -134,19 +227,30 @@ function Toolbar({ editor }: { editor: Editor }) {
       <ToolbarButton label="인용" active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
         <Quote size={15} />
       </ToolbarButton>
-      <ToolbarButton label="코드 블록" active={editor.isActive('codeBlock')} onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
+      <ToolbarButton label="코드 블록" active={inCodeBlock} onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
         <Code2 size={15} />
+      </ToolbarButton>
+      <ToolbarButton label="코드 들여쓰기 정리 (2칸)" disabled={!inCodeBlock} onClick={formatCodeBlock}>
+        <Wand2 size={15} />
       </ToolbarButton>
 
       <span className="rte-divider" />
 
-      <ToolbarButton label="링크" active={editor.isActive('link')} onClick={setLink}>
+      <ToolbarButton
+        label="링크"
+        active={editor.isActive('link') || popover === 'link'}
+        onClick={() => setPopover((prev) => (prev === 'link' ? null : 'link'))}
+      >
         <Link2 size={15} />
       </ToolbarButton>
       <ToolbarButton label="링크 해제" disabled={!editor.isActive('link')} onClick={() => editor.chain().focus().unsetLink().run()}>
         <Link2Off size={15} />
       </ToolbarButton>
-      <ToolbarButton label="이미지 삽입" onClick={addImage}>
+      <ToolbarButton
+        label="이미지 삽입"
+        active={popover === 'image'}
+        onClick={() => setPopover((prev) => (prev === 'image' ? null : 'image'))}
+      >
         <ImageIcon size={15} />
       </ToolbarButton>
       <ToolbarButton
@@ -176,6 +280,39 @@ function Toolbar({ editor }: { editor: Editor }) {
       <ToolbarButton label="다시 실행" disabled={!editor.can().redo()} onClick={() => editor.chain().focus().redo().run()}>
         <Redo2 size={15} />
       </ToolbarButton>
+
+      {actions && <div className="rte-toolbar-actions">{actions}</div>}
+
+      {popover === 'link' && (
+        <InputPopover
+          fields={[
+            {
+              id: 'url',
+              label: '링크 주소',
+              placeholder: 'https://example.com',
+              initial: (editor.getAttributes('link').href as string | undefined) || 'https://',
+            },
+          ]}
+          submitLabel="적용"
+          onSubmit={applyLink}
+          onClose={closePopover}
+        />
+      )}
+      {popover === 'image' && (
+        <InputPopover
+          fields={[
+            {
+              id: 'src',
+              label: '이미지 경로',
+              placeholder: '/books/python-intro/04.png (public/ 기준 절대 경로)',
+            },
+            { id: 'alt', label: '대체 텍스트', placeholder: '이미지 설명 (선택)' },
+          ]}
+          submitLabel="삽입"
+          onSubmit={applyImage}
+          onClose={closePopover}
+        />
+      )}
     </div>
   );
 }
@@ -183,10 +320,13 @@ function Toolbar({ editor }: { editor: Editor }) {
 export function BookSectionEditor({
   initialHtml,
   onChange,
+  actions,
 }: {
   initialHtml: string;
   /** dirty = 사용자가 실제로 내용을 바꿨는지 (에디터 내부 정규화는 제외) */
   onChange: (html: string, dirty: boolean) => void;
+  /** 스티키 툴바 오른쪽 끝에 붙는 액션 버튼 (저장/되돌리기 등) */
+  actions?: React.ReactNode;
 }) {
   // 에디터/플러그인이 로드 직후 스스로 문서를 정규화하는 경우(표 구조 보정 등)가 있어
   // 단순히 onUpdate 발생 여부로 "수정됨"을 판단하면 오탐이 난다.
@@ -200,12 +340,16 @@ export function BookSectionEditor({
         heading: { levels: [2, 3, 4] },
         link: { openOnClick: false },
       }),
-      Image,
+      ResizableImage,
       TableKit.configure({ table: { resizable: false } }),
       Placeholder.configure({ placeholder: '본문을 입력하세요' }),
     ],
     content: initialHtml,
     immediatelyRender: false,
+    // Tiptap v3는 기본적으로 트랜잭션마다 리렌더하지 않아 툴바의 활성/비활성
+    // 상태(isActive, can().undo 등)가 갱신되지 않는다. 이 에디터 규모에서는
+    // 매 트랜잭션 리렌더 비용이 미미하므로 v2 동작으로 되돌린다.
+    shouldRerenderOnTransaction: true,
     onCreate: ({ editor: e }) => {
       baseline.current = e.getHTML();
     },
@@ -231,7 +375,7 @@ export function BookSectionEditor({
 
   return (
     <div className="rte-wrapper">
-      {editor && <Toolbar editor={editor} />}
+      {editor && <Toolbar editor={editor} actions={actions} />}
       <EditorContent editor={editor} />
     </div>
   );

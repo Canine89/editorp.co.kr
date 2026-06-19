@@ -2,7 +2,9 @@ import { createHash } from 'node:crypto';
 import { Timestamp, FieldValue } from 'firebase-admin/firestore';
 import { getDb } from './firebase-admin';
 
-export const ADMIN_EMAIL = 'hgpark@goldenrabbit.co.kr';
+import { ADMIN_EMAIL } from './admin';
+
+export { ADMIN_EMAIL };
 export const POST_CATEGORIES = ['질문', '정보', '잡담'] as const;
 export type PostCategory = (typeof POST_CATEGORIES)[number];
 export const PAGE_SIZE = 15;
