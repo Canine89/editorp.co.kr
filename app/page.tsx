@@ -18,7 +18,6 @@ export default async function HomePage({
   const data = await getRoadmapData();
   const activeRoadmaps = data.roadmaps.filter((r) => r.isActive !== false);
   const totalLectures = activeRoadmaps.reduce((sum, r) => sum + (r.nodes?.length || 0), 0);
-  const totalRoadmaps = activeRoadmaps.length;
 
   // Filter by category if selected
   const filteredRoadmaps = cat
@@ -117,49 +116,6 @@ export default async function HomePage({
               src="/hero.png"
               alt="AI & 에이전트 로드맵 히어로"
             />
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.guideSection} aria-label="학습 진행 방식">
-        <div className={`container ${styles.guideInner}`}>
-          <div className={styles.guideIntro}>
-            <p className={styles.sectionKicker}>how to start</p>
-            <h2 className={styles.guideTitle}>많은 강의 중에서 지금 볼 것만 남겼습니다</h2>
-            <p className={styles.guideLead}>
-              도구 이름을 먼저 외우기보다, 지금 막힌 지점에 맞는 순서로 따라가게 구성했습니다.
-            </p>
-          </div>
-          <div className={styles.guideGrid}>
-            <div className={styles.guideCard}>
-              <span className={styles.guideNumber}>01</span>
-              <h3>카테고리 선택</h3>
-              <p>AI 기초, 에이전트, 바이브 코딩 중 지금 필요한 주제만 좁혀 봅니다.</p>
-            </div>
-            <div className={styles.guideCard}>
-              <span className={styles.guideNumber}>02</span>
-              <h3>첫 강의부터 보기</h3>
-              <p>로드맵 안에서는 쉬운 개념부터 실습까지 이어지도록 순서를 맞췄습니다.</p>
-            </div>
-            <div className={styles.guideCard}>
-              <span className={styles.guideNumber}>03</span>
-              <h3>막히면 질문하기</h3>
-              <p>질문 게시판과 오픈카톡방을 통해 중간에 멈추지 않게 이어갑니다.</p>
-            </div>
-          </div>
-          <div className={styles.guideStats} aria-label="로드맵 구성 요약">
-            <div>
-              <strong>{totalRoadmaps}</strong>
-              <span>로드맵</span>
-            </div>
-            <div>
-              <strong>{totalLectures}</strong>
-              <span>무료 강의</span>
-            </div>
-            <div>
-              <strong>{data.categories.length}</strong>
-              <span>카테고리</span>
-            </div>
           </div>
         </div>
       </section>

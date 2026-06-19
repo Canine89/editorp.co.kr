@@ -8,8 +8,8 @@
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: clamp(650px, 72vh, 780px);
-  padding: 82px 0 52px;
+  min-height: clamp(600px, 66vh, 700px);
+  padding: 76px 0 36px;
   border-bottom: 1px solid var(--colors-hairline-soft);
   background-color: var(--colors-canvas);
   background-image: radial-gradient(var(--colors-hairline) 1px, transparent 1px);
@@ -221,8 +221,8 @@
 
 .heroVisual {
   position: relative;
-  width: min(100%, 400px);
-  margin-top: 28px;
+  width: min(100%, 340px);
+  margin-top: 22px;
   margin-bottom: 4px;
 }
 
@@ -236,119 +236,6 @@
 
 .roadmapSection {
   padding: 68px 0 var(--spacing-lg);
-}
-
-.guideSection {
-  position: relative;
-  padding: 56px 0 18px;
-  background-color: var(--colors-canvas);
-}
-
-.guideInner {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.92fr) minmax(0, 1.45fr);
-  gap: 34px;
-  align-items: stretch;
-}
-
-.guideIntro {
-  padding: 28px 0;
-}
-
-.guideTitle {
-  max-width: 480px;
-  margin: 0;
-  color: var(--colors-ink);
-  font-size: clamp(30px, 3.4vw, 46px);
-  font-weight: 750;
-  letter-spacing: -0.035em;
-  line-height: 1.14;
-  text-wrap: balance;
-}
-
-.guideLead {
-  max-width: 430px;
-  margin: 18px 0 0;
-  color: var(--colors-muted);
-  font-size: 15px;
-  line-height: 1.72;
-}
-
-.guideGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.guideCard {
-  min-height: 206px;
-  padding: 22px;
-  border: 1px solid var(--colors-hairline);
-  border-radius: var(--rounded-lg);
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--colors-surface-card) 78%, transparent), var(--colors-surface-card));
-}
-
-.guideNumber {
-  display: inline-flex;
-  margin-bottom: 36px;
-  color: var(--colors-primary);
-  font-size: 12px;
-  font-weight: 750;
-  letter-spacing: 0.08em;
-}
-
-.guideCard h3 {
-  margin: 0 0 10px;
-  color: var(--colors-ink);
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
-}
-
-.guideCard p {
-  margin: 0;
-  color: var(--colors-body);
-  font-size: 13.5px;
-  line-height: 1.65;
-}
-
-.guideStats {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  overflow: hidden;
-  border: 1px solid var(--colors-hairline);
-  border-radius: var(--rounded-lg);
-  background-color: color-mix(in srgb, var(--colors-surface-soft) 70%, transparent);
-}
-
-.guideStats div {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 8px;
-  min-height: 72px;
-  border-right: 1px solid var(--colors-hairline-soft);
-}
-
-.guideStats div:last-child {
-  border-right: none;
-}
-
-.guideStats strong {
-  color: var(--colors-ink);
-  font-size: 28px;
-  font-weight: 750;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
-}
-
-.guideStats span {
-  color: var(--colors-muted);
-  font-size: 13px;
-  font-weight: 600;
 }
 
 .sectionHeader {
@@ -594,15 +481,6 @@
 }
 
 @media (max-width: 1024px) {
-  .guideInner {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .guideIntro {
-    padding: 12px 0 0;
-  }
-
   .roadmapGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -610,14 +488,14 @@
 
 @media (max-width: 768px) {
   .hero {
-    min-height: 680px;
-    padding: 72px 0 32px;
+    min-height: 620px;
+    padding: 66px 0 24px;
   }
 
   .thumbnailShowcase {
     justify-content: end;
     gap: 18px;
-    padding: 250px 0 32px;
+    padding: 230px 0 24px;
     opacity: 0.34;
   }
 
@@ -675,29 +553,12 @@
   }
 
   .heroVisual {
-    width: min(100%, 250px);
-    margin-top: 14px;
+    width: min(100%, 210px);
+    margin-top: 10px;
   }
 
   .roadmapSection {
     padding-top: 46px;
-  }
-
-  .guideSection {
-    padding: 42px 0 8px;
-  }
-
-  .guideGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .guideCard {
-    min-height: auto;
-    padding: 20px;
-  }
-
-  .guideNumber {
-    margin-bottom: 18px;
   }
 
   .sectionHeader {
@@ -727,7 +588,7 @@
   }
 
   .hero {
-    min-height: 680px;
+    min-height: 620px;
   }
 
   .heroInner {
@@ -747,20 +608,6 @@
   .categoryTabs {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .guideStats {
-    grid-template-columns: 1fr;
-  }
-
-  .guideStats div {
-    min-height: 58px;
-    border-right: none;
-    border-bottom: 1px solid var(--colors-hairline-soft);
-  }
-
-  .guideStats div:last-child {
-    border-bottom: none;
   }
 
   .categoryTab {
