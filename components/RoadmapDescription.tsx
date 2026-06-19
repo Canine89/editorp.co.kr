@@ -7,9 +7,14 @@ import { KakaoTalkIcon } from './BrandIcons';
 interface RoadmapDescriptionProps {
   description: string;
   isCompact?: boolean;
+  showLinks?: boolean;
 }
 
-export function RoadmapDescription({ description, isCompact = false }: RoadmapDescriptionProps) {
+export function RoadmapDescription({
+  description,
+  isCompact = false,
+  showLinks = true,
+}: RoadmapDescriptionProps) {
   // Description parsing logic
   const lines = description.split('\n');
   const bodyLines: string[] = [];
@@ -94,7 +99,7 @@ export function RoadmapDescription({ description, isCompact = false }: RoadmapDe
         </p>
       )}
       
-      {links.length > 0 && (
+      {showLinks && links.length > 0 && (
         <div
           style={{
             display: 'flex',

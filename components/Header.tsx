@@ -24,23 +24,30 @@ export function Header() {
             }}
           />
           <span className="serif-display header-logo-text">
-            편집자P
+            편집자P의 AI 강의·편집실
           </span>
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="main-nav-desktop">
           <Link href="/" className="nav-link">
-            로드맵 목록
+            로드맵
           </Link>
-          <Link href="/books" className="nav-link">
-            무료 도서
-          </Link>
-          <Link href="/edited-books" className="nav-link">
-            편집한 도서
-          </Link>
+          <div className="nav-group">
+            <button className="nav-link nav-trigger" type="button">
+              도서
+            </button>
+            <div className="nav-menu">
+              <Link href="/books" className="nav-menu-link">
+                무료 도서
+              </Link>
+              <Link href="/edited-books" className="nav-menu-link">
+                편집한 도서
+              </Link>
+            </div>
+          </div>
           <Link href="/qna" className="nav-link">
-            질문 게시판
+            질문
           </Link>
           <Link href="/about" className="nav-link">
             소개

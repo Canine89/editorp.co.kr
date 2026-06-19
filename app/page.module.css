@@ -213,6 +213,119 @@
   padding: 68px 0 var(--spacing-lg);
 }
 
+.guideSection {
+  position: relative;
+  padding: 56px 0 18px;
+  background-color: var(--colors-canvas);
+}
+
+.guideInner {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.92fr) minmax(0, 1.45fr);
+  gap: 34px;
+  align-items: stretch;
+}
+
+.guideIntro {
+  padding: 28px 0;
+}
+
+.guideTitle {
+  max-width: 480px;
+  margin: 0;
+  color: var(--colors-ink);
+  font-size: clamp(30px, 3.4vw, 46px);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.guideLead {
+  max-width: 430px;
+  margin: 18px 0 0;
+  color: var(--colors-muted);
+  font-size: 15px;
+  line-height: 1.72;
+}
+
+.guideGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.guideCard {
+  min-height: 206px;
+  padding: 22px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-lg);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--colors-surface-card) 78%, transparent), var(--colors-surface-card));
+}
+
+.guideNumber {
+  display: inline-flex;
+  margin-bottom: 36px;
+  color: var(--colors-primary);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+
+.guideCard h3 {
+  margin: 0 0 10px;
+  color: var(--colors-ink);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.guideCard p {
+  margin: 0;
+  color: var(--colors-body);
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+
+.guideStats {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-lg);
+  background-color: color-mix(in srgb, var(--colors-surface-soft) 70%, transparent);
+}
+
+.guideStats div {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  min-height: 72px;
+  border-right: 1px solid var(--colors-hairline-soft);
+}
+
+.guideStats div:last-child {
+  border-right: none;
+}
+
+.guideStats strong {
+  color: var(--colors-ink);
+  font-size: 28px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.guideStats span {
+  color: var(--colors-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .sectionHeader {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(240px, 380px);
@@ -286,7 +399,7 @@
 .roadmapGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
+  gap: 22px;
 }
 
 .roadmapCard {
@@ -327,7 +440,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 20px 24px 18px;
+  padding: 20px 24px 22px;
 }
 
 .cardBody :global(.roadmap-link-btn) {
@@ -394,7 +507,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 16px 24px 20px;
+  padding: 14px 24px 20px;
   border-top: 1px solid var(--colors-hairline-soft);
 }
 
@@ -456,6 +569,15 @@
 }
 
 @media (max-width: 1024px) {
+  .guideInner {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .guideIntro {
+    padding: 12px 0 0;
+  }
+
   .roadmapGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -531,6 +653,23 @@
     padding-top: 46px;
   }
 
+  .guideSection {
+    padding: 42px 0 8px;
+  }
+
+  .guideGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .guideCard {
+    min-height: auto;
+    padding: 20px;
+  }
+
+  .guideNumber {
+    margin-bottom: 18px;
+  }
+
   .sectionHeader {
     display: block;
     margin-bottom: 22px;
@@ -578,6 +717,20 @@
   .categoryTabs {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .guideStats {
+    grid-template-columns: 1fr;
+  }
+
+  .guideStats div {
+    min-height: 58px;
+    border-right: none;
+    border-bottom: 1px solid var(--colors-hairline-soft);
+  }
+
+  .guideStats div:last-child {
+    border-bottom: none;
   }
 
   .categoryTab {
