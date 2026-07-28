@@ -406,14 +406,54 @@ export default function AboutPage() {
             <table className="lecture-table">
               <tbody>
                 <tr className="lecture-row">
-                  <td className="lecture-cell lecture-date">2026-06 예정</td>
-                  <td className="lecture-cell lecture-title">바이브 코딩 강의</td>
+                  <td className="lecture-cell lecture-date">2026-08-10 예정</td>
+                  <td className="lecture-cell lecture-title">교사 대상 AI 특강: 클로드 코드 개념과 실습</td>
+                  <td className="lecture-cell lecture-org">부천공업고등학교 (오프라인)</td>
+                </tr>
+                <tr className="lecture-row">
+                  <td className="lecture-cell lecture-date">2026-07-24</td>
+                  <td className="lecture-cell lecture-title">경기 AI디지털배움터 「요즘 바이브코딩」 저자 특강</td>
+                  <td className="lecture-cell lecture-org">티엠디교육그룹 / 한양대 에리카캠퍼스</td>
+                </tr>
+                <tr className="lecture-row">
+                  <td className="lecture-cell lecture-date">2026-07 ~ 진행 중</td>
+                  <td className="lecture-cell lecture-title">AX 교육: 업무 자동화를 위한 AI 활용 — 3개 팀 단위로 매주 화·수·목 순차 진행</td>
+                  <td className="lecture-cell lecture-org">풀리오 (오프라인)</td>
+                </tr>
+                <tr className="lecture-row">
+                  <td className="lecture-cell lecture-date">2026-07-10</td>
+                  <td className="lecture-cell lecture-title">[알라딘X골든래빗] 코덱스 CLI로 바이브 코딩하기</td>
+                  <td className="lecture-cell lecture-org">알라딘 (유튜브 라이브)</td>
+                </tr>
+                <tr className="lecture-row">
+                  <td className="lecture-cell lecture-date">2026-07-08</td>
+                  <td className="lecture-cell lecture-title">내부 학습조직 초청 강의: 클로드 코워크·코드와 하네스 엔지니어링 입문</td>
+                  <td className="lecture-cell lecture-org">중소벤처기업진흥공단 서울남부지부</td>
+                </tr>
+                <tr className="lecture-row">
+                  <td className="lecture-cell lecture-date">2026-07-03</td>
+                  <td className="lecture-cell lecture-title">[교보문고X골든래빗] 코덱스 앱으로 업무 자동화하기 + 하네스 입문하기</td>
+                  <td className="lecture-cell lecture-org">교보문고 (유튜브 라이브)</td>
+                </tr>
+                <tr className="lecture-row">
+                  <td className="lecture-cell lecture-date">2026-06-26</td>
+                  <td className="lecture-cell lecture-title">[예스24X골든래빗] 챗GPT + 덕테이프 + 코덱스 앱 입문 가이드</td>
+                  <td className="lecture-cell lecture-org">예스24 (유튜브 라이브)</td>
+                </tr>
+                <tr className="lecture-row">
+                  <td className="lecture-cell lecture-date">2026-06-18</td>
+                  <td className="lecture-cell lecture-title">유아 놀이 기록·관찰 일지 기반 가정 통신문 제작 연수</td>
+                  <td className="lecture-cell lecture-org">십시일반교육연구회 / 시화유치원</td>
+                </tr>
+                <tr className="lecture-row">
+                  <td className="lecture-cell lecture-date">2026-06</td>
+                  <td className="lecture-cell lecture-title">《바로바로 AI 바이브코딩》 입문 프로그램 (전 10회차)</td>
                   <td className="lecture-cell lecture-org">금천구립독산도서관 (온라인 Zoom)</td>
                 </tr>
                 <tr className="lecture-row">
-                  <td className="lecture-cell lecture-date">2026-05 예정</td>
+                  <td className="lecture-cell lecture-date">2026-05-28</td>
                   <td className="lecture-cell lecture-title">십시일반교육연구회 전문가 초청 강의: AI·코덱스 활용 유아교육 자료 제작 실습</td>
-                  <td className="lecture-cell lecture-org">십시일반교육연구회 / 시화유치원</td>
+                  <td className="lecture-cell lecture-org">십시일반교육연구회</td>
                 </tr>
                 <tr className="lecture-row">
                   <td className="lecture-cell lecture-date">2026-05-19</td>
