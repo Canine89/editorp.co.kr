@@ -22,6 +22,13 @@ export interface Roadmap {
   isActive: boolean;
   order?: number;
   nodes: RoadmapNode[];
+  curation?: {
+    audience: string;
+    outcome: string;
+    level: string;
+    prerequisite: string;
+    next: string[];
+  };
 }
 
 export interface RoadmapData {
@@ -67,6 +74,16 @@ export function validateRoadmapData(data: unknown): string | null {
     if (typeof r.isActive !== 'boolean') return `${label}.isActive는 boolean이어야 합니다.`;
     if (r.order !== undefined && !isFiniteNumber(r.order)) return `${label}.order는 숫자여야 합니다.`;
     if (!Array.isArray(r.nodes)) return `${label}.nodes는 배열이어야 합니다.`;
+    if (r.curation !== undefined) {
+      if (typeof r.curation !== 'object' || r.curation === null) return `${label}.curation이 객체가 아닙니다.`;
+      const curation = r.curation as Record<string, unknown>;
+      for (const field of ['audience', 'outcome', 'level', 'prerequisite']) {
+        if (!isNonEmptyString(curation[field])) return `${label}.curation.${field}이 비어 있습니다.`;
+      }
+      if (!Array.isArray(curation.next) || !curation.next.every(id => typeof id === 'string' && SAFE_DOC_ID.test(id))) {
+        return `${label}.curation.next는 다음 학습 경로 ID의 배열이어야 합니다.`;
+      }
+    }
 
     for (const [j, node] of r.nodes.entries()) {
       const nodeLabel = `${label}.nodes[${j}]`;

@@ -1,115 +1,108 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { Providers } from '@/components/Providers';
-import { Header } from '@/components/Header';
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import "./globals.css";
+import { Providers } from "@/components/Providers";
+import { Header } from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: '편집자P의 AI & 에이전트 무료 강의 로드맵',
-  description: '편집자P의 AI, 에이전트, 바이브 코딩 무료 유튜브 강의를 입문자도 순서대로 따라갈 수 있게 정리한 학습 로드맵입니다.',
+  metadataBase: new URL("https://editorp.co.kr"),
+  title: "편집자P의 AI 학습 로드맵 | 배움에도 좋은 순서가 있습니다",
+  description:
+    "편집자P의 AI·클로드·커서·코덱스 유튜브 강의를 목표별 학습 경로로 만나보세요. 기초 개념부터 웹사이트 만들기와 업무 자동화까지, 책과 영상으로 차근차근 안내합니다.",
+  openGraph: {
+    title: "편집자P의 AI 학습 로드맵",
+    description: "흩어진 강의를 하나의 흐름으로, 배운 것을 나의 결과물로.",
+    locale: "ko_KR",
+    type: "website",
+    images: ["/p.png"],
+  },
 };
-
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <link
+          rel="preload"
+          href="/fonts/EditorPSans.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>
-        {/* Apply saved/system theme before first paint to avoid a light-mode flash */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}})()`,
           }}
         />
+        <a href="#main-content" className="skip-link">
+          본문으로 건너뛰기
+        </a>
         <Providers>
-          <div className="layout-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            {/* Top Navigation */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "100dvh",
+            }}
+          >
             <Header />
-
-            {/* Main Content Area */}
-            <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>{children}</main>
-
-            {/* Dark Footer */}
-            <footer
-              style={{
-                backgroundColor: 'var(--colors-surface-dark)',
-                color: 'var(--colors-on-dark-soft)',
-                padding: 'var(--spacing-xxl) 0',
-                borderTop: '1px solid var(--colors-surface-dark-soft)',
-              }}
+            <main
+              id="main-content"
+              tabIndex={-1}
+              style={{ flex: 1, minWidth: 0 }}
             >
+              {children}
+            </main>
+            <footer className="site-footer">
               <div className="container">
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    gap: 'var(--spacing-xl)',
-                    marginBottom: 'var(--spacing-xl)',
-                  }}
-                >
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <img
-                        src="/p.png"
-                        alt="편집자P 캐릭터"
-                        style={{
-                          width: '24px',
-                          height: '24px',
-                          borderRadius: '50%',
-                          objectFit: 'cover',
-                          border: '1px solid var(--colors-surface-dark-soft)',
-                        }}
-                      />
-                      <span className="serif-display" style={{ fontSize: '18px', color: 'var(--colors-on-dark)' }}>
-                        편집자P (editorp.co.kr)
-                      </span>
-                    </div>
-                    <p style={{ fontSize: '13px', color: 'var(--colors-on-dark-soft)', lineHeight: 1.6 }}>
-                      무료 강의가 많아도 헤매지 않도록, 입문자의 눈높이에 맞춰 볼 순서와 흐름을 정리했습니다.
+                <div className="footer-main">
+                  <div>
+                    <Link href="/" className="footer-brand">
+                      <Image src="/p.png" alt="" width={30} height={30} />
+                      편집자P의 AI 강의·편집실
+                    </Link>
+                    <p>
+                      책을 만들고, 기술을 배우고, 경험을 나눕니다.
+                      <br />
+                      당신의 다음 배움에 좋은 순서가 되어드릴게요.
                     </p>
                   </div>
-                  <div>
-                    <h4
-                      style={{
-                        fontSize: '14px',
-                        color: 'var(--colors-on-dark)',
-                        marginBottom: '16px',
-                        fontFamily: 'var(--font-sans)',
-                        fontWeight: 500,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                      }}
+                  <nav aria-label="학습 바로가기">
+                    <strong>함께 배우기</strong>
+                    <Link href="/#roadmap-list">학습 로드맵</Link>
+                    <Link href="/videos">전체 영상</Link>
+                    <Link href="/books">무료 도서</Link>
+                    <Link href="/qna">질문 게시판</Link>
+                  </nav>
+                  <nav aria-label="편집자P 연결">
+                    <strong>편집자P와 연결하기</strong>
+                    <Link href="/about">소개와 강의 문의</Link>
+                    <Link href="/edited-books">편집한 도서</Link>
+                    <a
+                      href="https://www.youtube.com/channel/UC4PwAtNhPsuBYdavDJb4F0g"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      함께 보기
-                    </h4>
-                    <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px' }}>
-                      <li>
-                        <a href="https://www.youtube.com/@editorp89" target="_blank" rel="noopener noreferrer">
-                          편집자P 유튜브 채널
-                        </a>
-                      </li>
-                      <li>
-                        <a href="https://open.kakao.com/o/ggK7EAJh" target="_blank" rel="noopener noreferrer">
-                          내 코드를 부탁해 오픈카톡방
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                      유튜브 채널 ↗
+                    </a>
+                    <a
+                      href="https://open.kakao.com/o/ggK7EAJh"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      내 코드를 부탁해 오픈카톡방 ↗
+                    </a>
+                  </nav>
                 </div>
-                <div
-                  style={{
-                    borderTop: '1px solid var(--colors-surface-dark-soft)',
-                    paddingTop: 'var(--spacing-md)',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    flexWrap: 'wrap',
-                    gap: '12px',
-                    fontSize: '12px',
-                  }}
-                >
-                  <span>© {new Date().getFullYear()} 편집자P. All rights reserved.</span>
-                  <span>무료 강의를 헤매지 않도록 차근차근 엮었습니다.</span>
+                <div className="footer-bottom">
+                  <span>
+                    © {new Date().getFullYear()} 편집자P. 모든 권리 보유.
+                  </span>
+                  <span>배움을 쌓고, 나의 가능성을 넓히는 공간.</span>
                 </div>
               </div>
             </footer>

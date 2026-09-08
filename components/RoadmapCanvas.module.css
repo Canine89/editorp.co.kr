@@ -1,0 +1,530 @@
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "toolbar" "watch" "details";
+  width: 100%;
+  max-width: 1600px;
+  align-items: start;
+  gap: 20px;
+  padding-top: 8px;
+  padding-bottom: 30px;
+}
+.withContents {
+  grid-template-columns: minmax(0, 1fr) 260px;
+  grid-template-areas: "toolbar toolbar" "watch toc" "details toc";
+}
+.sidebar {
+  grid-area: toc;
+  display: none;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 12px;
+  overflow: hidden;
+  position: sticky;
+  top: 140px;
+  background: var(--colors-surface-card);
+}
+.sidebar.open {
+  display: block;
+}
+.sidebarHead {
+  padding: 19px 20px 16px;
+}
+.sidebarHead > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--colors-muted);
+  font-size: 12px;
+  min-height: 30px;
+}
+.sidebarHead h2 {
+  font-size: 17px;
+  margin: 13px 0;
+}
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  color: var(--colors-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.progressLabel strong {
+  color: var(--colors-primary);
+}
+.sidebar progress {
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  border: 0;
+  background: var(--colors-surface-soft);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+.sidebar progress::-webkit-progress-bar {
+  background: var(--colors-surface-soft);
+  border-radius: 8px;
+}
+.sidebar progress::-webkit-progress-value {
+  background: var(--colors-primary);
+  border-radius: 8px;
+}
+.sidebar progress::-moz-progress-bar {
+  background: var(--colors-primary);
+  border-radius: 8px;
+}
+.list {
+  list-style: none;
+  border-top: 1px solid var(--colors-hairline);
+  max-height: max(160px, calc(100dvh - 340px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px;
+}
+.list button {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--colors-body);
+  padding: 13px 10px;
+  font-size: 14px;
+  line-height: 1.55;
+  cursor: pointer;
+  min-height: 56px;
+}
+.list button > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.number {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 23px;
+  flex-shrink: 0;
+  color: var(--colors-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.list small {
+  display: block;
+  font-size: 11px;
+  color: var(--colors-muted);
+  margin-top: 4px;
+}
+.list button:hover {
+  background: var(--colors-surface-soft);
+}
+.list button[aria-current] {
+  background: var(--learning-tint);
+  color: var(--colors-primary);
+  font-weight: 600;
+}
+.list button[aria-current] small {
+  color: var(--colors-primary);
+}
+.lesson {
+  grid-area: watch;
+  scroll-margin-top: 60px;
+  min-width: 0;
+}
+.lessonHead {
+  margin: 0 0 13px;
+}
+.lessonHead > span {
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+.lessonHead h2 {
+  font-size: 22px;
+  line-height: 1.45;
+  margin-top: 7px;
+}
+.video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #151b17;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  position: absolute;
+  inset: 0;
+}
+.controls {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) 80px;
+  gap: 10px;
+  margin-top: 13px;
+}
+.controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 8px;
+  background: var(--colors-surface-card);
+  color: var(--colors-ink);
+  min-height: 46px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.controls button:hover:not(:disabled) {
+  background: var(--colors-surface-soft);
+}
+.controls .complete {
+  background: var(--colors-primary);
+  color: var(--colors-on-primary);
+  border-color: var(--colors-primary);
+  font-weight: 600;
+}
+.controls .complete:hover {
+  background: var(--colors-primary-active);
+}
+.controls button:disabled {
+  color: var(--colors-muted);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.feedback {
+  min-height: 15px;
+}
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--learning-border);
+  border-radius: 8px;
+  background: var(--learning-tint);
+  margin-top: 12px;
+  font-size: 13px;
+}
+.notice > span {
+  flex: 1;
+}
+.notice button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px;
+  background: transparent;
+  border: 0;
+  color: var(--colors-primary);
+  font-size: 12px;
+  min-height: 40px;
+  cursor: pointer;
+}
+.feedback > p {
+  font-size: 13px;
+  color: var(--colors-error);
+  margin-top: 12px;
+}
+.details {
+  grid-area: details;
+  min-width: 0;
+  margin-top: 0;
+}
+.goal {
+  padding: 20px;
+  background: var(--colors-surface-soft);
+  border-radius: 10px;
+}
+.goal strong {
+  font-size: 13px;
+  color: var(--colors-primary);
+}
+.goal p {
+  font-size: 15px;
+  line-height: 1.8;
+  margin-top: 8px;
+}
+.resourceLinks {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  margin: 9px 0;
+}
+.resourceLinks a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  font-size: 13px;
+  color: var(--colors-primary);
+}
+.details details {
+  border-top: 1px solid var(--colors-hairline);
+  font-size: 13px;
+}
+.details summary {
+  padding: 14px 0;
+  cursor: pointer;
+  min-height: 44px;
+  color: var(--colors-muted);
+}
+.details details p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--colors-muted);
+  margin: 0 0 12px;
+}
+.timeline {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+.timeline button {
+  display: flex;
+  gap: 15px;
+  text-align: left;
+  font-size: 13px;
+  padding: 11px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 6px;
+  background: var(--colors-surface-card);
+  color: var(--colors-body);
+  cursor: pointer;
+}
+.timeline span {
+  font-variant-numeric: tabular-nums;
+  color: var(--colors-primary);
+  flex-shrink: 0;
+}
+.mobileTop {
+  grid-area: toolbar;
+  position: sticky;
+  top: 64px;
+  z-index: 25;
+  background: var(--colors-canvas);
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--colors-hairline);
+}
+.mobileTop button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 9px 13px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 8px;
+  background: var(--colors-surface-card);
+  color: var(--colors-ink);
+  font-size: 14px;
+  cursor: pointer;
+}
+.mobileTop button:hover {
+  border-color: var(--colors-primary);
+}
+.mobileTop span {
+  font-size: 12px;
+  color: var(--colors-muted);
+  font-variant-numeric: tabular-nums;
+}
+.finished {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 13px;
+  padding: 22px;
+  border: 1px solid var(--learning-border);
+  border-radius: 12px;
+  background: var(--learning-tint);
+  margin: 10px 0 18px;
+  color: var(--colors-primary);
+}
+.finished h3 {
+  font-size: 18px;
+  line-height: 1.5;
+}
+.finished p {
+  font-size: 14px;
+  margin-top: 5px;
+}
+.finished a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 13px;
+}
+.empty {
+  padding: 35px;
+}
+.empty h2 {
+  font-size: 23px;
+  margin-bottom: 20px;
+}
+.skeleton {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 20px;
+  max-width: 1552px;
+  margin: 20px auto;
+  min-height: 450px;
+}
+
+.skeleton > div {
+  border-radius: 12px;
+  background: var(--colors-surface-soft);
+}
+@media (max-width: 900px) {
+  .workspace,
+  .workspace.withContents {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding-top: 0;
+  }
+  .workspace.withContents {
+    grid-template-areas: "toolbar" "watch" "toc" "details";
+  }
+  .workspace:not(.withContents) {
+    grid-template-areas: "toolbar" "watch" "details";
+  }
+  .mobileTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    position: sticky;
+    top: 64px;
+    z-index: 25;
+    background: var(--colors-canvas);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--colors-hairline);
+  }
+  .mobileTop button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--colors-hairline);
+    border-radius: 8px;
+    min-height: 44px;
+    padding: 9px 13px;
+    background: var(--colors-surface-card);
+    color: var(--colors-ink);
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .mobileTop span {
+    font-size: 12px;
+    color: var(--colors-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .sidebar {
+    display: none;
+    position: static;
+  }
+  .sidebar.open {
+    display: block;
+  }
+  .sidebarHead {
+    padding: 12px 18px;
+  }
+  .sidebarHead > a,
+  .sidebarHead h2 {
+    display: none;
+  }
+  .list {
+    max-height: 240px;
+  }
+  .lessonHead h2 {
+    font-size: 20px;
+  }
+  .video {
+    max-height: none;
+  }
+  .skeleton {
+    display: block;
+    margin: 15px 20px;
+    min-height: 240px;
+  }
+  .controls {
+    grid-template-columns: 60px minmax(0, 1fr) 60px;
+    gap: 8px;
+  }
+  .controls button {
+    font-size: 13px;
+  }
+  .notice {
+    flex-wrap: wrap;
+  }
+  .goal {
+    padding: 17px;
+  }
+  .goal p {
+    font-size: 14px;
+  }
+  .workspace .resourceLinks {
+    gap: 20px;
+  }
+}
+@media (max-width: 380px) {
+  .controls {
+    grid-template-columns: 46px minmax(0, 1fr) 46px;
+  }
+  .previous span,
+  .next span {
+    position: absolute;
+    clip-path: inset(50%);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .complete {
+    gap: 5px !important;
+    font-size: 12px !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .controls button {
+    transition: none;
+  }
+}
+/* 작은 화면에서도 영상에는 기기 너비를 전부 사용한다. */
+@media (max-width: 900px) {
+  .video {
+    width: calc(100% + 48px);
+    margin-inline: -24px;
+    border-radius: 0;
+  }
+}
+@media (max-width: 640px) {
+  .video {
+    width: calc(100% + 40px);
+    margin-inline: -20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebarHead {
+    padding: 15px 18px 12px;
+  }
+  .sidebarHead h2 {
+    display: block;
+    font-size: 16px;
+    margin: 0 0 10px;
+  }
+  .sidebar {
+    scroll-margin-top: 140px;
+  }
+  .skeleton > div:first-child {
+    min-height: 220px;
+  }
+}

@@ -1,0 +1,90 @@
+.form {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 20px;
+  background: var(--colors-surface-soft);
+  border: 1px solid var(--colors-hairline);
+  border-radius: 12px;
+}
+.search {
+  flex: 1;
+  min-width: 190px;
+}
+.form label > span {
+  display: block;
+  font-size: 12px;
+  color: var(--colors-muted);
+  font-weight: 550;
+  margin-bottom: 7px;
+}
+.search > div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: 46px;
+  padding: 0 13px;
+  background: var(--colors-surface-card);
+  border: 1px solid var(--colors-hairline);
+  border-radius: 8px;
+}
+.search > div:focus-within {
+  outline: 2px solid var(--colors-primary);
+  outline-offset: 2px;
+}
+.search input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--colors-ink);
+  font-size: 16px;
+  font-family: inherit;
+}
+.search input::placeholder {
+  color: var(--colors-muted);
+}
+.search svg {
+  color: var(--colors-muted);
+  flex-shrink: 0;
+}
+.select select {
+  height: 46px;
+  min-width: 125px;
+  padding: 0 12px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 8px;
+  background: var(--colors-surface-card);
+  color: var(--colors-ink);
+  font-size: 14px;
+}
+.form > button {
+  min-height: 46px;
+  min-width: 76px;
+}
+.form > button:disabled {
+  opacity: 0.65;
+}
+@media (max-width: 640px) {
+  .form {
+    padding: 16px;
+    gap: 12px 9px;
+  }
+  .search {
+    flex-basis: 100%;
+  }
+  .select {
+    flex: 1;
+    min-width: 0;
+  }
+  .select select {
+    width: 100%;
+    min-width: 0;
+    font-size: 14px;
+  }
+  .form > button {
+    width: 100%;
+  }
+}

@@ -1,7 +1,17 @@
-import Link from 'next/link';
-import { Search } from 'lucide-react';
-import { isFirebaseConfigured } from '@/lib/firebase-admin';
-import { listPosts, POST_CATEGORIES, PAGE_SIZE, type PostListResult } from '@/lib/qna';
+import Link from "next/link";
+import { Search } from "lucide-react";
+import { isFirebaseConfigured } from "@/lib/firebase-admin";
+import {
+  listPosts,
+  POST_CATEGORIES,
+  PAGE_SIZE,
+  type PostListResult,
+} from "@/lib/qna";
+
+export const metadata = {
+  title: "질문 게시판 | 편집자P",
+  description: "AI 학습과 실습 중 궁금한 점을 함께 나누는 질문 게시판입니다.",
+};
 
 export const revalidate = 0;
 
@@ -13,18 +23,30 @@ function formatListDate(iso: string): string {
     d.getMonth() === now.getMonth() &&
     d.getDate() === now.getDate();
   if (sameDay) {
-    return new Intl.DateTimeFormat('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false }).format(d);
+    return new Intl.DateTimeFormat("ko-KR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).format(d);
   }
-  return new Intl.DateTimeFormat('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' }).format(d);
+  return new Intl.DateTimeFormat("ko-KR", {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
 }
 
-function buildQuery(params: { page?: number; q?: string; cat?: string }): string {
+function buildQuery(params: {
+  page?: number;
+  q?: string;
+  cat?: string;
+}): string {
   const sp = new URLSearchParams();
-  if (params.cat) sp.set('cat', params.cat);
-  if (params.q) sp.set('q', params.q);
-  if (params.page && params.page > 1) sp.set('page', String(params.page));
+  if (params.cat) sp.set("cat", params.cat);
+  if (params.q) sp.set("q", params.q);
+  if (params.page && params.page > 1) sp.set("page", String(params.page));
   const s = sp.toString();
-  return s ? `?${s}` : '';
+  return s ? `?${s}` : "";
 }
 
 export default async function QnaListPage({
@@ -32,8 +54,8 @@ export default async function QnaListPage({
 }: {
   searchParams: Promise<{ page?: string; q?: string; cat?: string }>;
 }) {
-  const { page: pageParam, q = '', cat = '' } = await searchParams;
-  const pageNum = Number.parseInt(pageParam || '1', 10) || 1;
+  const { page: pageParam, q = "", cat = "" } = await searchParams;
+  const pageNum = Number.parseInt(pageParam || "1", 10) || 1;
 
   let result: PostListResult = { posts: [], total: 0, page: 1, totalPages: 1 };
   let boardReady = isFirebaseConfigured();
@@ -41,18 +63,25 @@ export default async function QnaListPage({
     try {
       result = await listPosts({ page: pageNum, q, cat });
     } catch (error) {
-      console.error('QnA list read failed:', error);
+      console.error("QnA list read failed:", error);
       boardReady = false;
     }
   }
 
   const { posts, total, page, totalPages } = result;
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1).filter(
-    (n) => Math.abs(n - page) <= 2 || n === 1 || n === totalPages
-  );
+  const pageNumbers = Array.from(
+    { length: totalPages },
+    (_, i) => i + 1,
+  ).filter((n) => Math.abs(n - page) <= 2 || n === 1 || n === totalPages);
 
   return (
-    <div style={{ backgroundColor: 'var(--colors-canvas)', minHeight: '100%', paddingBottom: '80px' }}>
+    <div
+      style={{
+        backgroundColor: "var(--colors-canvas)",
+        minHeight: "100%",
+        paddingBottom: "80px",
+      }}
+    >
       <style>{`
         .board-table {
           width: 100%;
@@ -145,35 +174,96 @@ export default async function QnaListPage({
         }
       `}</style>
 
-      <section style={{ padding: '48px 0 0 0' }}>
-        <div className="container" style={{ maxWidth: '900px' }}>
-          <h1 className="serif-display" style={{ fontSize: '28px', margin: '0 0 6px 0' }}>
+      <section style={{ padding: "48px 0 0 0" }}>
+        <div className="container" style={{ maxWidth: "900px" }}>
+          <h1
+            className="serif-display"
+            style={{ fontSize: "28px", margin: "0 0 6px 0" }}
+          >
             질문 게시판
           </h1>
-          <p style={{ fontSize: '14px', color: 'var(--colors-muted)', margin: '0 0 24px 0' }}>
+          <p
+            style={{
+              fontSize: "14px",
+              color: "var(--colors-muted)",
+              margin: "0 0 24px 0",
+            }}
+          >
             강의 질문부터 자유로운 이야기까지, 편하게 글을 남겨 주세요.
           </p>
 
           {!boardReady ? (
-            <div style={{ textAlign: 'center', padding: '64px 24px', border: '1px dashed var(--colors-hairline)', borderRadius: 'var(--rounded-lg)' }}>
-              <p style={{ color: 'var(--colors-muted)', margin: 0 }}>게시판을 준비하고 있어요. 조금만 기다려 주세요!</p>
+            <div
+              style={{
+                textAlign: "center",
+                padding: "64px 24px",
+                border: "1px dashed var(--colors-hairline)",
+                borderRadius: "var(--rounded-lg)",
+              }}
+            >
+              <p style={{ color: "var(--colors-muted)", margin: 0 }}>
+                게시판을 준비하고 있어요. 조금만 기다려 주세요!
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "16px",
+                  flexWrap: "wrap",
+                  marginTop: "20px",
+                }}
+              >
+                <Link href="/#roadmap-list" className="btn btn-secondary">
+                  학습 로드맵으로 돌아가기
+                </Link>
+                <a
+                  href="https://open.kakao.com/o/ggK7EAJh"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                >
+                  오픈카톡방에서 질문하기 ↗
+                </a>
+              </div>
             </div>
           ) : (
             <>
               {/* 말머리 탭 + 검색 + 글쓰기 */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '14px' }}>
-                <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                  <Link href={`/qna${buildQuery({ q })}`} className={`board-tab${!cat ? ' active' : ''}`}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "12px",
+                  flexWrap: "wrap",
+                  marginBottom: "14px",
+                }}
+              >
+                <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
+                  <Link
+                    href={`/qna${buildQuery({ q })}`}
+                    className={`board-tab${!cat ? " active" : ""}`}
+                  >
                     전체
                   </Link>
                   {POST_CATEGORIES.map((c) => (
-                    <Link key={c} href={`/qna${buildQuery({ cat: c, q })}`} className={`board-tab${cat === c ? ' active' : ''}`}>
+                    <Link
+                      key={c}
+                      href={`/qna${buildQuery({ cat: c, q })}`}
+                      className={`board-tab${cat === c ? " active" : ""}`}
+                    >
                       {c}
                     </Link>
                   ))}
                 </div>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <form method="GET" action="/qna" style={{ display: 'flex', gap: '6px' }}>
+                <div
+                  style={{ display: "flex", gap: "8px", alignItems: "center" }}
+                >
+                  <form
+                    method="GET"
+                    action="/qna"
+                    style={{ display: "flex", gap: "6px" }}
+                  >
                     {cat && <input type="hidden" name="cat" value={cat} />}
                     <input
                       type="text"
@@ -181,13 +271,30 @@ export default async function QnaListPage({
                       defaultValue={q}
                       placeholder="제목 검색"
                       className="input-text"
-                      style={{ height: '36px', width: '180px', fontSize: '13px' }}
+                      style={{
+                        height: "36px",
+                        width: "180px",
+                        fontSize: "13px",
+                      }}
                     />
-                    <button type="submit" className="btn btn-secondary" style={{ height: '36px', padding: '0 12px' }} aria-label="검색">
+                    <button
+                      type="submit"
+                      className="btn btn-secondary"
+                      style={{ height: "36px", padding: "0 12px" }}
+                      aria-label="검색"
+                    >
                       <Search size={15} />
                     </button>
                   </form>
-                  <Link href="/qna/new" className="btn btn-primary" style={{ height: '36px', padding: '0 16px', fontSize: '13px' }}>
+                  <Link
+                    href="/qna/new"
+                    className="btn btn-primary"
+                    style={{
+                      height: "36px",
+                      padding: "0 16px",
+                      fontSize: "13px",
+                    }}
+                  >
                     글쓰기
                   </Link>
                 </div>
@@ -208,27 +315,49 @@ export default async function QnaListPage({
                 <tbody>
                   {posts.length === 0 ? (
                     <tr>
-                      <td colSpan={6} style={{ textAlign: 'center', padding: '56px 8px', color: 'var(--colors-muted)' }}>
-                        {q || cat ? '조건에 맞는 글이 없습니다.' : '아직 등록된 글이 없습니다. 첫 글을 남겨 보세요!'}
+                      <td
+                        colSpan={6}
+                        style={{
+                          textAlign: "center",
+                          padding: "56px 8px",
+                          color: "var(--colors-muted)",
+                        }}
+                      >
+                        {q || cat
+                          ? "조건에 맞는 글이 없습니다."
+                          : "아직 등록된 글이 없습니다. 첫 글을 남겨 보세요!"}
                       </td>
                     </tr>
                   ) : (
                     posts.map((post, idx) => (
                       <tr key={post.id}>
-                        <td className="board-col-num">{total - (page - 1) * PAGE_SIZE - idx}</td>
+                        <td className="board-col-num">
+                          {total - (page - 1) * PAGE_SIZE - idx}
+                        </td>
                         <td className="board-col-cat">
-                          <span className="board-cat-chip">[{post.category}]</span>
+                          <span className="board-cat-chip">
+                            [{post.category}]
+                          </span>
                         </td>
                         <td style={{ maxWidth: 0 }}>
-                          <Link href={`/qna/${post.id}`} className="board-title-link">
-                            <span className="board-title-text">{post.title}</span>
+                          <Link
+                            href={`/qna/${post.id}`}
+                            className="board-title-link"
+                          >
+                            <span className="board-title-text">
+                              {post.title}
+                            </span>
                             {post.commentCount > 0 && (
-                              <span className="board-comment-count">[{post.commentCount}]</span>
+                              <span className="board-comment-count">
+                                [{post.commentCount}]
+                              </span>
                             )}
                           </Link>
                         </td>
                         <td className="board-col-author">{post.authorName}</td>
-                        <td className="board-col-date">{formatListDate(post.createdAt)}</td>
+                        <td className="board-col-date">
+                          {formatListDate(post.createdAt)}
+                        </td>
                         <td className="board-col-views">{post.views}</td>
                       </tr>
                     ))
@@ -238,27 +367,55 @@ export default async function QnaListPage({
 
               {/* 페이지네이션 */}
               {totalPages > 1 && (
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', marginTop: '24px', alignItems: 'center' }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "4px",
+                    marginTop: "24px",
+                    alignItems: "center",
+                  }}
+                >
                   {page > 1 && (
-                    <Link href={`/qna${buildQuery({ page: page - 1, q, cat })}`} className="board-page-link">
+                    <Link
+                      href={`/qna${buildQuery({ page: page - 1, q, cat })}`}
+                      className="board-page-link"
+                    >
                       이전
                     </Link>
                   )}
                   {pageNumbers.map((n, i) => (
-                    <span key={n} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <span
+                      key={n}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
                       {i > 0 && pageNumbers[i - 1] !== n - 1 && (
-                        <span style={{ color: 'var(--colors-muted-soft)', fontSize: '12px' }}>…</span>
+                        <span
+                          style={{
+                            color: "var(--colors-muted-soft)",
+                            fontSize: "12px",
+                          }}
+                        >
+                          …
+                        </span>
                       )}
                       <Link
                         href={`/qna${buildQuery({ page: n, q, cat })}`}
-                        className={`board-page-link${n === page ? ' active' : ''}`}
+                        className={`board-page-link${n === page ? " active" : ""}`}
                       >
                         {n}
                       </Link>
                     </span>
                   ))}
                   {page < totalPages && (
-                    <Link href={`/qna${buildQuery({ page: page + 1, q, cat })}`} className="board-page-link">
+                    <Link
+                      href={`/qna${buildQuery({ page: page + 1, q, cat })}`}
+                      className="board-page-link"
+                    >
                       다음
                     </Link>
                   )}

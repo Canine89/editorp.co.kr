@@ -1,3 +1,4 @@
+import { removeEmptyStudyLabels } from '@/lib/reader-presentation';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -75,7 +76,7 @@ export default async function BookSectionPage({
             </span>
           </header>
 
-          <div className="rich-content book-content" dangerouslySetInnerHTML={{ __html: html }} />
+          <div className="rich-content book-content" dangerouslySetInnerHTML={{ __html: removeEmptyStudyLabels(html) }} />
 
           {/* 이전/다음 절 내비게이션 */}
           <nav

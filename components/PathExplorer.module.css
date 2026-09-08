@@ -1,0 +1,251 @@
+.filters {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+.filters button {
+  font-size: 13px;
+  font-weight: 550;
+  padding: 10px 15px;
+  min-height: 42px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 8px;
+  color: var(--colors-muted);
+  background: transparent;
+  cursor: pointer;
+}
+.filters button[aria-pressed="true"] {
+  background: var(--colors-ink);
+  border-color: var(--colors-ink);
+  color: var(--colors-canvas);
+}
+.filters button:hover {
+  border-color: var(--colors-primary);
+}
+.start {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 45px;
+  padding: 30px 34px;
+  background: var(--learning-tint);
+  border: 1px solid var(--learning-border);
+  border-radius: 14px;
+}
+.phase {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--colors-primary);
+}
+.start h3 {
+  font-size: 26px;
+  margin: 12px 0;
+}
+.start p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--colors-muted);
+}
+.meta {
+  display: flex;
+  gap: 17px;
+  margin-top: 15px;
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+.meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.firstLesson {
+  border-left: 1px solid var(--learning-border);
+  padding-left: 34px;
+}
+.firstLesson strong {
+  font-size: 19px;
+  color: var(--colors-ink);
+}
+.firstLesson p {
+  margin: 10px 0 16px;
+}
+.connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 19px 0;
+  font-size: 13px;
+  color: var(--colors-muted);
+}
+.connector svg {
+  flex-shrink: 0;
+  color: var(--colors-primary);
+}
+.branches {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+.branches > section {
+  border: 1px solid var(--colors-hairline);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--colors-surface-card);
+}
+.branchHeading {
+  padding: 24px 26px 20px;
+  background: var(--colors-surface-soft);
+}
+.branchHeading > span {
+  font-size: 12px;
+  color: var(--colors-primary);
+  font-weight: 600;
+}
+.branchHeading h3 {
+  font-size: 23px;
+  margin: 10px 0;
+}
+.branchHeading p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--colors-muted);
+}
+.branchList {
+  list-style: none;
+  padding: 0 26px;
+}
+.branchList > * + * {
+  border-top: 1px solid var(--colors-hairline);
+}
+.row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 21px 0;
+}
+.row > div {
+  min-width: 0;
+}
+.row > svg {
+  flex-shrink: 0;
+  color: var(--colors-primary);
+  transition: transform 0.2s;
+}
+.row:hover > svg {
+  transform: translateX(4px);
+}
+.row span,
+.row small {
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+.row h3 {
+  font-size: 18px;
+  line-height: 1.45;
+  margin: 6px 0 8px;
+}
+.row p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--colors-muted);
+}
+.row small {
+  display: block;
+  margin-top: 10px;
+}
+.row:hover h3 {
+  color: var(--colors-primary);
+}
+.advanced {
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  align-items: center;
+  gap: 30px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 14px;
+  padding: 12px 32px;
+}
+.advanced > div:first-child > h3 {
+  font-size: 21px;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 32px;
+}
+.grid .row {
+  border-bottom: 1px solid var(--colors-hairline);
+}
+.empty {
+  padding: 30px;
+  background: var(--colors-surface-soft);
+  border-radius: 12px;
+}
+.empty p {
+  margin-bottom: 15px;
+}
+.note {
+  font-size: 12px;
+  color: var(--colors-muted);
+  margin-top: 20px;
+}
+@media (max-width: 768px) {
+  .start,
+  .branches,
+  .advanced,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .start {
+    padding: 23px;
+    gap: 20px;
+  }
+  .start h3 {
+    font-size: 23px;
+  }
+  .firstLesson {
+    padding: 20px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--learning-border);
+  }
+  .connector {
+    font-size: 12px;
+    line-height: 1.7;
+    justify-content: flex-start;
+  }
+  .branches {
+    gap: 16px;
+  }
+  .branchHeading {
+    padding: 22px;
+  }
+  .branchHeading h3 {
+    font-size: 21px;
+  }
+  .branchList {
+    padding: 0 22px;
+  }
+  .advanced {
+    gap: 0;
+    padding: 22px;
+  }
+  .advanced > div:first-child {
+    padding-bottom: 8px;
+  }
+  .filters button {
+    font-size: 12px;
+    padding: 9px 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .row > svg {
+    transition: none;
+  }
+  .row:hover > svg {
+    transform: none;
+  }
+}

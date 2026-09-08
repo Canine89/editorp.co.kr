@@ -1,231 +1,167 @@
-import type { CSSProperties } from 'react';
-import { ArrowRight } from 'lucide-react';
-import { countEditedBooks, getEditedBooksData } from '@/lib/edited-books';
-
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { getEditedBooksData, countEditedBooks } from "@/lib/edited-books";
+import { searchText } from "@/lib/video-presentation";
+import { SearchFilters } from "@/components/SearchFilters";
+import styles from "./catalog.module.css";
 export const metadata = {
-  title: '편집한 도서 | 편집자P의 AI 강의·편집실',
-  description: '편집자P가 골든래빗·이지스퍼블리싱에서 기획하고 편집한 IT 도서를 소개합니다.',
+  title: "편집한 도서 | 편집자P의 AI 강의·편집실",
+  description:
+    "편집자P가 집필·기획·편집에 참여한 도서를 역할, 출판사, 제목으로 찾아보세요.",
 };
-
-export default function EditedBooksPage() {
+export default async function EditedBooksPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    q?: string;
+    role?: string;
+    publisher?: string;
+    page?: string;
+  }>;
+}) {
+  const {
+    q = "",
+    role = "",
+    publisher = "",
+    page: pageParam = "1",
+  } = await searchParams;
   const data = getEditedBooksData();
-  const total = countEditedBooks(data);
-
+  const books = data.publishers.flatMap((pub) =>
+    pub.books.map((book) => ({
+      ...book,
+      publisher: pub.name,
+      publisherId: pub.id,
+    })),
+  );
+  const found = books.filter(
+    (book) =>
+      (!q || searchText(book.title).includes(searchText(q))) &&
+      (!publisher || book.publisherId === publisher) &&
+      (!role ||
+        (role === "writing"
+          ? book.role.includes("집필")
+          : role === "editing"
+            ? /기획|편집/.test(book.role)
+            : /삽화/.test(book.role))),
+  );
+  const pageCount = Math.max(1, Math.ceil(found.length / 12));
+  const page = Math.min(
+    pageCount,
+    Math.max(1, Number.parseInt(pageParam, 10) || 1),
+  );
+  const href = (p: number) =>
+    "/edited-books?" +
+    new URLSearchParams({ q, role, publisher, page: String(p) }).toString();
   return (
-    <div style={{ backgroundColor: 'var(--colors-canvas)', minHeight: '100vh', paddingBottom: '80px' }}>
-      <style>{`
-        .edited-book-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 20px;
-        }
-        @media (max-width: 1024px) {
-          .edited-book-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 768px) {
-          .edited-book-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 480px) {
-          .edited-book-grid { grid-template-columns: 1fr; }
-        }
-        .edited-book-card {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          background-color: var(--colors-surface-card);
-          border: 1px solid var(--colors-hairline);
-          border-radius: var(--rounded-lg);
-          overflow: hidden;
-          transition: all var(--transition-normal);
-        }
-        .edited-book-card:hover {
-          transform: translateY(-4px);
-          border-color: var(--publisher-color, var(--colors-primary));
-          box-shadow: 0 12px 32px color-mix(in srgb, var(--publisher-color, var(--colors-primary)) 12%, transparent);
-        }
-        .edited-book-cover-wrap {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 28px 20px;
-          background-color: color-mix(in srgb, var(--publisher-color) 18%, var(--colors-surface-soft));
-          border-bottom: 1px solid var(--colors-hairline-soft);
-        }
-        .edited-book-cover {
-          height: 180px;
-          width: auto;
-          border-radius: var(--rounded-sm);
-          border: 1px solid var(--colors-hairline);
-          box-shadow: 0 10px 24px rgba(20, 20, 19, 0.16);
-          display: block;
-        }
-        .edited-book-body {
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-          padding: 16px;
-        }
-        .edited-book-card .card-stretched-link::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          border-radius: var(--rounded-lg);
-        }
-        .publisher-header {
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-          gap: 16px;
-          padding-bottom: 14px;
-          margin-bottom: 24px;
-          border-bottom: 2px solid var(--colors-hairline);
-        }
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-          margin-top: 48px;
-        }
-        @media (max-width: 640px) {
-          .stats-grid { grid-template-columns: 1fr; }
-        }
-        .stat-card {
-          background-color: var(--colors-surface-card);
-          border: 1px solid var(--colors-hairline);
-          border-radius: var(--rounded-lg);
-          padding: 20px 24px;
-        }
-      `}</style>
-
-      <section style={{ padding: '72px 0 40px 0', textAlign: 'center' }}>
-        <div className="container">
-          <span className="badge badge-coral" style={{ marginBottom: '20px', fontWeight: 600 }}>
-            ✦ 총 {total}권
+    <div className={`container ${styles.page}`}>
+      <header className="page-intro">
+        <span>편집자P가 함께 만든 {countEditedBooks(data)}권</span>
+        <h1>편집한 도서</h1>
+        <p>
+          직접 집필한 책부터 기획·편집·삽화로 함께한 책까지.
+          <br />각 책에서 맡은 역할과 관심 주제로 찾아보세요.
+        </p>
+        <Link href="/about#authored-books" className={styles.featuredLink}>
+          대표작과 관련 강의 소개 <ArrowRight size={15} />
+        </Link>
+      </header>
+      <SearchFilters
+        action="/edited-books"
+        query={q}
+        placeholder="예: 파이썬, 바이브 코딩…"
+        filters={[
+          {
+            name: "role",
+            label: "참여 역할",
+            value: role,
+            options: [
+              { value: "", label: "모든 역할" },
+              { value: "writing", label: "집필 참여" },
+              { value: "editing", label: "기획·편집 참여" },
+              { value: "illustration", label: "삽화 참여" },
+            ],
+          },
+          {
+            name: "publisher",
+            label: "출판사",
+            value: publisher,
+            options: [
+              { value: "", label: "모든 출판사" },
+              ...data.publishers.map((p) => ({ value: p.id, label: p.name })),
+            ],
+          },
+        ]}
+      />
+      <div
+        className={styles.result}
+        role="status"
+        id="search-results-status"
+        tabIndex={-1}
+      >
+        <p>
+          {q && `‘${q}’ `}
+          {found.length}권
+        </p>
+        {(q || role || publisher) && (
+          <Link href="/edited-books">필터 초기화</Link>
+        )}
+      </div>
+      <div className={styles.grid} id="book-results">
+        {found.slice((page - 1) * 12, page * 12).map((book) => (
+          <a
+            className={styles.book}
+            key={book.url}
+            href={book.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div className={styles.cover}>
+              <Image
+                src={book.image}
+                alt={`${book.title} 표지`}
+                width={170}
+                height={240}
+                sizes="(max-width:640px) 120px, 170px"
+              />
+            </div>
+            <div className={styles.meta}>
+              <span>{book.role.replaceAll("/", "·")}</span>
+              <span>{book.publisher}</span>
+            </div>
+            <h2>{book.title}</h2>
+            {book.note && <p>{book.note}</p>}
+            <span className={styles.external}>
+              도서 정보 <ArrowUpRight size={14} />
+            </span>
+          </a>
+        ))}
+      </div>
+      {found.length === 0 && (
+        <div className={styles.empty}>
+          <h2>조건에 맞는 도서를 찾지 못했습니다.</h2>
+          <p>검색어를 줄이거나 다른 역할·출판사를 선택해 보세요.</p>
+          <Link href="/edited-books" className="btn btn-secondary">
+            전체 도서 보기
+          </Link>
+        </div>
+      )}
+      {pageCount > 1 && (
+        <nav aria-label="도서 목록 페이지" className={styles.pagination}>
+          {page > 1 && (
+            <Link href={`${href(page - 1)}#book-results`}>← 이전</Link>
+          )}
+          <span>
+            {page} / {pageCount}
           </span>
-          <h1 className="serif-display" style={{ fontSize: '40px', margin: '16px 0 14px 0' }}>
-            편집한 도서
-          </h1>
-          <p style={{ fontSize: '17px', color: 'var(--colors-body)', maxWidth: '640px', margin: '0 auto' }}>
-            골든래빗·이지스퍼블리싱에서 기획하고 편집한 IT 도서들입니다.
-          </p>
-        </div>
-      </section>
-
-      <section style={{ padding: '0 0 20px 0' }}>
-        <div className="container">
-          {data.publishers.map((publisher) => (
-            <div key={publisher.id} style={{ marginBottom: '56px' }}>
-              <div className="publisher-header">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                  <span
-                    aria-hidden
-                    style={{
-                      display: 'block',
-                      width: '6px',
-                      height: '40px',
-                      borderRadius: 'var(--rounded-pill)',
-                      backgroundColor: publisher.color,
-                    }}
-                  />
-                  <div>
-                    <h2 className="serif-display" style={{ fontSize: '24px', margin: 0, fontWeight: 600 }}>
-                      {publisher.name}
-                    </h2>
-                    <p style={{ fontSize: '13px', color: 'var(--colors-muted)', margin: '4px 0 0 0' }}>
-                      {publisher.period} · {publisher.books.length}권
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="edited-book-grid">
-                {publisher.books.map((book) => (
-                  <article
-                    key={book.title}
-                    className="edited-book-card"
-                    style={{ '--publisher-color': publisher.color } as CSSProperties}
-                  >
-                    <div className="edited-book-cover-wrap">
-                      <img
-                        className="edited-book-cover"
-                        src={book.image}
-                        alt={`${book.title} 표지`}
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="edited-book-body">
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '10px' }}>
-                        <span
-                          className="badge"
-                          style={{
-                            fontSize: '10px',
-                            fontWeight: 600,
-                            color: '#fff',
-                            backgroundColor: publisher.color,
-                            border: 'none',
-                          }}
-                        >
-                          {book.role}
-                        </span>
-                        {book.note && (
-                          <span className="badge badge-cream" style={{ fontSize: '10px', fontWeight: 600 }}>
-                            {book.note}
-                          </span>
-                        )}
-                      </div>
-                      <h3
-                        className="serif-display"
-                        style={{ fontSize: '15px', lineHeight: 1.45, margin: '0 0 12px 0', fontWeight: 600, flex: 1 }}
-                      >
-                        {book.title}
-                      </h3>
-                      <a
-                        href={book.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-primary card-stretched-link"
-                        style={{
-                          height: '32px',
-                          padding: '0 14px',
-                          fontSize: '12px',
-                          gap: '4px',
-                          alignSelf: 'flex-start',
-                          position: 'relative',
-                          zIndex: 2,
-                        }}
-                      >
-                        예스24에서 보기 <ArrowRight size={13} />
-                      </a>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          ))}
-
-          <div className="stats-grid">
-            <div className="stat-card">
-              <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--colors-muted)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                Total
-              </p>
-              <p className="serif-display" style={{ fontSize: '32px', fontWeight: 700, margin: '8px 0 0 0' }}>
-                {total}
-              </p>
-            </div>
-            {data.publishers.map((pub) => (
-              <div key={pub.id} className="stat-card">
-                <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--colors-muted)', margin: 0 }}>
-                  {pub.name}
-                </p>
-                <p className="serif-display" style={{ fontSize: '32px', fontWeight: 700, margin: '8px 0 0 0', color: pub.color }}>
-                  {pub.books.length}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+          {page < pageCount && (
+            <Link href={`${href(page + 1)}#book-results`}>다음 →</Link>
+          )}
+        </nav>
+      )}
+      <p className={styles.note}>
+        한 도서에 여러 역할로 참여한 경우 각 역할의 검색 결과에 함께 표시됩니다.
+      </p>
     </div>
   );
 }

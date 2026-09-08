@@ -1,0 +1,136 @@
+.shelf {
+  background: var(--learning-tint);
+  border-radius: 16px;
+  padding: 32px 30px 20px;
+  min-width: 0;
+}
+.covers {
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+  align-items: flex-end;
+}
+.covers a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.covers img {
+  width: 160px;
+  height: 225px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 7px #20302620);
+}
+.covers span {
+  font-size: 12px;
+  color: var(--colors-primary);
+  font-weight: 600;
+}
+.caption {
+  margin-top: 25px;
+  padding-top: 18px;
+  border-top: 1px solid var(--learning-border);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.caption > span {
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+.caption a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--colors-primary);
+}
+.selection {
+  display: grid;
+  gap: 16px;
+}
+.selection article {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 25px;
+  align-items: center;
+  padding: 24px;
+  background: var(--colors-surface-card);
+  border: 1px solid var(--colors-hairline);
+  border-radius: 12px;
+}
+.coverLink img {
+  width: 100px;
+  height: 145px;
+  object-fit: contain;
+}
+.role {
+  font-size: 12px;
+  color: var(--colors-primary);
+}
+.selection h3 {
+  font-size: 19px;
+  line-height: 1.45;
+  margin: 8px 0;
+}
+.selection p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--colors-muted);
+}
+.links {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.links a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  min-height: 30px;
+  color: var(--colors-primary);
+}
+.links a:hover,
+.caption a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+@media (max-width: 640px) {
+  .shelf {
+    padding: 24px 22px 20px;
+  }
+  .covers {
+    gap: 24px;
+  }
+  .covers img {
+    width: 125px;
+    height: 175px;
+  }
+  .selection article {
+    padding: 18px;
+    gap: 18px;
+    grid-template-columns: 80px minmax(0, 1fr);
+  }
+  .coverLink img {
+    width: 80px;
+    height: 120px;
+  }
+  .selection h3 {
+    font-size: 16px;
+  }
+  .selection p {
+    font-size: 13px;
+  }
+  .links {
+    gap: 12px;
+  }
+  .links a {
+    font-size: 12px;
+  }
+}

@@ -34,3 +34,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## AI 학습 로드맵 개편
+
+홈·소개·영상 탐색·추천 학습 경로의 구조와 운영 반영 절차는 [개편 기록](docs/학습-로드맵-개편.md)에 정리했습니다. 추천 경로를 운영 Firestore에 처음 추가할 때 `node scripts/import-learning-paths.mjs`로 미리 확인하고 `--apply`로 등록합니다. 기존 로드맵은 덮어쓰지 않습니다.

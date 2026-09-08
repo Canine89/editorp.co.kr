@@ -1,0 +1,648 @@
+.page {
+  padding-bottom: 70px;
+}
+.sectionNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  padding: 23px 0;
+  border-bottom: 1px solid var(--colors-hairline);
+  color: var(--colors-muted);
+  font-size: 12px;
+}
+.sectionNav a:hover {
+  color: var(--colors-primary);
+}
+.hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 80px;
+  align-items: center;
+  padding: 60px 0 70px;
+}
+.eyebrow {
+  color: var(--colors-primary);
+  font-size: 13px;
+  font-weight: 600;
+}
+.hero h1 {
+  font-size: 46px;
+  line-height: 1.33;
+  letter-spacing: -0.045em;
+  margin: 21px 0;
+  font-weight: 720;
+}
+.hero h1 span {
+  color: var(--colors-primary);
+}
+.hero p {
+  color: var(--colors-muted);
+  line-height: 1.9;
+  font-size: 16px;
+  max-width: 500px;
+  margin-bottom: 26px;
+}
+.portrait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--learning-tint);
+  border-radius: 18px;
+  min-height: 390px;
+  padding: 25px;
+}
+.portrait img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.portrait > span {
+  font-size: 16px;
+  font-weight: 650;
+  color: var(--colors-primary);
+  margin-top: 10px;
+}
+.portrait small {
+  font-size: 12px;
+  color: var(--colors-muted);
+  margin-top: 5px;
+}
+:global(html[data-theme="dark"]) .portrait img {
+  mix-blend-mode: normal;
+  border-radius: 50%;
+}
+.bio {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 75px;
+  padding: 55px 0;
+  border-top: 1px solid var(--colors-hairline);
+}
+.bio h2 {
+  font-size: 30px;
+  line-height: 1.4;
+  margin-bottom: 23px;
+}
+.bio p {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--colors-muted);
+  margin-bottom: 15px;
+}
+.credentials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 23px;
+  margin-top: 25px;
+}
+.credentials span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+.credentials svg,
+.credentials strong {
+  color: var(--colors-primary);
+}
+.profile {
+  padding: 25px;
+  background: var(--colors-surface-soft);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.profile > div {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 15px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.profile dt {
+  color: var(--colors-muted);
+}
+.profile dd {
+  color: var(--colors-ink);
+  overflow-wrap: anywhere;
+}
+.profile dd a {
+  color: var(--colors-primary);
+}
+.profile dd small {
+  color: var(--colors-muted);
+}
+.ambassador {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 24px 30px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 14px;
+}
+.ambassador > div {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  color: var(--colors-primary);
+}
+.ambassador strong,
+.ambassador small {
+  display: block;
+}
+.ambassador strong {
+  font-size: 18px;
+}
+.ambassador small {
+  color: var(--colors-muted);
+  font-size: 13px;
+  margin-top: 6px;
+}
+.ambassador img {
+  border-radius: 8px;
+  max-width: 40%;
+}
+.storyVideo {
+  display: grid;
+  grid-template-columns: 280px 1fr auto;
+  gap: 30px;
+  align-items: center;
+  margin: 45px 0;
+  padding: 22px;
+  border-radius: 14px;
+  background: var(--colors-surface-soft);
+}
+.storyImage {
+  position: relative;
+  aspect-ratio: 16/9;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.storyImage img {
+  object-fit: cover;
+}
+.storyVideo span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--colors-primary);
+}
+.storyVideo h2 {
+  font-size: 23px;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+.storyVideo p {
+  font-size: 13px;
+  color: var(--colors-muted);
+  margin-top: 9px;
+}
+.storyVideo > svg {
+  color: var(--colors-primary);
+}
+.books,
+.lectures {
+  padding: 40px 0;
+}
+.sectionHeading {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  align-items: center;
+  margin-bottom: 25px;
+}
+.sectionHeading h2 {
+  font-size: 30px;
+  line-height: 1.4;
+}
+.sectionHeading p {
+  font-size: 14px;
+  color: var(--colors-muted);
+  margin-top: 10px;
+}
+.sectionHeading > a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--colors-primary);
+}
+/* 대표 도서 아래, 나머지 집필·편저서를 접지 않고 촘촘하게 나열한다. */
+.otherBooks {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px dashed var(--colors-hairline);
+}
+.otherBooks h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--colors-muted);
+  margin-bottom: 14px;
+}
+.bookList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.bookList a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 10px;
+  background: var(--colors-surface-card);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--colors-ink);
+}
+.bookList a > span {
+  flex: 1;
+}
+.bookList svg {
+  flex-shrink: 0;
+  color: var(--colors-primary);
+}
+.bookList a:hover {
+  border-color: var(--colors-primary);
+}
+
+/* 강의 타임라인: 왼쪽 연도 마커 + 세로 축선 위에 점으로 항목을 찍는다. */
+.timelineHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 40px 0 6px;
+}
+.timelineHeading h3 {
+  font-size: 18px;
+  font-weight: 650;
+}
+.timelineHeading p {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+.timeline,
+.timeline ol {
+  list-style: none;
+}
+.timelineYear {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.yearLabel {
+  position: sticky;
+  top: 88px;
+  display: block;
+  padding-top: 18px;
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--colors-primary);
+}
+.timelineYear ol {
+  position: relative;
+  padding: 10px 0 26px 28px;
+}
+/* 세로 축선 */
+.timelineYear ol::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  width: 1px;
+  background: var(--colors-hairline);
+}
+.timelineYear:last-child ol::before {
+  bottom: 26px;
+}
+.timelineYear ol li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 18px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--colors-hairline);
+}
+.timelineYear ol li:last-child {
+  border-bottom: 0;
+}
+/* 축선 위의 점 */
+.timelineYear ol li::before {
+  content: "";
+  position: absolute;
+  left: -28px;
+  top: 20px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--colors-canvas);
+  border: 2px solid var(--colors-primary);
+}
+.timelineYear:first-child ol li:first-child::before {
+  background: var(--colors-primary);
+  box-shadow: 0 0 0 4px var(--learning-tint);
+}
+.timelineYear time {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--colors-muted);
+  padding-top: 4px;
+  white-space: nowrap;
+}
+.timelineYear h4 {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--colors-ink);
+}
+.timelineYear li p {
+  font-size: 12px;
+  color: var(--colors-muted);
+  margin-top: 3px;
+  line-height: 1.6;
+}
+.contact {
+  text-align: center;
+  background: var(--learning-tint);
+  border: 1px solid var(--learning-border);
+  border-radius: 16px;
+  padding: 50px 25px;
+  margin-top: 30px;
+}
+.contact > svg {
+  color: var(--colors-primary);
+}
+.contact h2 {
+  font-size: 29px;
+  line-height: 1.45;
+  margin: 17px 0;
+}
+.contact p {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--colors-muted);
+  margin-bottom: 25px;
+}
+.email {
+  display: block;
+  font-size: 12px;
+  margin-top: 18px;
+  color: var(--colors-muted);
+}
+@media (max-width: 900px) {
+  .hero {
+    gap: 30px;
+  }
+  .hero h1 {
+    font-size: 37px;
+  }
+  .bio {
+    gap: 30px;
+  }
+  .storyVideo {
+    grid-template-columns: 220px 1fr;
+  }
+  .storyVideo > svg {
+    display: none;
+  }
+  .sectionHeading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+}
+@media (max-width: 640px) {
+  .sectionNav {
+    gap: 20px;
+  }
+  .hero,
+  .bio {
+    grid-template-columns: 1fr;
+    padding: 36px 0;
+  }
+  .hero h1 {
+    font-size: 34px;
+  }
+  .hero p {
+    font-size: 15px;
+  }
+  .portrait {
+    min-height: 280px;
+  }
+  .portrait img {
+    width: 180px;
+    height: 180px;
+  }
+  .ambassador {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px;
+  }
+  .ambassador img {
+    max-width: 100%;
+  }
+  .storyVideo {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .storyVideo h2 {
+    font-size: 21px;
+  }
+  .bookList {
+    grid-template-columns: 1fr;
+  }
+  .timelineYear {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .yearLabel {
+    position: static;
+    padding: 18px 0 0 28px;
+    font-size: 24px;
+  }
+  .timelineYear ol li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .timelineYear time {
+    padding-top: 0;
+  }
+  .sectionHeading h2,
+  .contact h2 {
+    font-size: 25px;
+  }
+  .profile {
+    padding: 21px;
+  }
+  .profile > div {
+    grid-template-columns: 70px 1fr;
+    gap: 8px;
+  }
+  .books,
+  .lectures {
+    padding: 25px 0;
+  }
+}
+
+/* 재평가 반영: 실제 도서와 강의 사례를 프로필보다 먼저 보여준다. */
+.hero {
+  grid-template-columns: 1.2fr 1fr;
+  gap: 55px;
+  padding: 36px 0 44px;
+}
+.hero h1 {
+  font-size: 38px;
+  line-height: 1.3;
+  margin: 22px 0 18px;
+}
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+.identity img {
+  border-radius: 50%;
+}
+.identity strong {
+  display: block;
+  font-size: 15px;
+  color: var(--colors-ink);
+  margin-top: 3px;
+}
+.heroFacts {
+  display: flex;
+  gap: 24px;
+  margin: 0 0 24px;
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+.heroFacts strong {
+  font-size: 20px;
+  color: var(--colors-primary);
+  margin-right: 5px;
+}
+.books {
+  border-top: 1px solid var(--colors-hairline);
+}
+.lectureHighlights {
+  display: grid;
+  gap: 0;
+}
+.lectureHighlights article {
+  display: grid;
+  grid-template-columns: 85px 1fr 1.4fr 130px;
+  align-items: start;
+  gap: 22px;
+  padding: 23px 0;
+  border-bottom: 1px solid var(--colors-hairline);
+}
+.lectureHighlights article > span {
+  color: var(--colors-primary);
+  font-size: 12px;
+  font-weight: 600;
+  padding-top: 3px;
+}
+.lectureHighlights h3 {
+  font-size: 17px;
+  line-height: 1.6;
+}
+.lectureHighlights p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--colors-muted);
+}
+.lectureHighlights time {
+  font-size: 12px;
+  color: var(--colors-muted);
+  text-align: right;
+  padding-top: 4px;
+}
+.historyLink {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--colors-primary);
+  font-size: 13px;
+  margin-top: 14px;
+  min-height: 36px;
+}
+.sectionHeading h2 {
+  font-size: 28px;
+}
+.more summary {
+  min-height: 44px;
+}
+.bio {
+  padding: 42px 0;
+}
+.bio h2 {
+  font-size: 28px;
+}
+@media (max-width: 900px) {
+  .hero {
+    gap: 25px;
+  }
+  .hero h1 {
+    font-size: 33px;
+  }
+  .lectureHighlights article {
+    grid-template-columns: 80px 1fr;
+  }
+  .lectureHighlights article > p {
+    grid-column: 2;
+  }
+  .lectureHighlights time {
+    grid-column: 2;
+    text-align: left;
+  }
+  .lectureHighlights article {
+    gap: 8px 20px;
+  }
+}
+@media (max-width: 640px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 28px;
+    gap: 25px;
+  }
+  .hero h1 {
+    font-size: 30px;
+  }
+  .hero p {
+    font-size: 14px;
+  }
+  .sectionHeading h2 {
+    font-size: 25px;
+  }
+  .lectureHighlights article {
+    grid-template-columns: 1fr;
+  }
+  .lectureHighlights article > p,
+  .lectureHighlights time {
+    grid-column: auto;
+  }
+  .heroFacts {
+    gap: 18px;
+  }
+  .sectionNav {
+    gap: 16px;
+  }
+}

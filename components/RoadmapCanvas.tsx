@@ -1,27 +1,42 @@
-'use client';
-
-import { useState, useEffect, useRef } from 'react';
-import { Play, CheckCircle2, ArrowLeft, ExternalLink, SkipForward, SkipBack } from 'lucide-react';
-import Link from 'next/link';
-
-interface TimelineItem {
-  time: string;
-  title: string;
-}
-
+"use client";
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useSyncExternalStore,
+} from "react";
+import Link from "next/link";
+import {
+  Check,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  List,
+  ExternalLink,
+  Undo2,
+  X,
+} from "lucide-react";
+import { lessonTitle } from "@/lib/video-presentation";
+import {
+  parseProgress,
+  progressSnapshot,
+  recordVisit,
+  saveCompleted,
+} from "@/lib/learning-progress";
+import styles from "./RoadmapCanvas.module.css";
 interface Node {
   id: string;
   title: string;
   description?: string;
   youtubeUrl: string;
   youtubeId: string;
-  difficulty: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+  difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
   x: number;
   y: number;
   parentId: string | null;
-  timeline?: TimelineItem[];
+  timeline?: { time: string; title: string }[];
 }
-
 interface Roadmap {
   id: string;
   title: string;
@@ -29,762 +44,398 @@ interface Roadmap {
   category: string;
   nodes: Node[];
 }
-
-// "1:23" → 83, "1:02:03" → 3723
-function parseTimeToSeconds(time: string): number {
-  const parts = time.split(':').map((p) => parseInt(p.trim(), 10));
-  if (parts.some(isNaN)) return 0;
-  return parts.reduce((acc, part) => acc * 60 + part, 0);
-}
-
+const subscribe = () => () => {};
 export function RoadmapCanvas({ roadmap }: { roadmap: Roadmap }) {
-  const [completedNodes, setCompletedNodes] = useState<string[]>([]);
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
-  const [startSeconds, setStartSeconds] = useState(0);
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
+  return mounted ? (
+    <Player key={roadmap.id} roadmap={roadmap} />
+  ) : (
+    <div
+      className={styles.skeleton}
+      role="status"
+      aria-label="강의 불러오는 중"
+    >
+      <div />
+      <div />
+    </div>
+  );
+}
+function Player({ roadmap }: { roadmap: Roadmap }) {
+  const [completed, setCompleted] = useState(
+    () => parseProgress(progressSnapshot(), { ...roadmap, href: "" }).completed,
+  );
+  const [selected, setSelected] = useState(() => {
+    const requested = new URLSearchParams(location.search).get("lesson");
+    const saved = parseProgress(progressSnapshot(), { ...roadmap, href: "" });
+    return (
+      roadmap.nodes.find((n) => n.id === requested) ??
+      roadmap.nodes.find((n) => n.id === saved.lastId) ??
+      roadmap.nodes.find((n) => !saved.completed.includes(n.id)) ??
+      roadmap.nodes[0]
+    );
+  });
+  const [tocOpen, setTocOpen] = useState(true);
+  const [start, setStart] = useState(0);
   const [autoplay, setAutoplay] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const listRef = useRef<HTMLDivElement>(null);
-
+  const [storageError, setStorageError] = useState(false);
+  const [notice, setNotice] = useState<{
+    id: string;
+    added: boolean;
+    text: string;
+  } | null>(null);
+  const tocRef = useRef<HTMLButtonElement>(null);
+  const lessonRef = useRef<HTMLDivElement>(null);
+  const lessonHeadingRef = useRef<HTMLHeadingElement>(null);
+  const revealPending = useRef(false);
+  const routePath = useRef(location.pathname);
+  const listRef = useRef<HTMLOListElement>(null);
+  const rowRefs = useRef(new Map<string, HTMLButtonElement>());
+  const index = selected
+    ? roadmap.nodes.findIndex((n) => n.id === selected.id)
+    : -1;
+  const isDone = selected ? completed.includes(selected.id) : false;
+  const allDone =
+    roadmap.nodes.length > 0 && completed.length === roadmap.nodes.length;
+  const percent = roadmap.nodes.length
+    ? Math.round((completed.length / roadmap.nodes.length) * 100)
+    : 0;
   useEffect(() => {
-    setMounted(true);
-    const stored = localStorage.getItem(`completed-nodes-${roadmap.id}`);
-    if (stored) {
-      try {
-        setCompletedNodes(JSON.parse(stored));
-      } catch (e) {
-        console.error(e);
+    if (selected) recordVisit(roadmap.id, selected.id);
+  }, [roadmap.id, selected]);
+  useEffect(() => {
+    const handleBack = () => {
+      if (location.pathname !== routePath.current) return;
+      const id = new URLSearchParams(location.search).get("lesson");
+      const node = roadmap.nodes.find((n) => n.id === id) ?? roadmap.nodes[0];
+      if (node) {
+        setSelected(node);
+        setStart(0);
+        setAutoplay(false);
+        setNotice(null);
+      }
+    };
+    window.addEventListener("popstate", handleBack);
+    return () => window.removeEventListener("popstate", handleBack);
+  }, [roadmap.nodes]);
+  useEffect(() => {
+    if (!selected || !listRef.current) return;
+    const row = rowRefs.current.get(selected.id);
+    const list = listRef.current;
+    if (!row) return;
+    const rowBox = row.getBoundingClientRect();
+    const listBox = list.getBoundingClientRect();
+    if (rowBox.top < listBox.top) list.scrollTop += rowBox.top - listBox.top;
+    else if (rowBox.bottom > listBox.bottom)
+      list.scrollTop += rowBox.bottom - listBox.bottom;
+  }, [selected, tocOpen]);
+  useLayoutEffect(() => {
+    if (revealPending.current) {
+      revealPending.current = false;
+      lessonHeadingRef.current?.focus({ preventScroll: true });
+      lessonRef.current?.scrollIntoView({
+        block: "start",
+        behavior: "instant",
+      });
+    }
+  }, [selected]);
+  function select(node: Node, push = true, revealVideo = false) {
+    setSelected(node);
+    setStart(0);
+    setAutoplay(false);
+    setNotice(null);
+    if (revealVideo && window.matchMedia("(max-width: 900px)").matches) {
+      if (node.id === selected?.id) {
+        lessonHeadingRef.current?.focus({ preventScroll: true });
+        lessonRef.current?.scrollIntoView({
+          block: "start",
+          behavior: "instant",
+        });
+      } else {
+        revealPending.current = true;
       }
     }
-    if (roadmap.nodes && roadmap.nodes.length > 0) {
-      const rootNode = roadmap.nodes.find(n => !n.parentId) || roadmap.nodes[0];
-      setSelectedNode(rootNode);
+    if (push) {
+      const url = new URL(location.href);
+      if (url.searchParams.get("lesson") !== node.id) {
+        url.searchParams.set("lesson", node.id);
+        window.history.pushState(window.history.state, "", url);
+      }
     }
-  }, [roadmap.id, roadmap.nodes]);
-
-  // Keep the active course visible in the sidebar list
-  useEffect(() => {
-    if (!selectedNode || !listRef.current) return;
-    const activeBtn = listRef.current.querySelector('.course-btn.active');
-    activeBtn?.scrollIntoView({ block: 'nearest' });
-  }, [selectedNode]);
-
-  if (!mounted) {
-    return (
-      <div className="canvas-skeleton">
-        <style>{`
-          .canvas-skeleton {
-            display: flex;
-            flex: 1;
-            min-height: 480px;
-            background: var(--colors-canvas);
-          }
-          .skeleton-block {
-            background: var(--colors-surface-card);
-            border-radius: var(--rounded-md);
-            animation: skeleton-pulse 1.4s ease-in-out infinite;
-          }
-          @keyframes skeleton-pulse {
-            0%, 100% { opacity: 0.55; }
-            50% { opacity: 1; }
-          }
-          .skeleton-sidebar {
-            width: 360px;
-            flex-shrink: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            border-right: 1px solid var(--colors-hairline);
-            background: var(--colors-surface-soft);
-          }
-          .skeleton-main {
-            flex: 1;
-            padding: 20px 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-          }
-          .skeleton-video {
-            width: min(100%, 860px);
-            aspect-ratio: 16 / 9;
-          }
-          @media (max-width: 900px) {
-            .canvas-skeleton { flex-direction: column; }
-            .skeleton-sidebar { width: 100%; border-right: none; }
-            .skeleton-video { width: 100%; }
-          }
-        `}</style>
-        <div className="skeleton-sidebar">
-          <div className="skeleton-block" style={{ height: '12px', width: '50%' }} />
-          <div className="skeleton-block" style={{ height: '6px' }} />
-          {Array.from({ length: 7 }, (_, i) => (
-            <div key={i} className="skeleton-block" style={{ height: '40px' }} />
-          ))}
-        </div>
-        <div className="skeleton-main">
-          <div className="skeleton-block skeleton-video" />
-          <div className="skeleton-block" style={{ height: '20px', width: 'min(60%, 480px)' }} />
-          <div className="skeleton-block" style={{ height: '14px', width: 'min(80%, 640px)' }} />
-        </div>
-      </div>
-    );
   }
-
-  const totalNodes = roadmap.nodes.length;
-  const progressPercent = totalNodes > 0
-    ? Math.round((completedNodes.length / totalNodes) * 100)
-    : 0;
-
-  const selectNode = (node: Node, opts?: { autoplay?: boolean }) => {
-    setSelectedNode(node);
-    setStartSeconds(0);
-    setAutoplay(opts?.autoplay ?? false);
-  };
-
-  const currentIndex = selectedNode ? roadmap.nodes.findIndex((n) => n.id === selectedNode.id) : -1;
-  const hasPrev = currentIndex > 0;
-  const hasNext = currentIndex >= 0 && currentIndex < roadmap.nodes.length - 1;
-
-  const toggleCompletion = (nodeId: string) => {
-    const isCompleting = !completedNodes.includes(nodeId);
-    const updated = isCompleting
-      ? [...completedNodes, nodeId]
-      : completedNodes.filter((id) => id !== nodeId);
-    setCompletedNodes(updated);
-    localStorage.setItem(`completed-nodes-${roadmap.id}`, JSON.stringify(updated));
-
-    // Completing a course moves straight on to the next one
-    if (isCompleting && hasNext) {
-      selectNode(roadmap.nodes[currentIndex + 1]);
-    }
-  };
-
-  const navigateNode = (direction: 'prev' | 'next') => {
-    if (currentIndex === -1) return;
-    const nextIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
-    if (nextIndex >= 0 && nextIndex < roadmap.nodes.length) {
-      selectNode(roadmap.nodes[nextIndex]);
-    }
-  };
-
-  const seekTo = (time: string) => {
-    setStartSeconds(parseTimeToSeconds(time));
+  function persist(next: string[]) {
+    setCompleted(next);
+    setStorageError(!saveCompleted(roadmap.id, next));
+  }
+  function toggleComplete() {
+    if (!selected) return;
+    const added = !isDone;
+    persist(
+      added
+        ? [...completed, selected.id]
+        : completed.filter((id) => id !== selected.id),
+    );
+    const id = selected.id;
+    if (added && index < roadmap.nodes.length - 1)
+      select(roadmap.nodes[index + 1]);
+    setNotice({
+      id,
+      added,
+      text: added
+        ? `${index + 1}강을 완료했습니다.`
+        : `${index + 1}강의 완료 표시를 취소했습니다.`,
+    });
+  }
+  function undo() {
+    if (!notice) return;
+    persist(
+      notice.added
+        ? completed.filter((id) => id !== notice.id)
+        : [...new Set([...completed, notice.id])],
+    );
+    const node = roadmap.nodes.find((n) => n.id === notice.id);
+    if (node) select(node);
+    setNotice(null);
+  }
+  function seek(time: string) {
+    const parts = time.split(":").map(Number);
+    if (parts.some((n) => !Number.isFinite(n) || n < 0)) return;
+    setStart(parts.reduce((n, p) => n * 60 + p, 0));
     setAutoplay(true);
-  };
-
-  const isSelectedCompleted = selectedNode ? completedNodes.includes(selectedNode.id) : false;
-
-  const embedParams = new URLSearchParams();
-  if (startSeconds > 0) embedParams.set('start', String(startSeconds));
-  if (autoplay) embedParams.set('autoplay', '1');
-  const embedQuery = embedParams.toString();
-
+  }
+  const back = roadmap.id.startsWith("learn-")
+    ? "/#roadmap-list"
+    : "/#book-roadmaps";
   return (
-    <>
-      <style>{`
-        .roadmap-layout {
-          display: flex;
-          flex: 1;
-          min-height: 0;
-          width: 100%;
-          background: var(--colors-canvas);
-        }
-
-        /* ── Left Sidebar ── */
-        .roadmap-sidebar {
-          width: 360px;
-          flex-shrink: 0;
-          display: flex;
-          flex-direction: column;
-          background: var(--colors-surface-soft);
-          border-right: 1px solid var(--colors-hairline);
-        }
-
-        .sidebar-header {
-          padding: 16px 20px;
-          border-bottom: 1px solid var(--colors-hairline-soft);
-        }
-
-        .sidebar-nav-row {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin-bottom: 12px;
-        }
-
-        .sidebar-back {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          font-size: 13px;
-          color: var(--colors-muted);
-          text-decoration: none;
-          transition: color var(--transition-fast);
-        }
-        .sidebar-back:hover { color: var(--colors-ink); }
-
-        .sidebar-progress-wrap {
-          padding: 4px 0 0;
-        }
-
-        .sidebar-progress-top {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 6px;
-        }
-
-        .sidebar-progress-label {
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--colors-muted);
-        }
-
-        .sidebar-progress-value {
-          font-size: 12px;
-          font-weight: 600;
-          color: var(--colors-primary);
-        }
-
-        .sidebar-progress-bar {
-          height: 4px;
-          background: var(--colors-hairline);
-          border-radius: var(--rounded-pill);
-          overflow: hidden;
-        }
-
-        .sidebar-progress-fill {
-          height: 100%;
-          background: var(--colors-primary);
-          border-radius: var(--rounded-pill);
-          transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .sidebar-list-title {
-          padding: 14px 20px 8px;
-          font-size: 12px;
-          font-weight: 600;
-          color: var(--colors-muted);
-        }
-
-        .sidebar-list {
-          flex: 1;
-          overflow-y: auto;
-        }
-
-        /* ── Course Item ── */
-        .course-item {
-          position: relative;
-        }
-
-        .course-btn {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          width: 100%;
-          padding: 12px 20px;
-          border: none;
-          background: transparent;
-          cursor: pointer;
-          text-align: left;
-          font-family: inherit;
-          transition: all var(--transition-fast);
-          border-bottom: 1px solid var(--colors-hairline-soft);
-        }
-        .course-btn:hover {
-          background: var(--colors-surface-card);
-        }
-        .course-btn.active {
-          background: var(--colors-surface-card);
-          border-left: 3px solid var(--colors-primary);
-          padding-left: 17px;
-        }
-
-        .course-status {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 20px;
-          height: 20px;
-          flex-shrink: 0;
-        }
-        .status-num {
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--colors-muted-soft);
-          font-family: var(--font-mono);
-        }
-        .status-icon.completed {
-          color: var(--colors-success);
-        }
-
-        .course-info {
-          flex: 1;
-          min-width: 0;
-        }
-
-        .course-title-text {
-          font-size: 13.5px;
-          font-weight: 400;
-          color: var(--colors-body);
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          line-height: 1.4;
-        }
-        .course-btn.active .course-title-text {
-          font-weight: 600;
-          color: var(--colors-primary);
-        }
-
-        /* ── Right Panel ── */
-        .video-panel {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          background: var(--colors-canvas);
-          overflow: hidden;
-        }
-
-        .video-wrapper {
-          padding: 20px 24px;
-          background: var(--colors-surface-soft);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-shrink: 0;
-          border-bottom: 1px solid var(--colors-hairline-soft);
-          width: 100%;
-        }
-
-        .video-container {
-          position: relative;
-          /* Cap the player height so the title and actions stay visible below */
-          width: min(100%, calc((100dvh - 430px) * 16 / 9));
-          min-width: min(100%, 560px);
-          aspect-ratio: 16 / 9;
-          background: #0f0e0d;
-          box-shadow: 0 4px 20px rgba(20, 20, 19, 0.06);
-          border-radius: var(--rounded-md);
-          overflow: hidden;
-        }
-
-        .video-container iframe {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          border: 0;
-        }
-
-        .video-details {
-          flex: 1;
-          overflow-y: auto;
-          padding: 24px 36px;
-          background: var(--colors-canvas);
-        }
-
-        .video-details-inner {
-          max-width: 960px;
-          margin: 0 auto;
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .video-meta-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 16px;
-        }
-
-        .video-badge {
-          font-size: 11px;
-          font-weight: 700;
-          padding: 5px 12px;
-          border-radius: var(--rounded-pill);
-          letter-spacing: 0.03em;
-        }
-
-        .video-external-link {
-          font-size: 12px;
-          color: var(--colors-muted);
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          text-decoration: none;
-          transition: color var(--transition-fast);
-        }
-        .video-external-link:hover { color: var(--colors-primary); }
-
-        .video-title {
-          font-size: 22px;
-          font-weight: 700;
-          color: var(--colors-ink);
-          line-height: 1.35;
-          margin-bottom: 12px;
-          letter-spacing: -0.01em;
-        }
-
-        .video-description {
-          font-size: 14px;
-          color: var(--colors-body);
-          line-height: 1.75;
-          white-space: pre-wrap;
-          margin-bottom: 24px;
-        }
-
-        /* Timeline */
-        .timeline-section {
-          margin-bottom: 28px;
-        }
-        .timeline-heading {
-          font-size: 12px;
-          font-weight: 700;
-          color: var(--colors-muted);
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-          margin-bottom: 14px;
-        }
-        .timeline-list {
-          border-left: 2px solid var(--colors-hairline);
-          padding-left: 18px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        .timeline-item {
-          position: relative;
-          display: flex;
-          align-items: baseline;
-          background: none;
-          border: none;
-          padding: 0;
-          font-family: inherit;
-          cursor: pointer;
-          text-align: left;
-        }
-        .timeline-item:hover .timeline-time {
-          text-decoration: underline;
-        }
-        .timeline-item:hover .timeline-text {
-          color: var(--colors-primary);
-        }
-        .timeline-dot {
-          position: absolute;
-          left: -25px;
-          top: 4px;
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          background: var(--colors-primary);
-          border: 2px solid var(--colors-canvas);
-        }
-        .timeline-time {
-          font-size: 12px;
-          font-weight: 700;
-          color: var(--colors-primary);
-          margin-right: 8px;
-          font-family: var(--font-mono);
-          flex-shrink: 0;
-        }
-        .timeline-text {
-          font-size: 13px;
-          color: var(--colors-ink);
-          transition: color var(--transition-fast);
-        }
-
-        /* Action area */
-        .action-area {
-          border-top: 1px solid var(--colors-hairline-soft);
-          padding-top: 24px;
-          margin-top: auto;
-        }
-
-        .btn-complete {
-          width: 100%;
-          padding: 14px;
-          border-radius: var(--rounded-md);
-          border: none;
-          font-weight: 500;
-          font-size: 14px;
-          font-family: inherit;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          transition: all var(--transition-fast);
-          margin-bottom: 12px;
-        }
-        .btn-complete.pending {
-          background: var(--colors-primary);
-          color: #fff;
-        }
-        .btn-complete.pending:hover {
-          background: var(--colors-primary-active);
-        }
-        .btn-complete.pending:active {
-          background: color-mix(in srgb, var(--colors-primary-active) 85%, var(--colors-ink));
-        }
-        .btn-complete.done {
-          background: var(--colors-success);
-          color: #fff;
-        }
-        .btn-complete.done:hover {
-          background: color-mix(in srgb, var(--colors-success) 88%, var(--colors-ink));
-        }
-
-        .nav-row {
-          display: flex;
-          gap: 8px;
-        }
-
-        .btn-nav {
-          flex: 1;
-          padding: 10px;
-          border-radius: var(--rounded-md);
-          border: 1px solid var(--colors-hairline);
-          background: transparent;
-          font-size: 13px;
-          font-weight: 500;
-          font-family: inherit;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 5px;
-          color: var(--colors-ink);
-          transition: all var(--transition-fast);
-        }
-        .btn-nav:hover:not(:disabled) {
-          background: var(--colors-surface-soft);
-        }
-        .btn-nav:active:not(:disabled) {
-          background: var(--colors-surface-cream-strong);
-        }
-        .btn-nav:disabled {
-          color: var(--colors-muted-soft);
-          border-color: var(--colors-hairline-soft);
-          cursor: not-allowed;
-        }
-
-        /* Empty state */
-        .empty-panel {
-          display: flex;
-          flex: 1;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 40px;
-          color: var(--colors-muted);
-        }
-
-        /* ── Mobile: video on top (sticky), course list below ── */
-        @media (max-width: 900px) {
-          .roadmap-layout {
-            flex-direction: column;
-            height: auto;
-            min-height: 0;
-          }
-          .video-panel {
-            order: 1;
-            overflow: visible;
-          }
-          .video-wrapper {
-            position: sticky;
-            top: 64px; /* keep the player below the sticky site header */
-            z-index: 20;
-            padding: 0;
-            border-bottom: 1px solid var(--colors-hairline);
-          }
-          .video-container {
-            width: 100%;
-            min-width: 0;
-            border-radius: 0;
-            box-shadow: none;
-          }
-          .video-details {
-            overflow-y: visible;
-            padding: 20px;
-          }
-          .roadmap-sidebar {
-            order: 2;
-            width: 100%;
-            border-right: none;
-            border-top: 1px solid var(--colors-hairline);
-          }
-          .sidebar-list {
-            overflow-y: visible;
-          }
-        }
-      `}</style>
-
-      <div className="roadmap-layout">
-
-        {/* ─── Left Sidebar ─── */}
-        <div className="roadmap-sidebar">
-          <div className="sidebar-header">
-            <div className="sidebar-nav-row">
-              <Link href="/" className="sidebar-back">
-                <ArrowLeft size={14} /> 목록으로
-              </Link>
-              <span style={{ color: 'var(--colors-hairline)' }}>·</span>
-              <span className="badge badge-cream" style={{ padding: '2px 10px', fontSize: '11px' }}>
-                {roadmap.category}
+    <section
+      className={`container ${styles.workspace} ${tocOpen ? styles.withContents : ""}`}
+      aria-label={`${roadmap.title} 강의실`}
+    >
+      <div className={styles.mobileTop}>
+        <button
+          ref={tocRef}
+          type="button"
+          aria-controls={`syllabus-${roadmap.id}`}
+          aria-expanded={tocOpen}
+          onClick={() => setTocOpen(!tocOpen)}
+        >
+          <List size={18} aria-hidden="true" />{" "}
+          {tocOpen ? "목차 접기" : "목차 펼치기"}{" "}
+          <span>
+            {index + 1}/{roadmap.nodes.length}
+          </span>
+        </button>
+        <span>{completed.length}개 완료</span>
+      </div>
+      <div className={styles.lesson} ref={lessonRef}>
+        {selected ? (
+          <>
+            <div className={styles.lessonHead}>
+              <span>
+                {index + 1}강 / {roadmap.nodes.length}강
               </span>
+              <h2 ref={lessonHeadingRef} tabIndex={-1}>
+                {lessonTitle(selected.youtubeId, selected.title)}
+              </h2>
             </div>
-
-            <div className="sidebar-progress-wrap">
-              <div className="sidebar-progress-top">
-                <span className="sidebar-progress-label">학습 진행률</span>
-                <span className="sidebar-progress-value">{progressPercent}%</span>
-              </div>
-              <div className="sidebar-progress-bar">
-                <div className="sidebar-progress-fill" style={{ width: `${progressPercent}%` }} />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
-                <span style={{ fontSize: '11px', color: 'var(--colors-muted-soft)' }}>
-                  {completedNodes.length} / {totalNodes} 완료
-                </span>
-                <span style={{ fontSize: '11px', color: 'var(--colors-muted-soft)' }}>
-                  진행률은 이 브라우저에 저장돼요
-                </span>
-              </div>
+            <div className={styles.video}>
+              <iframe
+                key={`${selected.id}-${start}-${autoplay}`}
+                src={`https://www.youtube-nocookie.com/embed/${selected.youtubeId}?rel=0${start ? `&start=${start}` : ""}${autoplay ? "&autoplay=1" : ""}`}
+                title={selected.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
             </div>
-          </div>
-
-          <div className="sidebar-list-title">
-            교육과정 목록
-          </div>
-
-          <div className="sidebar-list" ref={listRef}>
-            {roadmap.nodes.map((node, idx) => {
-              const isCompleted = completedNodes.includes(node.id);
-              const isSelected = selectedNode?.id === node.id;
-
-              return (
-                <div key={node.id} className="course-item">
+            <div className={styles.controls}>
+              <button
+                type="button"
+                className={styles.previous}
+                disabled={index <= 0}
+                onClick={() => select(roadmap.nodes[index - 1])}
+              >
+                <ChevronLeft size={17} aria-hidden="true" />
+                <span>이전</span>
+              </button>
+              <button
+                type="button"
+                className={styles.complete}
+                onClick={toggleComplete}
+              >
+                <CheckCircle2 size={17} aria-hidden="true" />
+                {isDone
+                  ? "완료 표시 취소"
+                  : index < roadmap.nodes.length - 1
+                    ? "완료하고 다음 강의"
+                    : "학습 완료하기"}
+              </button>
+              <button
+                type="button"
+                className={styles.next}
+                disabled={index >= roadmap.nodes.length - 1}
+                onClick={() => select(roadmap.nodes[index + 1])}
+              >
+                <span>다음</span>
+                <ChevronRight size={17} aria-hidden="true" />
+              </button>
+            </div>
+            <div className={styles.feedback} aria-live="polite">
+              {notice && (
+                <div className={styles.notice}>
+                  <span>{notice.text}</span>
+                  <button type="button" onClick={undo}>
+                    <Undo2 size={14} aria-hidden="true" /> 되돌리기
+                  </button>
                   <button
-                    className={`course-btn${isSelected ? ' active' : ''}`}
-                    onClick={() => selectNode(node)}
+                    type="button"
+                    aria-label="완료 알림 닫기"
+                    onClick={() => setNotice(null)}
                   >
-                    <div className="course-status">
-                      {isCompleted ? (
-                        <CheckCircle2 size={15} className="status-icon completed" />
-                      ) : (
-                        <span className="status-num">{idx + 1}</span>
-                      )}
-                    </div>
-                    <div className="course-info">
-                      <div className="course-title-text">
-                        {node.title}
-                      </div>
-                    </div>
+                    <X size={16} aria-hidden="true" />
                   </button>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ─── Right Panel ─── */}
-        <div className="video-panel">
-          {selectedNode ? (
-            <>
-              <div className="video-wrapper">
-                <div className="video-container">
-                  <iframe
-                    key={`${selectedNode.youtubeId}-${selectedNode.id}-${startSeconds}-${autoplay}`}
-                    src={`https://www.youtube.com/embed/${selectedNode.youtubeId}${embedQuery ? `?${embedQuery}` : ''}`}
-                    title={selectedNode.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
-                </div>
-              </div>
-
-              <div className="video-details">
-                <div className="video-details-inner">
-                  <div className="video-meta-row">
-                    <span
-                      className="video-badge"
-                      style={{
-                        backgroundColor: 'var(--colors-surface-cream-strong)',
-                        color: 'var(--colors-body-strong)',
-                      }}
-                    >
-                      {currentIndex + 1}/{totalNodes}강
-                    </span>
-                    <a
-                      href={selectedNode.youtubeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="video-external-link"
-                    >
-                      YouTube에서 보기 <ExternalLink size={12} />
-                    </a>
-                  </div>
-
-                  <h2 className="video-title">{selectedNode.title}</h2>
-
-                  {selectedNode.description && (
-                    <p className="video-description">{selectedNode.description}</p>
-                  )}
-
-                  {selectedNode.timeline && selectedNode.timeline.length > 0 && (
-                    <div className="timeline-section">
-                      <h3 className="timeline-heading">타임라인</h3>
-                      <div className="timeline-list">
-                        {selectedNode.timeline.map((item, idx) => (
-                          <button key={idx} className="timeline-item" onClick={() => seekTo(item.time)}>
-                            <div className="timeline-dot" />
-                            <span className="timeline-time">{item.time}</span>
-                            <span className="timeline-text">{item.title}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="action-area">
-                    <button
-                      className={`btn-complete ${isSelectedCompleted ? 'done' : 'pending'}`}
-                      onClick={() => toggleCompletion(selectedNode.id)}
-                    >
-                      <CheckCircle2 size={18} />
-                      {isSelectedCompleted
-                        ? '학습 완료됨 (다시 누르면 취소)'
-                        : hasNext
-                          ? '학습 완료하고 다음 강의로'
-                          : '학습 완료로 표시'}
-                    </button>
-
-                    <div className="nav-row">
-                      <button className="btn-nav" onClick={() => navigateNode('prev')} disabled={!hasPrev}>
-                        <SkipBack size={14} /> 이전 강의
-                      </button>
-                      <button className="btn-nav" onClick={() => navigateNode('next')} disabled={!hasNext}>
-                        다음 강의 <SkipForward size={14} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="empty-panel">
-              <Play size={48} style={{ marginBottom: '16px', opacity: 0.3 }} />
-              <p style={{ textAlign: 'center', fontSize: '14px' }}>강의를 선택하면 영상이 재생됩니다.</p>
+              )}
+              {storageError && (
+                <p>
+                  이 브라우저에 진도를 저장하지 못했습니다. 저장 공간 설정을
+                  확인해 주세요. 현재 학습은 계속할 수 있습니다.
+                </p>
+              )}
             </div>
+            {allDone && (
+              <div className={styles.finished}>
+                <CheckCircle2 size={23} aria-hidden="true" />
+                <div>
+                  <h3>이 경로의 모든 강의를 마쳤어요.</h3>
+                  <p>실습 결과를 정리하고 다음 배움을 골라보세요.</p>
+                </div>
+                <Link href={back}>
+                  다음 경로 고르기 <ChevronRight size={16} aria-hidden="true" />
+                </Link>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className={styles.empty}>
+            <h2>강의를 준비하고 있습니다.</h2>
+            <Link href={back}>다른 학습 경로 보기</Link>
+          </div>
+        )}
+      </div>
+      <aside
+        id={`syllabus-${roadmap.id}`}
+        className={`${styles.sidebar} ${tocOpen ? styles.open : ""}`}
+        aria-label="강의 목차"
+      >
+        <div className={styles.sidebarHead}>
+          <Link href={back}>
+            <ChevronLeft size={15} aria-hidden="true" /> 학습 경로로
+          </Link>
+          <h2>강의 목차</h2>
+          <div className={styles.progressLabel}>
+            <span>
+              {completed.length} / {roadmap.nodes.length}개 완료
+            </span>
+            <strong>{percent}%</strong>
+          </div>
+          <progress
+            value={completed.length}
+            max={Math.max(1, roadmap.nodes.length)}
+            aria-label="학습 진행률"
+          />
+        </div>
+        <ol className={styles.list} ref={listRef}>
+          {roadmap.nodes.map((node, i) => (
+            <li key={node.id}>
+              <button
+                type="button"
+                ref={(el) => {
+                  if (el) rowRefs.current.set(node.id, el);
+                  else rowRefs.current.delete(node.id);
+                }}
+                aria-current={selected?.id === node.id ? "step" : undefined}
+                onClick={() => select(node, true, true)}
+              >
+                <span className={styles.number}>
+                  {completed.includes(node.id) ? (
+                    <Check size={15} aria-hidden="true" />
+                  ) : (
+                    String(i + 1).padStart(2, "0")
+                  )}
+                </span>
+                <span>
+                  {lessonTitle(node.youtubeId, node.title)}
+                  <small>
+                    {completed.includes(node.id)
+                      ? "학습 완료"
+                      : selected?.id === node.id
+                        ? "현재 강의"
+                        : node.difficulty === "ADVANCED"
+                          ? "심화"
+                          : node.difficulty === "INTERMEDIATE"
+                            ? "활용"
+                            : "입문"}
+                  </small>
+                </span>
+                {selected?.id === node.id && (
+                  <ChevronRight size={14} aria-hidden="true" />
+                )}
+              </button>
+            </li>
+          ))}
+        </ol>
+      </aside>
+      {selected && (
+        <div className={styles.details}>
+          <div className={styles.goal}>
+            <strong>이번 강의에서 해볼 일</strong>
+            <p>
+              {selected.description?.replace(/^실습 목표:\s*/, "") ||
+                "영상을 따라 실습한 뒤, 배운 내용을 자신의 말로 정리해 보세요."}
+            </p>
+          </div>
+          <div className={styles.resourceLinks}>
+            <a
+              href={selected.youtubeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              유튜브에서 보기 <ExternalLink size={14} aria-hidden="true" />
+            </a>
+            <Link href="/qna">질문 남기기</Link>
+          </div>
+          <details>
+            <summary>원래 영상 제목과 시청 안내</summary>
+            <p>{selected.title}</p>
+            {selected.youtubeId === "lzkfJwYrKqw" && (
+              <p>
+                2026. 9. 6. 공개 재생을 확인한 영상입니다. 표지에는 ‘후원자
+                전용’ 문구가 남아 있습니다.
+              </p>
+            )}
+            <p>
+              완료 표시는 이 브라우저에 저장됩니다. 영상 시청 완료와 실습 완료
+              여부는 직접 표시해 주세요.
+            </p>
+          </details>
+          {selected.timeline && selected.timeline.length > 0 && (
+            <details open>
+              <summary>영상 구간 바로가기</summary>
+              <div className={styles.timeline}>
+                {selected.timeline.map((item, i) => (
+                  <button type="button" key={i} onClick={() => seek(item.time)}>
+                    <span>{item.time}</span>
+                    {item.title}
+                  </button>
+                ))}
+              </div>
+            </details>
           )}
         </div>
-
-      </div>
-    </>
+      )}
+    </section>
   );
 }

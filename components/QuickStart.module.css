@@ -1,0 +1,123 @@
+.panel {
+  background: var(--colors-surface-card);
+  border: 1px solid var(--colors-hairline);
+  border-radius: 16px;
+  padding: 26px;
+  box-shadow: 0 10px 30px -22px #163e3029;
+  scroll-margin-top: 85px;
+}
+.heading > span {
+  color: var(--colors-primary);
+  font-size: 12px;
+  font-weight: 650;
+}
+.heading h2 {
+  font-size: 21px;
+  line-height: 1.45;
+  margin: 7px 0 19px;
+}
+.choices {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.choices label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 11px 13px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 9px;
+  background: var(--colors-canvas);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--colors-body);
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+.choices input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--colors-primary);
+  flex-shrink: 0;
+}
+.choices svg {
+  color: var(--colors-muted);
+  flex-shrink: 0;
+}
+.choices label:focus-within {
+  outline: 2px solid var(--colors-primary);
+  outline-offset: 2px;
+}
+.choices label:hover {
+  border-color: var(--colors-primary);
+}
+.choices .selected {
+  background: var(--learning-tint);
+  border-color: var(--colors-primary);
+  font-weight: 600;
+  color: var(--colors-primary);
+}
+.choices .selected svg {
+  color: var(--colors-primary);
+}
+.recommendation {
+  margin-top: 19px;
+  padding-top: 18px;
+  border-top: 1px solid var(--colors-hairline);
+  min-height: 179px;
+}
+.caption {
+  font-size: 12px;
+  color: var(--colors-muted);
+}
+.recommendation h3 {
+  font-size: 18px;
+  line-height: 1.45;
+  margin: 6px 0;
+}
+.recommendation p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--colors-muted);
+}
+.meta {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--colors-muted);
+  margin: 11px 0 15px;
+}
+.meta > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.recommendation a {
+  width: 100%;
+  font-size: 13px;
+  white-space: normal;
+  text-align: center;
+  min-height: 46px;
+  height: auto;
+  padding: 12px;
+}
+.recommendation a svg {
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .panel {
+    padding: 21px;
+  }
+  .heading h2 {
+    font-size: 20px;
+  }
+  .recommendation {
+    min-height: 184px;
+  }
+}

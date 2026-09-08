@@ -1,40 +1,43 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@font-face { font-family: 'EditorP Sans'; src: url(/fonts/EditorPSans.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
 
 :root {
-  /* Warm-Editorial Color Tokens */
-  --colors-canvas: #faf9f5;
-  --colors-surface-soft: #f5f0e8;
-  --colors-surface-card: #efe9de;
-  --colors-surface-cream-strong: #e8e0d2;
-  --colors-surface-dark: #181715;
-  --colors-surface-dark-elevated: #252320;
-  --colors-surface-dark-soft: #1f1e1b;
-  --colors-hairline: #e6dfd8;
-  --colors-hairline-soft: #ebe6df;
+  /* 편집자P 학습 서재: 녹색 계열 공통 토큰 */
+  --colors-canvas: #f8f9f6;
+  --colors-surface-soft: #eef1eb;
+  --colors-surface-card: #fdfefb;
+  --colors-surface-cream-strong: #e3e9df;
+  --colors-surface-dark: #17251e;
+  --colors-surface-dark-elevated: #223229;
+  --colors-surface-dark-soft: #283a2f;
+  --colors-hairline: #dce2d8;
+  --colors-hairline-soft: #e7ebe3;
 
-  --colors-primary: #cc785c;
-  --colors-primary-active: #a9583e;
-  --colors-primary-disabled: #e6dfd8;
+  --colors-primary: #285c45;
+  --colors-primary-active: #1b4532;
+  --colors-primary-disabled: #dce2d8;
   --colors-accent-teal: #5db8a6;
   --colors-accent-amber: #e8a55a;
 
-  --colors-ink: #141413;
-  --colors-body-strong: #252523;
-  --colors-body: #3d3d3a;
-  --colors-muted: #6c6a64;
-  --colors-muted-soft: #8e8b82;
-  --colors-on-primary: #ffffff;
-  --colors-on-dark: #faf9f5;
-  --colors-on-dark-soft: #a09d96;
+  --colors-ink: #202a23;
+  --colors-body-strong: #2d3930;
+  --colors-body: #455148;
+  --colors-muted: #5c685c;
+  --colors-muted-soft: #737d72;
+  --colors-on-primary: #f8faf5;
+  --colors-on-dark: #f8f9f6;
+  --colors-on-dark-soft: #aab6aa;
 
   /* Semantic */
   --colors-success: #5db872;
   --colors-warning: #d4a017;
   --colors-error: #c64545;
 
+  --learning-tint: #eaf0e5;
+  --learning-border: #c9d8c2;
+
   /* Fonts */
-  --font-serif: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
-  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  --font-serif: var(--font-sans);
+  --font-sans: 'EditorP Sans', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Borders & Radius */
@@ -68,27 +71,30 @@
 
 /* Warm dark theme — same coral accent, dark warm surfaces from DESIGN.md */
 html[data-theme='dark'] {
-  --colors-canvas: #161512;
-  --colors-surface-soft: #1d1b18;
-  --colors-surface-card: #252320;
-  --colors-surface-cream-strong: #2e2b26;
-  --colors-surface-dark: #100f0d;
-  --colors-surface-dark-elevated: #252320;
-  --colors-surface-dark-soft: #1a1916;
-  --colors-hairline: #312e29;
-  --colors-hairline-soft: #262420;
+  --learning-tint: #223529;
+  --learning-border: #435a47;
+  --colors-on-primary: #18291d;
+  --colors-canvas: #141c17;
+  --colors-surface-soft: #1a251e;
+  --colors-surface-card: #223229;
+  --colors-surface-cream-strong: #2b3b30;
+  --colors-surface-dark: #101812;
+  --colors-surface-dark-elevated: #223229;
+  --colors-surface-dark-soft: #1a251e;
+  --colors-hairline: #354539;
+  --colors-hairline-soft: #2a372e;
 
-  --colors-primary: #d98a6d;
-  --colors-primary-active: #e6a288;
-  --colors-primary-disabled: #3a352f;
+  --colors-primary: #a4d1b0;
+  --colors-primary-active: #bde6c7;
+  --colors-primary-disabled: #354539;
 
-  --colors-ink: #faf9f5;
-  --colors-body-strong: #e8e5de;
-  --colors-body: #cfccc4;
-  --colors-muted: #a09d96;
-  --colors-muted-soft: #807d75;
-  --colors-on-dark: #faf9f5;
-  --colors-on-dark-soft: #a09d96;
+  --colors-ink: #f8f9f6;
+  --colors-body-strong: #e5ece2;
+  --colors-body: #cad5c7;
+  --colors-muted: #aab6aa;
+  --colors-muted-soft: #a4b2a0;
+  --colors-on-dark: #f8f9f6;
+  --colors-on-dark-soft: #aab6aa;
 
   --hero-orb: rgba(204, 120, 92, 0.14);
   --marquee-opacity: 0.22;
@@ -1140,3 +1146,62 @@ a {
 .roadmap-link-btn:active {
   background-color: var(--colors-surface-cream-strong);
 }
+
+/* 공통 접근성 및 페이지 프레임. 고정 레이어: 헤더 50, 메뉴 49, 편집 툴바 30. */
+.sr-only { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.skip-link { position:fixed; top:-60px; left:20px; z-index:60; padding:12px 20px; border-radius:8px; background:var(--colors-primary); color:var(--colors-on-primary); }
+.skip-link:focus { top:10px; }
+section[id],div[id] { scroll-margin-top:90px; }
+.btn { gap:9px; min-height:42px; }
+.btn-primary { font-weight:600; }
+.icon-btn { width:38px; height:38px; }
+.nav-link[aria-current='page'] { color:var(--colors-primary); font-weight:700; }
+.main-header { background:color-mix(in srgb,var(--colors-canvas) 96%,transparent); backdrop-filter:blur(14px); }
+.header-logo-text { font-size:16px; }
+.main-nav-desktop { gap:23px; }
+.nav-menu { top:100%; padding-top:12px; }
+.nav-trigger { padding:12px 0; cursor:pointer; }
+.nav-menu[hidden] { display:none; }
+.main-nav-mobile .nav-link { padding:7px 0; font-size:15px; }
+.site-footer { background:var(--colors-surface-soft); border-top:1px solid var(--colors-hairline); padding:45px 0 23px; }
+.footer-main { display:grid; grid-template-columns:2fr 1fr 1fr; gap:40px; padding-bottom:35px; }
+.footer-brand { display:flex; align-items:center; gap:10px; color:var(--colors-ink); font-weight:700; }
+.footer-brand img { border-radius:50%; }
+.footer-main p { font-size:13px; color:var(--colors-muted); margin-top:13px; max-width:330px; line-height:1.8; }
+.footer-main nav { display:flex; flex-direction:column; gap:10px; font-size:13px; color:var(--colors-muted); }
+.footer-main nav strong { color:var(--colors-ink); margin-bottom:4px; font-size:12px; }
+.footer-main a:hover { color:var(--colors-primary); }
+.footer-bottom { display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; border-top:1px solid var(--colors-hairline); padding-top:20px; color:var(--colors-muted); font-size:11px; }
+@media(max-width:1050px) { .main-nav-desktop { gap:16px; }.header-container { gap:14px; } }
+@media(max-width:860px) { .main-nav-desktop { display:none; }.menu-toggle-btn,.header-mobile-actions { display:flex; }.header-mobile-actions { margin-left:auto; }.header-logo-text { font-size:14px; } }
+@media(max-width:640px) { .footer-main { grid-template-columns:1fr 1fr; gap:25px; }.footer-main > div { grid-column:1/-1; }.container { padding-left:20px; padding-right:20px; } }
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
+
+/* 도서·영상 탐색의 공통 제목 체계 */
+.page-intro { padding:40px 0 30px; }
+.page-intro > span { font-size:12px; font-weight:600; color:var(--colors-primary); }
+.page-intro h1 { font-size:40px; font-weight:700; line-height:1.3; margin:12px 0 14px; letter-spacing:-.04em; }
+.page-intro p { font-size:15px; line-height:1.8; color:var(--colors-muted); max-width:660px; }
+.nav-menu-link[aria-current='page'] { color:var(--colors-primary); background:var(--colors-surface-soft); }
+@media(max-width:640px) { .page-intro { padding:30px 0 25px; }.page-intro h1 { font-size:32px; }.page-intro p { font-size:14px; } }
+
+/* UI/UX Pro Max + Web Interface Guidelines: 조작 영역, 포커스와 로딩 상태 */
+button,a,input,select,summary { touch-action:manipulation; -webkit-tap-highlight-color:color-mix(in srgb,var(--colors-primary) 15%,transparent); }
+button,.btn { min-height:44px; }
+.icon-btn { width:44px; height:44px; }
+.nav-link { display:inline-flex; align-items:center; min-height:44px; }
+.nav-menu-link { min-height:44px; }
+button:focus-visible,a:focus-visible,summary:focus-visible { outline:2px solid var(--colors-primary); outline-offset:3px; }
+h1,h2,h3 { text-wrap:balance; }
+.listing-loading { padding-top:45px; padding-bottom:60px; }
+.loading-heading,.loading-search,.loading-grid>div { background:var(--colors-surface-soft); border-radius:10px; }
+.loading-heading { width:45%;height:55px;margin-bottom:35px; }
+.loading-search { height:90px;margin-bottom:35px; }
+.loading-grid { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px; }
+.loading-grid>div { height:230px; }
+.listing-error { padding-top:55px;padding-bottom:70px; }
+.listing-error h1 { font-size:30px; }
+.listing-error p { margin:18px 0 25px;max-width:620px;color:var(--colors-muted);line-height:1.8; }
+.listing-error>div { display:flex;gap:12px;flex-wrap:wrap; }
+@media(max-width:640px){.loading-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.loading-heading{width:75%}.loading-grid>div{height:180px}.main-nav-mobile{max-height:calc(100dvh - 64px);overflow-y:auto;overscroll-behavior:contain;padding-bottom:calc(16px + env(safe-area-inset-bottom));}}
+html { scroll-padding-top:84px; }

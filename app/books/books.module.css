@@ -1,0 +1,108 @@
+.page {
+  padding-bottom: 60px;
+}
+.books {
+  display: grid;
+  gap: 24px;
+}
+.book {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 42px;
+  padding: 35px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 14px;
+  background: var(--colors-surface-card);
+}
+.cover {
+  display: grid;
+  place-items: center;
+  background: var(--colors-surface-soft);
+  border-radius: 10px;
+  padding: 25px;
+}
+.cover img {
+  width: 180px;
+  height: 250px;
+  object-fit: contain;
+}
+.meta {
+  font-size: 12px;
+  color: var(--colors-primary);
+}
+.book h2 {
+  font-size: 30px;
+  margin: 14px 0;
+  line-height: 1.4;
+}
+.book p {
+  font-size: 15px;
+  line-height: 1.85;
+  max-width: 540px;
+  color: var(--colors-muted);
+  margin: 12px 0;
+}
+.book .subtitle {
+  font-size: 16px;
+  color: var(--colors-body);
+}
+.author {
+  display: block;
+  font-size: 13px;
+  color: var(--colors-muted);
+  margin: 18px 0;
+}
+.guide {
+  margin-top: 32px;
+  background: var(--colors-surface-soft);
+  border-radius: 12px;
+  padding: 24px;
+}
+.guide h2 {
+  font-size: 18px;
+}
+.guide p {
+  font-size: 14px;
+  color: var(--colors-muted);
+  margin: 10px 0;
+}
+.guide a,
+.other,
+.empty a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--colors-primary);
+  min-height: 40px;
+}
+.other {
+  margin-top: 25px;
+}
+.empty {
+  padding: 35px 0;
+}
+.empty h2 {
+  font-size: 23px;
+  margin-bottom: 15px;
+}
+@media (max-width: 640px) {
+  .book {
+    grid-template-columns: 1fr;
+    padding: 22px;
+    gap: 23px;
+  }
+  .cover img {
+    width: 130px;
+    height: 180px;
+  }
+  .cover {
+    padding: 20px;
+  }
+  .book h2 {
+    font-size: 26px;
+  }
+  .book p {
+    font-size: 14px;
+  }
+}
