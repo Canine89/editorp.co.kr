@@ -81,8 +81,11 @@ export async function renderReaderSection(
 ): Promise<ReaderSection | null> {
   const raw = await getSectionMarkdown(bookId, section);
   if (raw === null) return null;
-  // "print( )" 처럼 괄호 사이 공백에서 줄이 끊기지 않게
-  const markdown = raw.replace(/\( \)/g, '( )');
+  const markdown = raw
+    // "print( )" 처럼 괄호 사이 공백에서 줄이 끊기지 않게
+    .replace(/\( \)/g, '( )')
+    // 워드 원고의 자동 링크: [<u>test.py</u>](http://test.py) → `test.py` (운영 오버레이 원고에도 남아 있다)
+    .replace(/\[(?:<u>)?([\w-]+\.(?:py|js|ts|txt|csv|json|html|css|md))(?:<\/u>)?\]\(http:\/\/\1\/?\)/gi, '`$1`');
   const tokens = marked.lexer(markdown);
   const hl = await getHighlighter();
   const sizes = imageSizes(bookId);
