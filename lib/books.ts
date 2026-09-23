@@ -149,6 +149,12 @@ export function flattenSections(book: Book): FlatSection[] {
   );
 }
 
+/** 목차 밖(이어 읽기, 이전·다음)에서 쓰는 절 이름. "들어가며"처럼 장마다 반복되는 제목에는 장 번호를 붙인다 */
+export function sectionLabel(flat: FlatSection): string {
+  const { section, chapter } = flat;
+  return /^\d/.test(section.title) ? section.title : `${chapter.title.match(/^\d+장/)?.[0] ?? ''} ${section.title}`.trim();
+}
+
 export function countSections(book: Book): number {
   return flattenSections(book).length;
 }

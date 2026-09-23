@@ -646,3 +646,11 @@
     gap: 16px;
   }
 }
+
+/* DESIGN.md: 연한 배경 패널·카드 대신 가는 선 */
+.profile { background: none; border-radius: 0; padding: 16px 0 0; border-top: 1px solid var(--colors-ink); }
+.ambassador { border: 0; border-radius: 0; border-top: 1px solid var(--colors-hairline); border-bottom: 1px solid var(--colors-hairline); padding: 24px 0; }
+.storyVideo { background: none; border: 0; border-radius: 0; border-top: 1px solid var(--colors-hairline); border-bottom: 1px solid var(--colors-hairline); padding: 24px 0; }
+.storyImage { border-radius: 2px; }
+.bookList a { border: 0; border-radius: 0; border-bottom: 1px solid var(--colors-hairline); padding: 12px 0; }
+.contact { background: none; border: 0; border-radius: 0; border-top: 1px solid var(--colors-hairline); }

@@ -1,0 +1,96 @@
+{
+  "base": "Use the attached reference images as the exact character design. The character is a soft matte clay figure: a large rounded black bowl-cut hairstyle with a blunt fringe, a cream-colored face with two vertical oval black eyes, small rounded cream ears, an oversized black hoodie, and round cream mitten-like hands. Keep the proportions, the felt-like clay texture, and the colors identical to the references. Show emotion only through eye shape, head tilt, and body pose; do not add a mouth, eyebrows, blush, or a nose. Any props are also matte clay and use only navy blue (#1F4292), warm yellow (#EEA93B), white, and cream. Single character, soft even studio lighting, no text, no letters, no numbers, no logos, fully transparent background, no floor or backdrop.",
+  "shots": [
+    {
+      "id": "hero-wave",
+      "place": "홈 첫 화면 강의자 소개 (기존 p.png 자리)",
+      "size": "1024x1024",
+      "refs": ["front", "left-3q"],
+      "prompt": "Front view, upper body leaning on an invisible desk edge so the bottom of the figure is cut flat and horizontal, exactly like the references. One hand rests on the edge, the other hand is raised in a friendly wave. Eyes are gently curved upward arcs to look happy."
+    },
+    {
+      "id": "roadmap-start",
+      "place": "로드맵 '처음이라면 여기서'",
+      "size": "1024x1024",
+      "refs": ["front", "left-3q", "left-side"],
+      "prompt": "Three-quarter view, holding an unfolded small clay paper map in both hands with a dotted navy route drawn on it, looking at it with curious round eyes, head slightly tilted."
+    },
+    {
+      "id": "roadmap-docs",
+      "place": "로드맵 갈래 '문서·업무'",
+      "size": "1024x1024",
+      "refs": ["front", "left-3q"],
+      "prompt": "Front view, upper body behind a flat invisible desk edge, neatly squaring a small stack of blank white clay papers with a navy folder on top, calm focused eyes."
+    },
+    {
+      "id": "roadmap-build",
+      "place": "로드맵 갈래 '웹·앱 제작'",
+      "size": "1024x1024",
+      "refs": ["left-3q", "left-side", "front"],
+      "prompt": "Three-quarter view, typing on a small navy clay laptop placed on an invisible desk edge, the laptop screen faces away from the viewer, focused slightly narrowed eyes."
+    },
+    {
+      "id": "roadmap-advanced",
+      "place": "로드맵 '심화'",
+      "size": "1024x1024",
+      "refs": ["front", "left-3q"],
+      "prompt": "Front view, one hand raised like a conductor, with three small blank floating clay rectangles (two white, one yellow) arranged in an arc around the head, confident eyes."
+    },
+    {
+      "id": "library-books",
+      "place": "서재(도서) 섹션",
+      "size": "1024x1024",
+      "refs": ["front", "left-3q"],
+      "prompt": "Front view, hugging a tall stack of four closed clay books against the chest; book covers and spines are plain navy and yellow with no text; happy curved eyes."
+    },
+    {
+      "id": "reader-bookmark",
+      "place": "서재의 '이어 읽기' / 리더 진도",
+      "size": "1024x1024",
+      "refs": ["left-3q", "left-side"],
+      "prompt": "Three-quarter view, gently slipping a yellow ribbon bookmark into an open navy book held in one hand, attentive eyes looking at the book."
+    },
+    {
+      "id": "reader-done",
+      "place": "리더 절 끝 완료 순간 (작게)",
+      "size": "1024x1024",
+      "refs": ["front"],
+      "prompt": "Front view, both arms raised in a small cheer, eyes squeezed shut in happy upward arcs, a single chunky yellow clay check mark shape floating beside the head."
+    },
+    {
+      "id": "about-lecture",
+      "place": "소개 페이지 강의 이력",
+      "size": "1024x1024",
+      "refs": ["left-3q", "front", "left-side"],
+      "prompt": "Three-quarter view, standing upper body next to a small blank white clay whiteboard with a navy frame, pointing at the board with one hand like a teacher, confident eyes toward the viewer."
+    },
+    {
+      "id": "contact-letter",
+      "place": "강의·협업 문의",
+      "size": "1024x1024",
+      "refs": ["front", "left-3q"],
+      "prompt": "Front view, holding out a white clay envelope with a navy stripe toward the viewer with both hands, friendly curved eyes."
+    },
+    {
+      "id": "qna-question",
+      "place": "질문 게시판",
+      "size": "1024x1024",
+      "refs": ["front", "left-3q"],
+      "prompt": "Front view, one hand raised high as if asking a question in class, head tilted, round curious eyes, a chunky yellow clay question mark shape floating above the raised hand."
+    },
+    {
+      "id": "empty-peek",
+      "place": "검색 결과 없음 / 404",
+      "size": "1024x1024",
+      "refs": ["front", "right-side"],
+      "prompt": "Front view, peeking out from behind a large upright closed navy clay book, only the top of the head, eyes, and both hands gripping the book edge are visible, surprised wide round eyes."
+    },
+    {
+      "id": "footer-back",
+      "place": "푸터",
+      "size": "1024x1024",
+      "refs": ["back", "back-3q"],
+      "prompt": "Back view exactly like the rear reference, seated and reading an open book held up in front of the face, the bottom of the figure cut flat and horizontal, calm and cozy."
+    }
+  ]
+}

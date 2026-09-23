@@ -14,6 +14,9 @@ npm run build        # 프로덕션 빌드 — 커밋 전 통과 확인
 npm run start        # 빌드 결과 실행
 npm run lint         # eslint (eslint-config-next)
 npm run import:book  # scripts/import-book.mjs — .docx 원고 → content/books/ 변환
+node scripts/book-image-sizes.mjs   # 도서 이미지 크기 → content/books/<id>/images.json (임포트·이미지 교체 후)
+npm run character:generate -- [샷id] [--dry] [--n 3]  # 캐릭터 삽화 생성(OpenAI, .env 필요)
+python scripts/export-character.py  # 생성 원본 → public/character/*.webp + manifest.json
 ```
 
 테스트 러너는 없다. 검증은 `npm run build` + dev 서버에서 라우트 200 확인으로 한다
@@ -27,6 +30,7 @@ npm run import:book  # scripts/import-book.mjs — .docx 원고 → content/book
 | `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | 구글 로그인 |
 | `AUTH_SECRET` | NextAuth 서명 키. 운영에서 없으면 기동 실패 (개발 모드에만 폴백 존재) |
 | `ADMIN_EMAIL` | 관리자 계정. 미설정 시 `lib/admin.ts`의 기본값 |
+| `OPENAI_API_KEY` / `OPENAI_IMAGE_MODEL` | 캐릭터 삽화 생성 스크립트 전용(로컬 `.env`). 사이트 런타임에서는 쓰지 않는다 |
 
 로컬에서 Firebase 변수 없이 띄우면 파일 폴백 모드로 동작하고, `/api/auth/signin`에서
 개발 전용 Credentials 프로바이더(관리자 이메일 + 비밀번호 `admin`)로 로그인할 수 있다.
@@ -34,7 +38,8 @@ npm run import:book  # scripts/import-book.mjs — .docx 원고 → content/book
 ## 아키텍처
 
 Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 CSS 변수
-디자인 토큰 + 컴포넌트 인라인 스타일(CSS Modules는 `app/page.module.css` 하나뿐).
+디자인 토큰 + CSS Modules. 도서 리더만 렌더러 출력 HTML에 클래스를 붙이므로 전역 파일
+`app/books/reader.css`(rd- 접두어)를 쓴다. 관리자·질문 게시판 일부에 옛 인라인 스타일이 남아 있다.
 
 ### 이중 저장소 패턴 (이 저장소의 핵심 개념)
 
@@ -49,6 +54,9 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
   `bookOverrides/{bookId}/sections/{sectionId}`(절 마크다운) 오버레이가 덮인다.
   → 원고를 재임포트해도 옛 오버레이가 남아 있으면 새 원고가 보이지 않는다. 관리자 패널의
   "원본으로 되돌리기"로 오버레이를 비워야 한다.
+  독자 화면은 `lib/reader-render.ts`(Shiki 구문 강조, 실습 단계 묶기, 이미지 크기)로 그리고,
+  관리자 편집기는 단순 HTML인 `renderSectionHtml()`을 그대로 쓴다. 두 경로를 섞지 말 것.
+  독서 진도는 브라우저 `localStorage`(`lib/reading-progress.ts`)에만 저장한다.
 - **Q&A 게시판** (`lib/qna.ts`): Firestore 전용(폴백 없음). `questions/{id}` + 하위 `comments/`.
   전문 검색이 없어 최신 500개(`MAX_SCAN`)를 서버 메모리에서 필터링·페이징한다.
   `userActivity/{email}` 문서로 도배 방지(글 60초/일 20개, 댓글 10초) — 트랜잭션 안에서
@@ -87,15 +95,17 @@ Tiptap 리치 텍스트로 들어온 HTML은 저장·렌더 전에 `lib/sanitize
 
 ### 배포 주의
 
-도서 페이지는 런타임에 파일을 읽는 동적 렌더링이라, 새 도서 관련 라우트를 만들면
-`next.config.ts`의 `outputFileTracingIncludes`에 해당 라우트를 추가해야 서버리스 번들에
-`content/books/**`가 포함된다.
+도서 페이지(와 서재 블록을 쓰는 홈 `/`)는 런타임에 파일을 읽는 동적 렌더링이라, 도서를 읽는
+라우트를 새로 만들면 `next.config.ts`의 `outputFileTracingIncludes`에 추가해야 서버리스 번들에
+`content/books/**`가 포함된다. `public/`은 번들에 없으므로 런타임에 읽을 값(이미지 크기 등)은
+`content/books` 쪽에 둔다.
 
 ## 디자인
 
-`DESIGN.md`가 사이트 디자인 시스템(warm-editorial: 크림 캔버스 + 코랄 액센트 + 다크 네이비)의
-단일 출처다. 색·타이포·간격·반경은 전부 `app/globals.css`의 CSS 변수 토큰을 쓰고 hex를
-인라인하지 않는다. 다크 모드는 `html[data-theme='dark']`로 전환된다 (`components/ThemeToggle.tsx`).
+`DESIGN.md`가 사이트 디자인 시스템("편집자P의 AI 서재": 흰 바탕 + 《바로바로 파이썬》 표지 남색·노랑,
+가는 선 목록, 클레이 캐릭터 삽화)의 단일 출처다. 작업 전에 DESIGN.md의 **금지 패턴** 표를 먼저 확인한다.
+색·타이포·간격·반경은 전부 `app/globals.css`의 CSS 변수 토큰을 쓰고 hex를 인라인하지 않는다.
+다크 모드는 두지 않는다(배경은 항상 흰색). 캐릭터는 `components/Character.tsx`로만 넣는다.
 
 ## Git 운영 규칙 (AGENTS.md)
 

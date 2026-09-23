@@ -1,0 +1,6 @@
+.resume { border-bottom: 1px solid var(--colors-hairline); font-size: 15px; }
+.resume > div { display: flex; gap: 8px 32px; padding-top: 12px; padding-bottom: 12px; flex-wrap: wrap; }
+.resume a { display: inline-flex; gap: 10px; align-items: baseline; min-width: 0; max-width: 100%; }
+.resume b { color: var(--colors-ink); font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: color var(--transition-fast); }
+.resume a:hover b { color: var(--colors-primary); }
+.resume small { color: var(--colors-muted); font-size: 14px; flex-shrink: 0; }

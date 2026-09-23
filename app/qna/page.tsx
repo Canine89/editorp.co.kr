@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Character } from "@/components/Character";
+import styles from "./qna.module.css";
 import { Search } from "lucide-react";
 import { isFirebaseConfigured } from "@/lib/firebase-admin";
 import {
@@ -176,21 +178,13 @@ export default async function QnaListPage({
 
       <section style={{ padding: "48px 0 0 0" }}>
         <div className="container" style={{ maxWidth: "900px" }}>
-          <h1
-            className="serif-display"
-            style={{ fontSize: "28px", margin: "0 0 6px 0" }}
-          >
-            질문 게시판
-          </h1>
-          <p
-            style={{
-              fontSize: "14px",
-              color: "var(--colors-muted)",
-              margin: "0 0 24px 0",
-            }}
-          >
-            강의 질문부터 자유로운 이야기까지, 편하게 글을 남겨 주세요.
-          </p>
+          <div className={styles.head}>
+            <div>
+              <h1>질문 게시판</h1>
+              <p>강의와 책을 보다 막힌 곳, 자유로운 이야기까지 편하게 남겨 주세요.</p>
+            </div>
+            <Character id="qna-question" height={110} />
+          </div>
 
           {!boardReady ? (
             <div

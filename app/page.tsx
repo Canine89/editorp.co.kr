@@ -1,252 +1,309 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, BookOpen } from "lucide-react";
 import { getRoadmapData } from "@/lib/roadmap-data";
-import { youtubeChannel, asRoadmap } from "@/lib/learning-paths";
+import { youtubeChannel, asRoadmap, type LearningPath } from "@/lib/learning-paths";
 import { countEditedBooks, getEditedBooksData } from "@/lib/edited-books";
 import { getLearningPaths, learningMinutes } from "@/lib/learning-data";
-import { getLectureHighlights } from "@/lib/editorial-content";
-import { PathExplorer } from "@/components/PathExplorer";
-import { QuickStart } from "@/components/QuickStart";
-import { ContinueLearning } from "@/components/ContinueLearning";
+import { getAuthoredBooks } from "@/lib/editorial-content";
+import { listBooks, flattenSections, sectionLabel } from "@/lib/books";
 import { lessonTitle } from "@/lib/video-presentation";
-import { BookShelf } from "@/components/FeaturedBooks";
+import profile from "@/data/profile.json";
+import { Character } from "@/components/Character";
+import { ResumeBar } from "@/components/ResumeBar";
+import { AuthoredBooks, FreeBooks, JoinedBooks } from "@/components/Library";
 import styles from "./page.module.css";
+
 export const revalidate = 0;
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ cat?: string; view?: string }>;
-}) {
-  const { cat, view } = await searchParams;
+
+const seconds = (duration?: string) =>
+  duration ? duration.split(":").reduce((n, p) => n * 60 + Number(p), 0) : 0;
+
+export default async function HomePage() {
   const data = await getRoadmapData();
   const paths = await getLearningPaths(data);
-  const active = data.roadmaps.filter(
-    (r) => r.isActive !== false && !r.curation,
-  );
-  const filtered = active.filter(
-    (r) => !cat || r.category.toLowerCase() === cat.toLowerCase(),
-  );
-  const categories = data.categories.filter((category) =>
-    active.some((r) => r.category === category),
-  );
-  const summaries = paths.map(({ lessons, ...path }) => {
-    const video = youtubeChannel.videos.find((v) => v.id === lessons[0]?.id);
-    return {
-      ...path,
-      lessonCount: lessons.length,
-      minutes: learningMinutes({ ...path, lessons }),
-      firstMinutes: video?.duration
-        ? Math.ceil(
-            video.duration.split(":").reduce((n, p) => n * 60 + Number(p), 0) /
-              60,
-          )
-        : null,
-      firstGoal: lessons[0]?.goal ?? path.outcome,
-    };
-  });
+  const managed = data.roadmaps.filter((r) => r.isActive !== false && !r.curation);
+  const books = (await listBooks()).filter((b) => b.id !== "free-book-guide");
+  const bookCount = countEditedBooks(getEditedBooksData());
+  const authoredCount = getAuthoredBooks().length;
+  const publishers = getEditedBooksData().publishers.map((p) => p.name).sort().join("과 ");
+  const lectures = profile.lectures;
+
+  // 로드맵 흐름: 공통 기초 → 문서·업무 / 웹·앱 제작 → 심화 (옛 시작점 선택을 첫 줄로 흡수)
+  const foundation = paths.find((p) => p.id === "ai-foundations");
+  const advanced = paths.filter((p) => p.level === "심화" || p.topic === "에이전트 심화");
+  const middle = paths.filter((p) => p !== foundation && !advanced.includes(p));
+  const work = middle.filter((p) => p.topic === "업무 자동화");
+  const build = middle.filter((p) => !work.includes(p));
+  const firstVideo = foundation && youtubeChannel.videos.find((v) => v.id === foundation.lessons[0]?.id);
+
+  // 이어보기·이어 읽기 한 줄
   const courses = [
     ...paths.map((path) => ({
-      roadmap:
-        data.roadmaps.find(
-          (r) => r.curation && r.id.replace(/^learn-/, "") === path.id,
-        ) ?? asRoadmap(path),
+      roadmap: data.roadmaps.find((r) => r.curation && r.id.replace(/^learn-/, "") === path.id) ?? asRoadmap(path),
       href: `/learn/${path.id}`,
     })),
-    ...active.map((roadmap) => ({ roadmap, href: `/roadmaps/${roadmap.id}` })),
+    ...managed.map((roadmap) => ({ roadmap, href: `/roadmaps/${roadmap.id}` })),
   ].map(({ roadmap, href }) => ({
     id: roadmap.id,
     title: roadmap.title,
     href,
-    nodes: roadmap.nodes.map((n) => ({
-      id: n.id,
-      title: lessonTitle(n.youtubeId, n.title),
-    })),
+    nodes: roadmap.nodes.map((n) => ({ id: n.id, title: lessonTitle(n.youtubeId, n.title) })),
   }));
+  const resumeBooks = books.map((b) => ({
+    id: b.id,
+    title: b.title,
+    sections: flattenSections(b).map((f) => ({ id: f.section.id, title: sectionLabel(f) })),
+  }));
+
+  const latest = youtubeChannel.videos.slice(0, 4);
+  const years: { year: string; items: typeof lectures }[] = [];
+  for (const lecture of lectures.slice(0, 12)) {
+    const year = lecture.date.slice(0, 4);
+    if (years.at(-1)?.year !== year) years.push({ year, items: [] });
+    years.at(-1)!.items.push(lecture);
+  }
+  const day = (date: string) =>
+    date.replace(/^\d{4}-?/, "").replace(/^(\d{2})-(\d{2})/, "$1.$2");
+
+  const pathRow = (p: LearningPath) => (
+    <li key={p.id}>
+      <Link className={styles.row} href={`/learn/${p.id}`}>
+        <span className={styles.rowTitle}>{p.title}</span>
+        <span className={styles.rowDesc}>{p.outcome}</span>
+        <span className={styles.rowMeta}>
+          {p.lessons.length}강{learningMinutes(p) !== null && ` · ${learningMinutes(p)}분`}
+        </span>
+      </Link>
+    </li>
+  );
+
   return (
     <div className={styles.page}>
+      <ResumeBar courses={courses} books={resumeBooks} />
       <div className="container">
-        <ContinueLearning courses={courses} />
-      </div>
-      <section className={`container ${styles.hero}`}>
-        <div>
-          <Link href="/about" className={styles.author}>
-            <Image src="/p.png" alt="" width={42} height={42} />
-            <span>
-              <strong>편집자P, 박현규</strong>
-              <small>IT 도서 기획·편집자 / 커서 공식 앰배서더</small>
-            </span>
-            <ArrowUpRight size={17} />
-          </Link>
-          <h1>
-            지금 필요한 AI,
-            <br />
-            <span>어디서부터 배울까요?</span>
-          </h1>
-          <p>
-            책을 만들며 쌓은 경험을 무료 강의와 실습으로 나눕니다.
-            <br />
-            기초를 이해하고, 내 문서와 웹사이트를 직접 만들어보세요.
-          </p>
-          <div className={styles.actions}>
-            <a href="#quick-start" className="btn btn-primary">
-              나에게 맞는 시작점 찾기{" "}
-              <ArrowRight size={16} aria-hidden="true" />
-            </a>
-            <a href="#roadmap-list" className={styles.textLink}>
-              전체 학습 경로 <ArrowDownLabel />
-            </a>
+        <section className={styles.intro}>
+          <div className="reveal">
+            <h1 className={styles.name}>
+              편집자P<span>박현규 · IT 도서 기획·편집자 · 커서 공식 앰배서더</span>
+            </h1>
+            <p className={styles.introText}>
+              {publishers}에서 IT 책 <b className="mark">{bookCount}권</b>을 기획하고 편집했고, 그중 {authoredCount}권은 직접
+              썼습니다. 책에 다 담지 못한 내용은 유튜브 강의로 풀고, 기업·학교·공공기관에서 AI 도구를 가르칩니다. 이곳에 그
+              강의를 배울 순서대로 엮은 로드맵과 무료로 읽는 책, 제 이력을 모았습니다.
+            </p>
           </div>
-          <p className={styles.heroNote}>
-            회원가입 없이 바로 시작할 수 있습니다.
-          </p>
-        </div>
-        <QuickStart paths={summaries} />
-      </section>
-      <section
-        className={`container ${styles.experience}`}
-        aria-label="편집자P의 책과 강의 경력"
-      >
-        <div>
-          <strong>
-            {countEditedBooks(getEditedBooksData())}권의 책에 참여
-          </strong>
-          <span>기획·편집·집필 등 도서별 역할을 소개합니다.</span>
-          <Link href="/about">
-            프로필과 전체 이력 <ArrowUpRight size={14} />
-          </Link>
-        </div>
-        <div className={styles.experienceList}>
-          {getLectureHighlights().map((item) => (
-            <Link key={item.label} href="/about#lectures">
-              <span>{item.label}</span>
-              <strong>{item.org}</strong>
+          <div className="reveal">
+            <Character id="hero-wave" height={150} />
+            <ul className={styles.pillars} aria-label="바로가기">
+              <li>
+                <a href="#roadmap">
+                  <b>로드맵</b>
+                  <span>
+                    영상 강의를 배울 순서대로
+                    <small>
+                      추천 경로 {paths.length}개 · 책과 함께 보는 로드맵 {managed.length}개
+                    </small>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="#library">
+                  <b>서재</b>
+                  <span>
+                    직접 쓴 책과 무료로 읽는 책
+                    <small>
+                      직접 쓴 책 {authoredCount}권{books[0] && ` · ${books[0].title} 무료 공개`}
+                    </small>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="#about">
+                  <b>소개</b>
+                  <span>
+                    강의 이력과 문의
+                    <small>강의 {lectures.length}건 · 기업·학교·공공기관</small>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section className={styles.ed} id="roadmap">
+          <div className={styles.label}>
+            <h2>로드맵</h2>
+            <p>공통 기초에서 시작해 만들고 싶은 것에 따라 갈라집니다.</p>
+            <Character id="roadmap-start" height={120} align="left" />
+          </div>
+          <div>
+            <div className={`${styles.flow} flow reveal`}>
+              {foundation && (
+                <div className={`${styles.step} flow-step`}>
+                  <p className={styles.kicker}>처음이라면 여기서</p>
+                  <div className={styles.start}>
+                    <h3>{foundation.title}</h3>
+                    <p>{foundation.summary}</p>
+                    <p className={styles.meta}>
+                      {foundation.lessons.length}강
+                      {learningMinutes(foundation) !== null && ` · 전체 ${learningMinutes(foundation)}분`}
+                      {firstVideo?.duration && ` · 첫 강의 ${Math.ceil(seconds(firstVideo.duration) / 60)}분`}
+                      {foundation.prerequisite && ` · ${foundation.prerequisite}`}
+                    </p>
+                    <Link className="btn btn-primary" href={`/learn/${foundation.id}`}>
+                      첫 강의 보기
+                    </Link>
+                  </div>
+                </div>
+              )}
+              {(work.length > 0 || build.length > 0) && (
+                <div className={`${styles.step} flow-step`}>
+                  <p className={styles.kicker}>기초 다음, 만들고 싶은 것에 따라</p>
+                  <div className={styles.branches}>
+                    {work.length > 0 && (
+                      <div>
+                        <div className={styles.perchRow}>
+                          <div>
+                            <h4>문서·업무</h4>
+                            <p>반복되는 문서 작업을 AI에게 맡깁니다.</p>
+                          </div>
+                          <Character id="roadmap-docs" height={96} />
+                        </div>
+                        <ul className={styles.rows}>{work.map(pathRow)}</ul>
+                      </div>
+                    )}
+                    {build.length > 0 && (
+                      <div>
+                        <div className={styles.perchRow}>
+                          <div>
+                            <h4>웹·앱 제작</h4>
+                            <p>작은 웹사이트와 프로그램을 직접 만듭니다.</p>
+                          </div>
+                          <Character id="roadmap-build" height={96} />
+                        </div>
+                        <ul className={styles.rows}>{build.map(pathRow)}</ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              {advanced.length > 0 && (
+                <div className={`${styles.step} flow-step`}>
+                  <div className={styles.perchRow}>
+                    <p className={styles.kicker}>심화</p>
+                    <Character id="roadmap-advanced" height={104} />
+                  </div>
+                  <ul className={`${styles.rows} ${styles.wide}`}>{advanced.map(pathRow)}</ul>
+                </div>
+              )}
+            </div>
+
+            {managed.length > 0 && (
+              <>
+                <h3 className={styles.subHead}>책과 함께 보는 로드맵</h3>
+                <ul className={`${styles.rows} ${styles.wide} reveal`}>
+                  {managed.map((r) => (
+                    <li key={r.id}>
+                      <Link className={styles.row} href={`/roadmaps/${r.id}`}>
+                        <span className={styles.rowTitle}>{r.title}</span>
+                        <span className={styles.rowMeta}>
+                          {r.category} · {r.nodes.length}강
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            <h3 className={styles.subHead}>
+              최근 영상
+              <Link className={styles.more} href="/videos">
+                영상 {youtubeChannel.videos.length}편 검색
+              </Link>
+            </h3>
+            <div className={`${styles.videos} reveal`}>
+              {latest.map((video) => (
+                <a key={video.id} className={styles.video} href={video.url} target="_blank" rel="noopener noreferrer">
+                  <Image
+                    src={`/learning/${video.id}.jpg`}
+                    alt=""
+                    width={480}
+                    height={270}
+                    sizes="(max-width:520px) 90vw, (max-width:960px) 45vw, 230px"
+                  />
+                  <h4>{lessonTitle(video.id, video.title)}</h4>
+                  <span>{video.duration}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.ed} id="library">
+          <div className={styles.label}>
+            <h2>서재</h2>
+            <p>제가 쓴 책과, 브라우저에서 바로 읽는 책입니다.</p>
+            <Character id="library-books" height={120} align="left" />
+          </div>
+          <div>
+            <AuthoredBooks />
+            <FreeBooks books={books} />
+            <JoinedBooks limit={16} />
+          </div>
+        </section>
+
+        <section className={styles.ed} id="about">
+          <div className={styles.label}>
+            <h2>소개</h2>
+            <p>책을 만들고, 그 내용을 강의합니다.</p>
+            <Link className={styles.more} href="/about">
+              프로필 전체
             </Link>
-          ))}
-        </div>
-      </section>
-      <section
-        className={`container ${styles.authorShelf}`}
-        aria-label="편집자P 대표 도서"
-      >
-        <div>
-          <span>책을 만들고, 배움을 연결합니다.</span>
-          <h2>
-            직접 쓰고 기획한 책의 경험을
-            <br />
-            강의에 담았습니다.
-          </h2>
-          <Link href="/about">
-            편집자P 소개와 강의 이력{" "}
-            <ArrowUpRight size={15} aria-hidden="true" />
-          </Link>
-        </div>
-        <BookShelf />
-      </section>
-      <section id="roadmap-list" className={`container ${styles.pathSection}`}>
-        <div className={styles.sectionHeader}>
-          <h2>기초에서 시작해, 나의 결과물까지.</h2>
-          <p>
-            공통 기초를 익힌 뒤 목적에 맞는 갈래를 고르세요. 도구는 하나부터
-            시작해도 충분합니다.
-          </p>
-        </div>
-        <PathExplorer paths={summaries} initialFilter={view} />
-      </section>
-      <section
-        id="book-roadmaps"
-        className={`container ${styles.managedSection}`}
-      >
-        <div className={styles.sectionHeader}>
-          <h2>책의 진도에 맞춰 배우고 싶다면.</h2>
-          <p>도서 연계 강의와 편집자P가 관리하는 주제별 로드맵입니다.</p>
-        </div>
-        <div className={styles.managedTabs} aria-label="도서·주제별 로드맵">
-          <Link href="/#book-roadmaps" aria-current={!cat ? "true" : undefined}>
-            전체
-          </Link>
-          {categories.map((category) => (
-            <Link
-              key={category}
-              href={`/?cat=${encodeURIComponent(category)}#book-roadmaps`}
-              aria-current={cat === category ? "true" : undefined}
-            >
-              {category}
-            </Link>
-          ))}
-        </div>
-        <div className={styles.managedGrid}>
-          {filtered.map((r) => (
-            <Link
-              key={r.id}
-              href={`/roadmaps/${r.id}`}
-              className={styles.managedCard}
-            >
-              <BookOpen size={21} />
-              <div>
-                <span>
-                  {r.category} / {r.nodes.length}개 강의
-                </span>
-                <h3>{r.title}</h3>
-              </div>
-              <ArrowRight size={17} />
-            </Link>
-          ))}
-        </div>
-        {filtered.length === 0 && (
-          <p className={styles.empty}>
-            이 조건의 로드맵은 아직 없습니다.{" "}
-            <Link href="/#book-roadmaps">전체 보기</Link>
-          </p>
-        )}
-        <Link href="/books" className={styles.bookBanner}>
-          <span>
-            <strong>무료 도서로 기본기를 채워보세요.</strong>
-            <small>파이썬 입문부터 브라우저에서 바로 읽을 수 있습니다.</small>
-          </span>
-          <ArrowRight size={19} />
-        </Link>
-      </section>
-      <section className={`container ${styles.archiveSection}`}>
-        <div className={styles.sectionHeader}>
-          <h2>필요한 강의 한 편을 찾는다면.</h2>
-          <p>
-            영상 {youtubeChannel.videos.length}개와 재생목록{" "}
-            {youtubeChannel.playlists.length}개를 주제별로 탐색하세요.
-          </p>
-        </div>
-        <div className={styles.latestGrid}>
-          {youtubeChannel.videos.slice(0, 4).map((video) => (
-            <a
-              key={video.id}
-              href={video.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.latestCard}
-            >
-              <div className={styles.latestImage}>
-                <Image
-                  src={`/learning/${video.id}.jpg`}
-                  alt=""
-                  fill
-                  sizes="(max-width:640px) 90vw, (max-width:1000px) 44vw, 280px"
-                />
-              </div>
-              <div className={styles.latestMeta}>
-                <span>{video.kind}</span>
-                <span>{video.duration}</span>
-              </div>
-              <h3>{video.title.replace(/^\[시즌 3\]\s*/, "")}</h3>
-            </a>
-          ))}
-        </div>
-        <Link href="/videos" className="btn btn-secondary">
-          전체 영상 검색 <ArrowRight size={16} />
-        </Link>
-      </section>
+            <Character id="about-lecture" height={120} align="left" />
+          </div>
+          <div>
+            <h3 className={styles.subHead}>
+              강의 이력
+              <Link className={styles.more} href="/about#lectures">
+                전체 {lectures.length}건
+              </Link>
+            </h3>
+            <table className={`${styles.lectures} reveal`}>
+              <thead>
+                <tr>
+                  <th>날짜</th>
+                  <th>강의</th>
+                  <th>기관</th>
+                </tr>
+              </thead>
+              <tbody>
+                {years.map((group) => [
+                  <tr key={group.year} className={styles.year}>
+                    <td colSpan={3}>{group.year}</td>
+                  </tr>,
+                  ...group.items.map((lecture) => (
+                    <tr key={lecture.date + lecture.title}>
+                      <td>{day(lecture.date)}</td>
+                      <td>{lecture.title}</td>
+                      <td>{lecture.org}</td>
+                    </tr>
+                  )),
+                ])}
+              </tbody>
+            </table>
+            <div className={styles.contactPerch}>
+              <Character id="contact-letter" height={104} align="left" />
+            </div>
+            <div className={styles.contact}>
+              <a className="btn btn-primary" href="mailto:hgpark@goldenrabbit.co.kr">
+                강의·협업 문의
+              </a>
+              <span>hgpark@goldenrabbit.co.kr · 기업·학교·공공기관 강의</span>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   );
-}
-function ArrowDownLabel() {
-  return <span aria-hidden="true">↓</span>;
 }

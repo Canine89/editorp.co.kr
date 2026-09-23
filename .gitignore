@@ -46,3 +46,6 @@ next-env.d.ts
 # agents & vscode metadata
 .agents/
 .vscode/
+
+# 캐릭터 일러스트 생성 원본(후보). 최종본만 public/character/로 옮겨 커밋한다
+assets/character/generated/

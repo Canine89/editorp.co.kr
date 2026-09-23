@@ -134,3 +134,7 @@
     font-size: 12px;
   }
 }
+
+/* DESIGN.md: 연한 배경 패널·카드 대신 가는 선 */
+.shelf { background: none; border-radius: 0; padding: 24px 0 0; border-top: 2px solid var(--colors-primary); }
+.selection article { background: none; border: 0; border-radius: 0; border-top: 1px solid var(--colors-hairline); padding: 24px 0; }

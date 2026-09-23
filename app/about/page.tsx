@@ -1,25 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowUpRight,
-  ArrowRight,
-  BookOpen,
-  Mail,
-  GraduationCap,
-  BriefcaseBusiness,
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { countEditedBooks, getEditedBooksData } from "@/lib/edited-books";
 import profile from "@/data/profile.json";
 import styles from "./about.module.css";
 import { BookShelf, FeaturedBooks } from "@/components/FeaturedBooks";
-import { getLectureHighlights, getSelectedBooks } from "@/lib/editorial-content";
+import { getAuthoredBooks, getLectureHighlights, getSelectedBooks } from "@/lib/editorial-content";
+import { Character } from "@/components/Character";
 export const metadata = {
-  title: "편집자P 소개와 강의 문의 | 박현규",
+  title: "소개 | 편집자P의 AI 서재",
   description:
     "IT 도서 기획·편집자이자 개발자 박현규, 편집자P의 이야기. 집필 도서, 편집한 책, 주요 강의 이력과 강의 문의를 만나보세요.",
 };
 export default function AboutPage() {
   const totalBooks = countEditedBooks(getEditedBooksData());
+  const publishers = getEditedBooksData().publishers.map((p) => p.name).sort().join("과 ");
+  const authoredCount = getAuthoredBooks().length;
   const featuredUrls = new Set(getSelectedBooks().map((book) => book.url));
   const otherBooks = profile.books.filter((book) => !featuredUrls.has(book.url));
   // 연도별로 묶은 타임라인. profile.lectures는 최신순으로 정렬되어 있다.
@@ -48,31 +44,14 @@ export default function AboutPage() {
       </nav>
       <section className={styles.hero} id="story">
         <div>
-          <div className={styles.identity}>
-            <Image src="/p.png" alt="" width={56} height={56} />
-            <span>
-              IT 도서 기획·편집자<strong>박현규 / 편집자P</strong>
-            </span>
-          </div>
-          <h1>
-            책으로 정리하고,
-            <br />
-            <span>강의와 실습으로 나눕니다.</span>
-          </h1>
+          <h1>박현규 · 편집자P</h1>
           <p>
-            개발이 취미인 IT 도서 기획·편집자입니다. 직접 쓰고 기획한 AI 도서,
-            기업과 학교에서 진행한 강의, 업무에 적용한 자동화 경험을 소개합니다.
+            개발이 취미인 IT 도서 기획·편집자입니다. {publishers}에서 IT 책{" "}
+            <b className="mark">{totalBooks}권</b>을 기획하고 편집했고, 그중 {authoredCount}권은 직접 썼습니다.
+            기업·학교·공공기관에서 AI 도구를 가르치며 지금까지 강의 {profile.lectures.length}건을 진행했습니다.
           </p>
-          <div className={styles.heroFacts}>
-            <span>
-              <strong>{totalBooks}권</strong> 도서 참여
-            </span>
-            <span>
-              <strong>{profile.lectures.length}건</strong> 주요 강의 기록
-            </span>
-          </div>
           <a href="#contact" className="btn btn-primary">
-            강의·협업 문의 <ArrowUpRight size={16} />
+            강의·협업 문의
           </a>
         </div>
         <BookShelf priority />
@@ -80,12 +59,10 @@ export default function AboutPage() {
       <section className={styles.books} id="authored-books">
         <div className={styles.sectionHeading}>
           <div>
-            <h2>직접 쓰고 기획한 대표 도서</h2>
+            <h2>대표 도서</h2>
             <p>도서별 참여 역할과 함께 볼 수 있는 강의를 연결했습니다.</p>
           </div>
-          <Link href="/edited-books">
-            전체 {totalBooks}권 보기 <ArrowRight size={15} />
-          </Link>
+          <Link href="/books">서재에서 모두 보기</Link>
         </div>
         <FeaturedBooks />
         <div className={styles.otherBooks}>
@@ -98,7 +75,6 @@ export default function AboutPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <BookOpen size={15} />
                 <span>{book.title}</span>
                 <ArrowUpRight size={14} />
               </a>
@@ -109,12 +85,10 @@ export default function AboutPage() {
       <section className={styles.lectures} id="lectures">
         <div className={styles.sectionHeading}>
           <div>
-            <h2>업무와 현장에 맞춘 AI 강의</h2>
-            <p>
-              기업 실무부터 교사 연수와 공공기관 강의까지, 실제 진행한
-              사례입니다.
-            </p>
+            <h2>강의 이력</h2>
+            <p>기업 실무, 교사 연수, 공공기관 강의를 진행했습니다.</p>
           </div>
+          <Character id="about-lecture" height={120} />
         </div>
         <div className={styles.lectureHighlights}>
           {getLectureHighlights().map((item) => (
@@ -161,11 +135,7 @@ export default function AboutPage() {
       </section>
       <section className={styles.bio} id="profile">
         <div>
-          <h2>
-            책에서 영상으로,
-            <br />
-            배운 것을 일상으로.
-          </h2>
+          <h2>프로필</h2>
           <p>
             사내에서 사용하는 자동화 앱을 파이썬과 자바스크립트로 직접 개발해
             활용합니다. IT 지식을 더 쉽게 나누기 위해 책을 쓰고, 유튜브 영상을
@@ -175,16 +145,6 @@ export default function AboutPage() {
             이 공간에는 강의의 순서와 연결을 담았습니다. 처음 배우는 분도 작은
             결과물을 완성하고 다음 공부를 이어갈 수 있도록요.
           </p>
-          <div className={styles.credentials}>
-            <span>
-              <BookOpen size={18} />
-              <strong>{totalBooks}권</strong>의 책에 참여
-            </span>
-            <span>
-              <GraduationCap size={18} />
-              <strong>{profile.lectures.length}건</strong>의 주요 강의 기록
-            </span>
-          </div>
         </div>
         <dl className={styles.profile}>
           <div>
@@ -235,10 +195,8 @@ export default function AboutPage() {
       </section>
       <div className={styles.ambassador}>
         <div>
-          <BriefcaseBusiness size={25} />
           <span>
             <strong>커서 공식 앰배서더</strong>
-            <small>직접 사용하고, 만들고, 경험을 나눕니다.</small>
           </span>
         </div>
         <Image
@@ -264,22 +222,19 @@ export default function AboutPage() {
           />
         </div>
         <div>
-          <span>공부를 시작한 과정이 궁금하다면</span>
           <h2>편집자P의 공부 이야기</h2>
           <p>유튜브에서 소개 영상 보기</p>
         </div>
         <ArrowUpRight size={22} />
       </a>
       <section id="contact" className={styles.contact}>
-        <Mail size={28} />
-        <h2>우리 팀에도, 배움의 계기가 필요하다면.</h2>
+        <Character id="contact-letter" height={120} align="center" />
+        <h2>강의·협업 문의</h2>
         <p>
-          AI 입문부터 바이브 코딩, 실무 자동화까지.
-          <br />
-          대상과 주제, 희망 일정을 함께 보내주시면 이야기 나누겠습니다.
+          AI 입문, 바이브 코딩, 업무 자동화 강의를 합니다. 대상과 주제, 희망 일정을 보내주시면 답장드리겠습니다.
         </p>
         <a className="btn btn-primary" href="mailto:hgpark@goldenrabbit.co.kr">
-          강의 문의 이메일 보내기 <ArrowUpRight size={17} />
+          이메일 보내기
         </a>
         <a className={styles.email} href="mailto:hgpark@goldenrabbit.co.kr">
           hgpark@goldenrabbit.co.kr

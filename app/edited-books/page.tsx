@@ -56,8 +56,7 @@ export default async function EditedBooksPage({
   return (
     <div className={`container ${styles.page}`}>
       <header className="page-intro">
-        <span>편집자P가 함께 만든 {countEditedBooks(data)}권</span>
-        <h1>편집한 도서</h1>
+        <h1>참여한 책 {countEditedBooks(data)}권</h1>
         <p>
           직접 집필한 책부터 기획·편집·삽화로 함께한 책까지.
           <br />각 책에서 맡은 역할과 관심 주제로 찾아보세요.

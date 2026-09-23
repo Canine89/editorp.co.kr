@@ -1,0 +1,44 @@
+/* 서재 공용 블록: 직접 쓴 책 · 무료로 읽기 · 참여한 책 */
+.subHead { font-size: 14px; font-weight: 600; color: var(--colors-muted); margin: 72px 0 16px; letter-spacing: 0; line-height: 1.5; }
+.subHead:first-child { margin-top: 0; }
+.more { font-weight: 400; margin-left: 12px; color: var(--colors-ink); text-decoration: underline; text-decoration-color: var(--colors-hairline); text-underline-offset: 4px; }
+.more:hover { text-decoration-color: var(--colors-primary); }
+
+.cover { display: block; width: 100%; height: auto; border-radius: 2px; background: var(--colors-canvas); box-shadow: 0 1px 2px rgba(14, 23, 51, .08), 0 6px 18px -8px rgba(14, 23, 51, .28); }
+
+.authored { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 28px; }
+.authored a { display: grid; gap: 8px; }
+.authored .cover { aspect-ratio: 3 / 4.2; object-fit: cover; margin-bottom: 8px; transition: transform .2s; }
+.authored a:hover .cover { transform: translateY(-4px); }
+.authored b { font-size: 16px; font-weight: 600; color: var(--colors-ink); line-height: 1.45; transition: color var(--transition-fast); }
+.authored a:hover b { color: var(--colors-primary); }
+.authored span { font-size: 14px; color: var(--colors-muted); }
+
+.feature { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; align-items: start; }
+.feature + .feature { margin-top: 48px; }
+.feature h3 { font-size: 26px; line-height: 1.3; }
+.sub { font-size: 17px; color: var(--colors-body); margin-top: 6px; }
+.meta { font-size: 14px; color: var(--colors-muted); margin-top: 14px; }
+.desc { font-size: 16px; margin-top: 16px; max-width: 34em; line-height: 1.75; }
+.noCover { display: grid; place-items: center; aspect-ratio: 3 / 4.1; padding: 16px; border: 1px solid var(--colors-hairline); font-weight: 700; color: var(--colors-ink); text-align: center; }
+
+.progress { margin-top: 20px; max-width: 360px; }
+.progressBar { height: 3px; background: var(--colors-hairline); border-radius: 2px; overflow: hidden; }
+.progressBar i { display: block; height: 100%; background: var(--colors-yellow); }
+.progress small { display: block; font-size: 14px; color: var(--colors-muted); margin-top: 6px; }
+.actions { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+
+.shelf { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 18px 16px; }
+.shelf .cover { aspect-ratio: 3 / 4.2; object-fit: cover; transition: transform .2s; }
+.shelf a:hover .cover { transform: translateY(-4px); }
+.shelf small { display: block; font-size: 14px; color: var(--colors-muted); margin-top: 8px; line-height: 1.4; }
+
+@media (max-width: 960px) {
+  .authored { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 20px; }
+  .feature { grid-template-columns: 1fr; gap: 24px; }
+  .feature > a { width: 150px; }
+  .shelf { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .shelf { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

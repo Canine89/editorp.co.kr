@@ -37,6 +37,25 @@ export function getSelectedBooks() {
       : [];
   });
 }
+/** 직접 쓴 책(profile.books 순서 = 최신순). 역할·표지·출판사는 참여 도서 목록에서 가져온다 */
+export function getAuthoredBooks() {
+  const books = getEditedBooksData().publishers.flatMap((p) =>
+    p.books.map((book) => ({ ...book, publisher: p.name })),
+  );
+  return profile.books.flatMap((authored) => {
+    const book = books.find((b) => b.url === authored.url);
+    return book ? [book] : [];
+  });
+}
+
+/** 기획·편집·삽화 등으로 참여한 책: 직접 쓴 책을 뺀 나머지 */
+export function getJoinedBooks() {
+  const authored = new Set(profile.books.map((b) => b.url));
+  return getEditedBooksData().publishers.flatMap((p) =>
+    p.books.filter((b) => !authored.has(b.url)).map((book) => ({ ...book, publisher: p.name })),
+  );
+}
+
 export function getLectureHighlights() {
   return [
     { label: "기업 실무", org: "풀리오", contains: "AX 교육" },

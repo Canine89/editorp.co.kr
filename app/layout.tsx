@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Header } from "@/components/Header";
+import { Character } from "@/components/Character";
+import { ScrollEffects } from "@/components/ScrollEffects";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://editorp.co.kr"),
-  title: "편집자P의 AI 학습 로드맵 | 배움에도 좋은 순서가 있습니다",
+  title: "편집자P의 AI 서재",
   description:
-    "편집자P의 AI·클로드·커서·코덱스 유튜브 강의를 목표별 학습 경로로 만나보세요. 기초 개념부터 웹사이트 만들기와 업무 자동화까지, 책과 영상으로 차근차근 안내합니다.",
+    "IT 도서 편집자 박현규(편집자P)가 AI 강의를 배울 순서대로 엮은 로드맵, 무료로 읽는 책, 강의 이력을 모았습니다.",
   openGraph: {
-    title: "편집자P의 AI 학습 로드맵",
-    description: "흩어진 강의를 하나의 흐름으로, 배운 것을 나의 결과물로.",
+    title: "편집자P의 AI 서재",
+    description: "AI 강의 로드맵, 무료로 읽는 책, 강의 이력.",
     locale: "ko_KR",
     type: "website",
     images: ["/p.png"],
@@ -35,7 +36,7 @@ export default function RootLayout({
       <body>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}})()`,
+            __html: `(function(){try{var s=localStorage.getItem('reader-size');if(s==='s'||s==='l')document.documentElement.dataset.size=s}catch(e){}})()`,
           }}
         />
         <a href="#main-content" className="skip-link">
@@ -50,6 +51,7 @@ export default function RootLayout({
             }}
           >
             <Header />
+            <ScrollEffects />
             <main
               id="main-content"
               tabIndex={-1}
@@ -58,52 +60,30 @@ export default function RootLayout({
               {children}
             </main>
             <footer className="site-footer">
+              <Character id="footer-back" height={92} />
               <div className="container">
-                <div className="footer-main">
-                  <div>
-                    <Link href="/" className="footer-brand">
-                      <Image src="/p.png" alt="" width={30} height={30} />
-                      편집자P의 AI 강의·편집실
-                    </Link>
-                    <p>
-                      책을 만들고, 기술을 배우고, 경험을 나눕니다.
-                      <br />
-                      당신의 다음 배움에 좋은 순서가 되어드릴게요.
-                    </p>
-                  </div>
-                  <nav aria-label="학습 바로가기">
-                    <strong>함께 배우기</strong>
-                    <Link href="/#roadmap-list">학습 로드맵</Link>
-                    <Link href="/videos">전체 영상</Link>
-                    <Link href="/books">무료 도서</Link>
-                    <Link href="/qna">질문 게시판</Link>
-                  </nav>
-                  <nav aria-label="편집자P 연결">
-                    <strong>편집자P와 연결하기</strong>
-                    <Link href="/about">소개와 강의 문의</Link>
-                    <Link href="/edited-books">편집한 도서</Link>
-                    <a
-                      href="https://www.youtube.com/channel/UC4PwAtNhPsuBYdavDJb4F0g"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      유튜브 채널 ↗
-                    </a>
-                    <a
-                      href="https://open.kakao.com/o/ggK7EAJh"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      내 코드를 부탁해 오픈카톡방 ↗
-                    </a>
-                  </nav>
-                </div>
-                <div className="footer-bottom">
-                  <span>
-                    © {new Date().getFullYear()} 편집자P. 모든 권리 보유.
-                  </span>
-                  <span>배움을 쌓고, 나의 가능성을 넓히는 공간.</span>
-                </div>
+                <span>© {new Date().getFullYear()} 편집자P · 박현규</span>
+                <nav aria-label="바깥 링크">
+                  <Link href="/videos">전체 영상</Link>
+                  <Link href="/edited-books">참여한 책</Link>
+                  <a
+                    className="ext"
+                    href="https://www.youtube.com/channel/UC4PwAtNhPsuBYdavDJb4F0g"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    유튜브
+                  </a>
+                  <a
+                    className="ext"
+                    href="https://open.kakao.com/o/ggK7EAJh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    내 코드를 부탁해 오픈카톡방
+                  </a>
+                  <a href="mailto:hgpark@goldenrabbit.co.kr">hgpark@goldenrabbit.co.kr</a>
+                </nav>
               </div>
             </footer>
           </div>

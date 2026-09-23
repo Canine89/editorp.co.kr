@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "import:book": "node scripts/import-book.mjs"
+    "import:book": "node scripts/import-book.mjs",
+    "character:generate": "node --env-file=.env scripts/generate-character.mjs"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.1",
@@ -24,6 +25,7 @@
     "react-dom": "19.2.4",
     "reactflow": "^11.11.4",
     "sanitize-html": "^2.17.4",
+    "shiki": "^3.23.0",
     "turndown": "^7.2.4",
     "turndown-plugin-gfm": "^1.0.2"
   },

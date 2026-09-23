@@ -1,0 +1,67 @@
+{
+  "about-lecture": {
+    "width": 480,
+    "height": 408,
+    "source": "about-lecture-20260923T131415-1.png"
+  },
+  "contact-letter": {
+    "width": 362,
+    "height": 480,
+    "source": "contact-letter-20260923T131456-1.png"
+  },
+  "empty-peek": {
+    "width": 323,
+    "height": 480,
+    "source": "empty-peek-20260923T131621-1.png"
+  },
+  "footer-back": {
+    "width": 416,
+    "height": 480,
+    "source": "footer-back-20260923T131702-1.png"
+  },
+  "hero-wave": {
+    "width": 480,
+    "height": 442,
+    "source": "hero-wave-20260923T130829-1.png"
+  },
+  "library-books": {
+    "width": 394,
+    "height": 480,
+    "source": "library-books-20260923T130909-1.png"
+  },
+  "qna-question": {
+    "width": 393,
+    "height": 480,
+    "source": "qna-question-20260923T131537-1.png"
+  },
+  "reader-bookmark": {
+    "width": 411,
+    "height": 480,
+    "source": "reader-bookmark-20260923T131254-1.png"
+  },
+  "reader-done": {
+    "width": 480,
+    "height": 457,
+    "source": "reader-done-20260923T131334-1.png"
+  },
+  "roadmap-advanced": {
+    "width": 474,
+    "height": 480,
+    "source": "roadmap-advanced-20260923T131213-1.png"
+  },
+  "roadmap-build": {
+    "width": 480,
+    "height": 454,
+    "source": "roadmap-build-20260923T131136-1.png"
+  },
+  "roadmap-docs": {
+    "width": 443,
+    "height": 480,
+    "source": "roadmap-docs-20260923T131056-1.png"
+  },
+  "roadmap-start": {
+    "width": 411,
+    "height": 480,
+    "source": "roadmap-start-20260923T131017-1.png"
+  }
+}
