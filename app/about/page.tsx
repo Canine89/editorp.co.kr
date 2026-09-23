@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { countEditedBooks, getEditedBooksData } from "@/lib/edited-books";
 import profile from "@/data/profile.json";
 import styles from "./about.module.css";
-import { BookShelf, FeaturedBooks } from "@/components/FeaturedBooks";
+import { FeaturedBooks } from "@/components/FeaturedBooks";
 import { getAuthoredBooks, getLectureHighlights, getSelectedBooks } from "@/lib/editorial-content";
 import { Character } from "@/components/Character";
 export const metadata = {
@@ -19,20 +19,17 @@ export default function AboutPage() {
   const featuredUrls = new Set(getSelectedBooks().map((book) => book.url));
   const otherBooks = profile.books.filter((book) => !featuredUrls.has(book.url));
   // 연도별로 묶은 타임라인. profile.lectures는 최신순으로 정렬되어 있다.
-  const timeline = profile.lectures.reduce<
-    { year: string; items: typeof profile.lectures }[]
-  >((groups, lecture) => {
-    const year = lecture.date.slice(0, 4);
-    const last = groups[groups.length - 1];
-    if (last?.year === year) last.items.push(lecture);
-    else groups.push({ year, items: [lecture] });
-    return groups;
-  }, []);
-  const formatDay = (date: string) =>
-    date
-      .replace(" 예정", "")
-      .replace(/^\d{4}-?/, "")
-      .replace(/^(\d{2})-(\d{2})/, "$1.$2");
+  const byYear = (list: typeof profile.lectures) =>
+    list.reduce<{ year: string; items: typeof profile.lectures }[]>((groups, lecture) => {
+      const year = lecture.date.slice(0, 4);
+      const last = groups[groups.length - 1];
+      if (last?.year === year) last.items.push(lecture);
+      else groups.push({ year, items: [lecture] });
+      return groups;
+    }, []);
+  const RECENT = 8;
+  const recent = byYear(profile.lectures.slice(0, RECENT));
+  const older = byYear(profile.lectures.slice(RECENT));
   return (
     <div className={`container ${styles.page}`}>
       <nav className={styles.sectionNav} aria-label="소개 목차">
@@ -54,7 +51,6 @@ export default function AboutPage() {
             강의·협업 문의
           </a>
         </div>
-        <BookShelf priority />
       </section>
       <section className={styles.books} id="authored-books">
         <div className={styles.sectionHeading}>
@@ -104,26 +100,13 @@ export default function AboutPage() {
           <h3>강의 타임라인</h3>
           <p>{profile.lectures.length}건 · 최신순</p>
         </div>
-        <ol className={styles.timeline}>
-          {timeline.map((group) => (
-            <li key={group.year} className={styles.timelineYear}>
-              <span className={styles.yearLabel}>{group.year}</span>
-              <ol>
-                {group.items.map((lecture, index) => (
-                  <li key={`${lecture.date}-${index}`}>
-                    <time dateTime={lecture.date.slice(0, 10)}>
-                      {formatDay(lecture.date)}
-                    </time>
-                    <div>
-                      <h4>{lecture.title.replaceAll("—", "-")}</h4>
-                      <p>{lecture.org}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </li>
-          ))}
-        </ol>
+        <Timeline groups={recent} />
+        {older.length > 0 && (
+          <details className={styles.olderLectures}>
+            <summary>이전 강의 {profile.lectures.length - RECENT}건 더 보기</summary>
+            <Timeline groups={older} />
+          </details>
+        )}
         <a
           className={styles.historyLink}
           href="https://docs.google.com/document/d/1bZ1TlO8acV-tytns-vXeQ_EP_RXNXvG2kYiKZQzku8g/edit?tab=t.0"
@@ -241,5 +224,33 @@ export default function AboutPage() {
         </a>
       </section>
     </div>
+  );
+}
+
+function Timeline({ groups }: { groups: { year: string; items: typeof profile.lectures }[] }) {
+  const formatDay = (date: string) =>
+    date
+      .replace(" 예정", "")
+      .replace(/^\d{4}-?/, "")
+      .replace(/^(\d{2})-(\d{2})/, "$1.$2");
+  return (
+    <ol className={styles.timeline}>
+      {groups.map((group) => (
+        <li key={group.year} className={styles.timelineYear}>
+          <span className={styles.yearLabel}>{group.year}</span>
+          <ol>
+            {group.items.map((lecture, index) => (
+              <li key={`${lecture.date}-${index}`}>
+                <time dateTime={lecture.date.slice(0, 10)}>{formatDay(lecture.date)}</time>
+                <div>
+                  <h4>{lecture.title.replaceAll("—", "-")}</h4>
+                  <p>{lecture.org}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </li>
+      ))}
+    </ol>
   );
 }

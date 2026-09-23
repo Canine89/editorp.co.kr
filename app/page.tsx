@@ -57,7 +57,7 @@ export default async function HomePage() {
 
   const latest = youtubeChannel.videos.slice(0, 4);
   const years: { year: string; items: typeof lectures }[] = [];
-  for (const lecture of lectures.slice(0, 12)) {
+  for (const lecture of lectures.slice(0, 6)) {
     const year = lecture.date.slice(0, 4);
     if (years.at(-1)?.year !== year) years.push({ year, items: [] });
     years.at(-1)!.items.push(lecture);
@@ -93,7 +93,7 @@ export default async function HomePage() {
             </p>
           </div>
           <div className="reveal">
-            <Character id="hero-wave" height={150} />
+            <Character id="hero-wave" height={112} />
             <ul className={styles.pillars} aria-label="바로가기">
               <li>
                 <a href="#roadmap">
@@ -130,12 +130,14 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className={styles.ed} id="roadmap">
-          <div className={styles.label}>
-            <h2>로드맵</h2>
-            <p>공통 기초에서 시작해 만들고 싶은 것에 따라 갈라집니다.</p>
-            <Character id="roadmap-start" height={120} align="left" />
-          </div>
+        <section className={styles.sec} id="roadmap">
+          <header className={styles.secHead}>
+            <div>
+              <h2>로드맵</h2>
+              <p>공통 기초에서 시작해 만들고 싶은 것에 따라 갈라집니다.</p>
+            </div>
+            <Character id="roadmap-start" height={88} />
+          </header>
           <div>
             <div className={`${styles.flow} flow reveal`}>
               {foundation && (
@@ -167,7 +169,7 @@ export default async function HomePage() {
                             <h4>문서·업무</h4>
                             <p>반복되는 문서 작업을 AI에게 맡깁니다.</p>
                           </div>
-                          <Character id="roadmap-docs" height={96} />
+                          <Character id="roadmap-docs" height={72} />
                         </div>
                         <ul className={styles.rows}>{work.map(pathRow)}</ul>
                       </div>
@@ -179,7 +181,7 @@ export default async function HomePage() {
                             <h4>웹·앱 제작</h4>
                             <p>작은 웹사이트와 프로그램을 직접 만듭니다.</p>
                           </div>
-                          <Character id="roadmap-build" height={96} />
+                          <Character id="roadmap-build" height={72} />
                         </div>
                         <ul className={styles.rows}>{build.map(pathRow)}</ul>
                       </div>
@@ -191,7 +193,7 @@ export default async function HomePage() {
                 <div className={`${styles.step} flow-step`}>
                   <div className={styles.perchRow}>
                     <p className={styles.kicker}>심화</p>
-                    <Character id="roadmap-advanced" height={104} />
+                    <Character id="roadmap-advanced" height={72} />
                   </div>
                   <ul className={`${styles.rows} ${styles.wide}`}>{advanced.map(pathRow)}</ul>
                 </div>
@@ -201,7 +203,7 @@ export default async function HomePage() {
             {managed.length > 0 && (
               <>
                 <h3 className={styles.subHead}>책과 함께 보는 로드맵</h3>
-                <ul className={`${styles.rows} ${styles.wide} reveal`}>
+                <ul className={`${styles.rows} ${styles.wide} ${styles.twoCol} reveal`}>
                   {managed.map((r) => (
                     <li key={r.id}>
                       <Link className={styles.row} href={`/roadmaps/${r.id}`}>
@@ -240,31 +242,38 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className={styles.ed} id="library">
-          <div className={styles.label}>
-            <h2>서재</h2>
-            <p>제가 쓴 책과, 브라우저에서 바로 읽는 책입니다.</p>
-            <Character id="library-books" height={120} align="left" />
-          </div>
+        <section className={styles.sec} id="library">
+          <header className={styles.secHead}>
+            <div>
+              <h2>서재</h2>
+              <p>제가 쓴 책과, 브라우저에서 바로 읽는 책입니다.</p>
+            </div>
+            <Link className={styles.more} href="/books">
+              서재 전체
+            </Link>
+            <Character id="library-books" height={88} />
+          </header>
           <div>
             <AuthoredBooks />
             <FreeBooks books={books} />
-            <JoinedBooks limit={16} />
+            <JoinedBooks limit={10} />
           </div>
         </section>
 
-        <section className={styles.ed} id="about">
-          <div className={styles.label}>
-            <h2>소개</h2>
-            <p>책을 만들고, 그 내용을 강의합니다.</p>
+        <section className={styles.sec} id="about">
+          <header className={styles.secHead}>
+            <div>
+              <h2>소개</h2>
+              <p>책을 만들고, 그 내용을 강의합니다.</p>
+            </div>
             <Link className={styles.more} href="/about">
               프로필 전체
             </Link>
-            <Character id="about-lecture" height={120} align="left" />
-          </div>
+            <Character id="about-lecture" height={88} />
+          </header>
           <div>
             <h3 className={styles.subHead}>
-              강의 이력
+              최근 강의
               <Link className={styles.more} href="/about#lectures">
                 전체 {lectures.length}건
               </Link>
@@ -292,10 +301,8 @@ export default async function HomePage() {
                 ])}
               </tbody>
             </table>
-            <div className={styles.contactPerch}>
-              <Character id="contact-letter" height={104} align="left" />
-            </div>
             <div className={styles.contact}>
+              <Character id="contact-letter" height={64} align="left" />
               <a className="btn btn-primary" href="mailto:hgpark@goldenrabbit.co.kr">
                 강의·협업 문의
               </a>

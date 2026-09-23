@@ -20,7 +20,7 @@ export default async function BooksPage() {
           <h1>서재</h1>
           <p>제가 쓴 책과, 브라우저에서 바로 읽는 책입니다. 기획·편집으로 참여한 책도 함께 꽂아 두었습니다.</p>
         </div>
-        <Character id="library-books" height={140} />
+        <Character id="library-books" height={96} />
       </header>
       <AuthoredBooks />
       <FreeBooks books={books} />

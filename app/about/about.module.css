@@ -654,3 +654,28 @@
 .storyImage { border-radius: 2px; }
 .bookList a { border: 0; border-radius: 0; border-bottom: 1px solid var(--colors-hairline); padding: 12px 0; }
 .contact { background: none; border: 0; border-radius: 0; border-top: 1px solid var(--colors-hairline); }
+
+/* 여백 단계: 섹션 32~40 · 간격 40 (DESIGN.md 4절) */
+.page { padding-bottom: 24px; }
+.hero { gap: 48px; padding: 28px 0 36px; }
+.bio { gap: 40px; padding: 32px 0; }
+.lectures { padding: 32px 0; }
+.contact { padding: 28px 0 8px; }
+@media (max-width: 960px) {
+  .hero { gap: 24px; padding: 20px 0 28px; }
+  .bio { gap: 24px; padding: 28px 0; }
+  .lectures { padding: 28px 0; }
+}
+
+/* 첫 화면: 대표 도서와 겹치던 표지 선반을 빼고 한 열로 */
+.hero { grid-template-columns: minmax(0, 1fr); max-width: 760px; }
+.sectionHeading { align-items: flex-end; flex-wrap: nowrap; gap: 16px; margin-bottom: 16px; }
+.sectionHeading > :global(.perch) { flex-shrink: 0; }
+.lectureHighlights article { gap: 16px; padding: 14px 0; }
+.olderLectures { margin-top: 8px; border-top: 1px solid var(--colors-hairline); }
+.olderLectures summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-size: 15px; font-weight: 600; color: var(--colors-primary); }
+.olderLectures[open] summary { margin-bottom: 8px; }
+@media (max-width: 960px) {
+  .sectionHeading { flex-direction: row; }
+  .sectionHeading > :global(.perch) { height: 80px; }
+}

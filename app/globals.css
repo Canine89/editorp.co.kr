@@ -796,7 +796,7 @@ html { scroll-padding-top:84px; }
 @media (max-width: 960px) { .perch { height: calc(var(--h, 104px) * .78); } }
 
 /* 푸터 */
-.site-footer { position: relative; border-top: 1px solid var(--colors-hairline); margin-top: 56px; padding: 32px 0 48px; font-size: 14px; color: var(--colors-muted); }
+.site-footer { position: relative; border-top: 1px solid var(--colors-hairline); margin-top: 24px; padding: 20px 0 28px; font-size: 14px; color: var(--colors-muted); }
 .site-footer .perch { position: absolute; right: max(24px, calc((100% - 1152px) / 2)); bottom: 100%; margin: 0 0 -1px; }
 .site-footer .container { display: flex; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; }
 .site-footer nav { display: flex; gap: 8px 20px; flex-wrap: wrap; }

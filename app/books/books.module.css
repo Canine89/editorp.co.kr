@@ -1,8 +1,8 @@
-.page { padding-top: 48px; padding-bottom: 40px; }
-.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; border-bottom: 1px solid var(--colors-hairline); margin-bottom: 48px; }
-.head > div { padding-bottom: 24px; }
-.head h1 { font-size: 36px; line-height: 1.25; }
-.head p { font-size: 16px; color: var(--colors-muted); margin-top: 10px; max-width: 34em; line-height: 1.7; }
+.page { padding-top: 28px; padding-bottom: 32px; }
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; border-bottom: 1px solid var(--colors-hairline); margin-bottom: 24px; }
+.head > div { padding-bottom: 16px; }
+.head h1 { font-size: 30px; line-height: 1.25; }
+.head p { font-size: 15px; color: var(--colors-muted); margin-top: 6px; max-width: 40em; line-height: 1.6; }
 @media (max-width: 640px) {
   .head h1 { font-size: 30px; }
 }

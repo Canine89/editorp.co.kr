@@ -138,3 +138,10 @@
 /* DESIGN.md: 연한 배경 패널·카드 대신 가는 선 */
 .shelf { background: none; border-radius: 0; padding: 24px 0 0; border-top: 2px solid var(--colors-primary); }
 .selection article { background: none; border: 0; border-radius: 0; border-top: 1px solid var(--colors-hairline); padding: 24px 0; }
+/* 대표 도서 3권은 데스크톱에서 한 줄에 */
+.selection { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; }
+.selection article { grid-template-columns: 88px minmax(0, 1fr); gap: 16px; align-items: start; padding: 20px 0; }
+@media (max-width: 960px) {
+  .selection { grid-template-columns: minmax(0, 1fr); }
+  .selection article { padding: 16px 0; }
+}

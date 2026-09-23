@@ -60,7 +60,7 @@ export default function RootLayout({
               {children}
             </main>
             <footer className="site-footer">
-              <Character id="footer-back" height={92} />
+              <Character id="footer-back" height={72} />
               <div className="container">
                 <span>© {new Date().getFullYear()} 편집자P · 박현규</span>
                 <nav aria-label="바깥 링크">
