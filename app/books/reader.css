@@ -29,8 +29,10 @@ a[aria-current='page'] .rd-ck::before { content: '●'; font-size: 9px; color: v
 /* ── 리더 ─────────────────────────────── */
 .rd-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; pointer-events: none; }
 .rd-progress i { display: block; height: 100%; background: var(--colors-yellow); transform-origin: left; transform: scaleX(var(--rp, 0)); }
-.rd-reader { display: grid; grid-template-columns: 232px minmax(0, 1fr) 196px; gap: 48px; padding-top: 24px; padding-bottom: 24px; }
-.rd-main { --fs: 17px; min-width: 0; max-width: calc(34 * var(--fs)); width: 100%; justify-self: center; }
+/* 리더는 사이트 공통 폭(1200px)보다 넓게 써서 본문 칸을 확보한다. 본문 한 줄은 약 42자(44em) */
+.container.rd-reader { max-width: 1440px; }
+.rd-reader { display: grid; grid-template-columns: 220px minmax(0, 1fr) 176px; gap: 40px; padding-top: 24px; padding-bottom: 24px; }
+.rd-main { --fs: 17px; min-width: 0; max-width: calc(44 * var(--fs)); width: 100%; justify-self: center; }
 html[data-size='s'] .rd-main { --fs: 16px; }
 html[data-size='l'] .rd-main { --fs: 19px; }
 
@@ -153,7 +155,7 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-zoom img { display: block; max-width: 96vw; max-height: 94vh; width: auto; height: auto; }
 
 @media (max-width: 1279px) {
-  .rd-reader { grid-template-columns: 232px minmax(0, 1fr); }
+  .rd-reader { grid-template-columns: 220px minmax(0, 1fr); }
   .rd-aside { display: none; }
 }
 @media (max-width: 960px) {
