@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { createHash } from 'crypto';
 import path from 'path';
 import { marked, type Token, type Tokens, type TokensList } from 'marked';
 import { createHighlighter, type Highlighter, type ThemeRegistration } from 'shiki';
@@ -16,6 +17,8 @@ import { removeEmptyStudyLabels } from './reader-presentation';
  *  - 코너 박스: 인용문 첫 줄이 **NOTE**·**프롬프트**·**AI 답변**·**잠깐 퀴즈**·**1:1 코칭 · …**·**바로 핵심 요약** 등이면 종류별 스타일
  *  - 이미지만 있는 문단: 크기(images.json)를 넣은 figure
  *  - h2: 앵커 id, "[연습 NN]"·"바로 NN" 은 번호 라벨로 분리
+ *  - 문단 댓글용 키: 문단·목록·코너·그림·코드·실습 단계에 data-pk(글 내용 해시)를 붙인다.
+ *    순서가 아니라 내용으로 정하므로 앞에 문단이 끼어도 댓글이 제자리에 남는다 (lib/book-comments.ts)
  * 사용자 원고에서 온 HTML은 토큰 단위로 sanitizeBookHtml()을 거친다.
  */
 
@@ -29,6 +32,8 @@ export interface ReaderSection {
   headings: ReaderHeading[];
   codeCount: number;
   readMinutes: number;
+  /** 문단 댓글 키(data-pk) 목록 — 원문이 바뀐 문단의 댓글을 가려낼 때 쓴다 */
+  paragraphKeys: string[];
 }
 
 const BOOKS_DIR = path.join(process.cwd(), 'content', 'books');
@@ -113,6 +118,18 @@ export async function renderReaderSection(
   const isImageOnly = (t: Token): t is Tokens.Paragraph =>
     t.type === 'paragraph' && (t as Tokens.Paragraph).tokens.length === 1 && (t as Tokens.Paragraph).tokens[0].type === 'image';
 
+  // 문단 댓글 키: 글 내용 해시 10자, 같은 글이 또 나오면 -2, -3 …
+  const pkSeen = new Map<string, number>();
+  const pkOf = (basis: string) => {
+    const hash = createHash('sha1').update(basis.replace(/\s+/g, ' ').trim()).digest('hex').slice(0, 10);
+    const n = (pkSeen.get(hash) ?? 0) + 1;
+    pkSeen.set(hash, n);
+    return n === 1 ? hash : `${hash}-${n}`;
+  };
+  /** 블록 HTML의 첫 태그에 data-pk를 붙인다 (정화가 끝난 HTML에만) */
+  const withPk = (blockHtml: string, basis = stripTags(blockHtml)) =>
+    basis ? blockHtml.replace(/^\s*<(p|ul|ol|blockquote|figure|div)(?=[\s>])/, `<$1 data-pk="${pkOf(basis)}"`) : blockHtml;
+
   let imageNo = 0;
   const figure = (img: Tokens.Image) => {
     if (!safeSrc(img.href)) return '';
@@ -127,7 +144,11 @@ export async function renderReaderSection(
   let html = '';
   let steps: { no: string; html: string }[] | null = null;
   const closeSteps = () => {
-    if (steps) html += `<ol class="steps">${steps.map((s) => `<li data-no="${s.no}">${s.html}</li>`).join('')}</ol>`;
+    if (steps) {
+      html += `<ol class="steps">${steps
+        .map((s) => `<li data-no="${s.no}" data-pk="${pkOf(`${s.no} ${stripTags(s.html)}`)}">${s.html}</li>`)
+        .join('')}</ol>`;
+    }
     steps = null;
   };
 
@@ -149,7 +170,7 @@ export async function renderReaderSection(
     closeSteps();
 
     if (isImageOnly(t)) {
-      html += figure(t.tokens[0] as Tokens.Image);
+      html += withPk(figure(t.tokens[0] as Tokens.Image), `img:${(t.tokens[0] as Tokens.Image).href}`);
       continue;
     }
     if (t.type === 'code') {
@@ -158,7 +179,7 @@ export async function renderReaderSection(
       const lines = code.text.split('\n').length;
       codeCount++;
       const body = hl.codeToHtml(code.text, { lang, theme: 'barobaro-light' });
-      html += `<div class="code"><div class="code-head"><span>${LANG_LABEL[lang] ?? '코드'} · ${lines}줄</span><button type="button" data-copy>복사</button></div>${body}</div>`;
+      html += `<div class="code" data-pk="${pkOf(`code:${code.text}`)}"><div class="code-head"><span>${LANG_LABEL[lang] ?? '코드'} · ${lines}줄</span><button type="button" data-copy>복사</button></div>${body}</div>`;
       continue;
     }
     if (t.type === 'heading' && (t as Tokens.Heading).depth === 2) {
@@ -173,14 +194,15 @@ export async function renderReaderSection(
       continue;
     }
     if (t.type === 'blockquote') {
-      html += corner(parse([t]));
+      html += withPk(corner(parse([t])));
       continue;
     }
-    html += parse([t]);
+    html += ['paragraph', 'list'].includes(t.type) ? withPk(parse([t])) : parse([t]);
   }
   closeSteps();
 
   html = removeEmptyStudyLabels(html);
   const readMinutes = Math.max(1, Math.round(stripTags(html).length / 500));
-  return { html, headings, codeCount, readMinutes };
+  const paragraphKeys = [...html.matchAll(/ data-pk="([^"]+)"/g)].map((m) => m[1]);
+  return { html, headings, codeCount, readMinutes, paragraphKeys };
 }

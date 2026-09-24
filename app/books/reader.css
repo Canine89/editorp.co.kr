@@ -95,7 +95,7 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-prose .corner-answer .corner-label { color: var(--colors-muted); }
 .rd-prose blockquote.corner-quiz { background: none; border: 1px solid var(--colors-yellow); }
 .rd-prose .corner-quiz .corner-label { color: var(--colors-ink); }
-.rd-prose .corner-quiz > p:last-child:not(:nth-child(2)) { color: var(--colors-muted); font-size: .92em; }
+.rd-prose .corner-quiz > p:last-of-type:not(:nth-of-type(2)) { color: var(--colors-muted); font-size: .92em; }
 .rd-prose blockquote.corner-coach { background: none; border: 1px solid var(--colors-hairline); }
 .rd-prose .corner-coach .corner-label { font-size: 15px; color: var(--colors-ink); }
 .rd-prose blockquote.corner-summary { background: none; border-top: 2px solid var(--colors-primary); border-bottom: 1px solid var(--colors-hairline); border-radius: 0; padding: 14px 0; }
@@ -203,4 +203,61 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 @media (max-width: 960px) {
   .rd-chapter-locked ul { columns: 1; }
   .rd-more > .perch { display: none; }
+}
+
+/* 문단 댓글 (components/ParagraphComments.tsx): 오른쪽 여백의 말풍선 버튼 + 댓글 시트 */
+.rd-prose [data-pk], .rd-prose ul[data-pk] > li:first-child, .rd-prose ol[data-pk] > li:first-child { position: relative; }
+.rd-pc-btn {
+  position: absolute; top: .15em; right: -38px; width: 28px; height: 26px; min-height: 0; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+  border: 0; border-radius: 6px; background: none; color: var(--colors-muted-soft); cursor: pointer;
+  opacity: 0; transition: opacity var(--transition-fast), color var(--transition-fast), background-color var(--transition-fast);
+  font: 600 12px/1 var(--font-sans); text-indent: 0;
+}
+.rd-prose ul[data-pk] .rd-pc-btn, .rd-prose ol[data-pk] .rd-pc-btn { right: -38px; }
+.rd-prose .steps .rd-pc-btn { top: 0; }
+.rd-prose .code .rd-pc-btn { top: 4px; }
+.rd-prose [data-pk]:hover .rd-pc-btn, .rd-prose .pc-show .rd-pc-btn, .rd-pc-btn:focus-visible { opacity: 1; }
+.rd-pc-btn:hover { color: var(--colors-primary); background: var(--colors-surface-soft); }
+.rd-pc-btn.has { opacity: 1; color: var(--colors-primary); width: auto; padding: 0 4px; }
+.rd-pc-btn.has::after { content: attr(data-count); }
+.rd-prose .pc-show { background: var(--colors-surface-soft); box-shadow: 0 0 0 6px var(--colors-surface-soft); border-radius: 2px; }
+
+.rd-pc-sheet .rd-sheet-head b small { font-weight: 600; color: var(--colors-primary); margin-left: 4px; }
+.rd-pc-body { padding: 16px 20px 20px; display: grid; gap: 16px; }
+.rd-pc-quote { margin: 0; padding: 2px 0 2px 12px; border-left: 2px solid var(--colors-yellow); font-size: 14px; line-height: 1.6; color: var(--colors-muted); }
+.rd-pc-empty { font-size: 14px; color: var(--colors-muted); }
+.rd-pc-list { list-style: none; display: grid; gap: 14px; }
+.rd-pc-list li + li { border-top: 1px solid var(--colors-hairline-soft); padding-top: 14px; }
+.rd-pc-who { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--colors-muted); }
+.rd-pc-who img, .rd-pc-who > span { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; }
+.rd-pc-who > span { display: grid; place-items: center; background: var(--colors-surface-cream-strong); color: var(--colors-primary); font-weight: 700; font-size: 12px; }
+.rd-pc-who b { color: var(--colors-ink); font-weight: 600; }
+.rd-pc-who button { margin-left: auto; min-height: 0; padding: 2px 6px; border: 0; background: none; font-size: 13px; color: var(--colors-muted); cursor: pointer; }
+.rd-pc-who button:hover { color: var(--colors-error); }
+.rd-pc-list p { margin-top: 6px; font-size: 15px; line-height: 1.7; color: var(--colors-body); white-space: pre-wrap; overflow-wrap: anywhere; }
+.rd-pc-form textarea {
+  width: 100%; resize: vertical; min-height: 84px; padding: 10px 12px; font: inherit; font-size: 15px; line-height: 1.6;
+  border: 1px solid var(--colors-hairline); border-radius: var(--rounded-md); color: var(--colors-ink); background: var(--colors-canvas);
+}
+.rd-pc-form textarea:focus { outline: 2px solid var(--colors-primary); outline-offset: -1px; border-color: transparent; }
+.rd-pc-form-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px; }
+.rd-pc-form-foot small { font-size: 13px; color: var(--colors-muted); }
+.rd-pc-login { display: grid; gap: 10px; justify-items: start; padding-top: 12px; border-top: 1px solid var(--colors-hairline); }
+.rd-pc-login p { font-size: 14px; color: var(--colors-muted); }
+.rd-pc-error { font-size: 14px; color: var(--colors-error); }
+.rd-pc-orphans { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--colors-hairline); }
+.rd-pc-orphans h2 { font-size: 14px; font-weight: 600; color: var(--colors-muted); margin-bottom: 12px; letter-spacing: 0; }
+
+/* 넓은 화면: 댓글 시트는 오른쪽 서랍 */
+@media (min-width: 961px) {
+  .rd-sheet.rd-pc-sheet { width: 420px; max-width: 100vw; height: 100vh; max-height: 100vh; margin: 0 0 0 auto; border-radius: 0; box-shadow: -8px 0 24px -12px rgba(14, 23, 51, .3); }
+}
+/* 오른쪽 칸(이 절에서)이 없는 폭: 컨테이너 여백(24px) 안에 버튼을 둔다 */
+@media (max-width: 1279px) {
+  .rd-pc-btn, .rd-prose ul[data-pk] .rd-pc-btn, .rd-prose ol[data-pk] .rd-pc-btn { right: -24px; width: 22px; }
+}
+@media (max-width: 960px) {
+  .rd-pc-btn, .rd-prose ul[data-pk] .rd-pc-btn, .rd-prose ol[data-pk] .rd-pc-btn { right: -20px; width: 20px; }
+  .rd-pc-btn.has { right: -20px; padding: 0 2px; flex-direction: column; height: auto; font-size: 11px; }
 }

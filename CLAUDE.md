@@ -66,6 +66,12 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
   전문 검색이 없어 최신 500개(`MAX_SCAN`)를 서버 메모리에서 필터링·페이징한다.
   `userActivity/{email}` 문서로 도배 방지(글 60초/일 20개, 댓글 10초) — 트랜잭션 안에서
   검사하며 관리자는 면제. 한도 초과는 `RateLimitError` → API에서 429.
+- **문단 댓글** (`lib/book-comments.ts`): Firestore `bookComments/{bookId}/sections/{sectionId}/comments/`.
+  Firebase 없는 개발 서버에서는 프로세스 메모리(재시작하면 사라짐), 운영에서 Firebase가 없으면 기능을 끈다.
+  문단은 리더가 붙이는 `data-pk`(문단 글 내용의 sha1 앞 10자, 같은 글이 또 나오면 `-2`)로 가리키므로,
+  원고가 바뀌면 옛 댓글은 절 끝 "원문이 바뀐 문단의 댓글"로 모인다. 쓰기는 로그인 사용자만,
+  하루 5개(한국 시간)·10초 간격·직전과 같은 내용 금지(`userActivity/{email}`의 `bookComments*` 필드,
+  트랜잭션, 관리자 면제). 지워도 그날 개수는 돌아오지 않는다. 화면은 `components/ParagraphComments.tsx`.
 - **편집 도서 목록** (`lib/edited-books.ts`): `data/edited-books.json` 정적 읽기만.
 
 Firestore는 서버(서버 컴포넌트 / 라우트 핸들러)에서만 접근한다. 클라이언트에 Firebase SDK를

@@ -7,6 +7,7 @@ import { Character } from "@/components/Character";
 import { ReaderClient } from "@/components/ReaderClient";
 import { TocMarks } from "@/components/TocMarks";
 import { PreviewEnd } from "@/components/BookPurchase";
+import { ParagraphComments } from "@/components/ParagraphComments";
 import "../../reader.css";
 
 // 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
@@ -115,6 +116,12 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
           </p>
 
           <div className="rd-prose" dangerouslySetInnerHTML={{ __html: rendered.html }} />
+          <ParagraphComments
+            key={current.section.id}
+            bookId={book.id}
+            sectionId={current.section.id}
+            paragraphKeys={rendered.paragraphKeys}
+          />
 
           <footer className="rd-end">
             {!next && <PreviewEnd book={book} />}
