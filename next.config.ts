@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
     "/admin/books/[bookId]": ["./content/books/**"],
     "/api/admin/books/section": ["./content/books/**"],
     "/api/admin/books/publish": ["./content/books/**"],
+    "/api/admin/books/block": ["./content/books/**"],
     // 문단 댓글 API는 책·절이 있는지만 확인한다 (book.json만 필요)
     "/api/books/[bookId]/[sectionId]/comments": ["./content/books/*/book.json"],
     "/api/books/[bookId]/[sectionId]/comments/[commentId]": ["./content/books/*/book.json"],

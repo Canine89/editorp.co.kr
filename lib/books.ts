@@ -280,3 +280,59 @@ export async function revertSectionMarkdown(bookId: string, sectionId: string): 
   await getDb().doc(`bookOverrides/${bookId}/sections/${sectionId}`).delete();
   return '수정사항을 버리고 파일 원본으로 되돌렸습니다.';
 }
+
+// ── 리더에서 블록 하나 바로 고치기 (관리자) ──────────────────────
+// 리더가 블록마다 붙인 data-src(원고 marked 토큰 번호)로 원고의 그 부분만 읽고 바꾼다.
+
+/** 다른 곳에서 먼저 고쳐 원고가 달라졌을 때 */
+export class BlockConflictError extends Error {}
+
+async function sectionSource(bookId: string, sectionId: string) {
+  const book = await getBook(bookId, true);
+  const flat = book ? flattenSections(book).find((f) => f.section.id === sectionId) : null;
+  if (!book || !flat) throw new Error(`존재하지 않는 절입니다: ${bookId}/${sectionId}`);
+  const markdown = await getSectionMarkdown(bookId, flat.section);
+  if (markdown === null) throw new Error('절 본문을 읽을 수 없습니다.');
+  return { markdown, tokens: marked.lexer(markdown) };
+}
+
+/** 블록의 원고(마크다운) */
+export async function getSectionBlock(bookId: string, sectionId: string, index: number): Promise<string> {
+  const { tokens } = await sectionSource(bookId, sectionId);
+  const token = tokens[index];
+  if (!token || token.type === 'space') throw new BlockConflictError('원고가 바뀌었습니다. 새로고침한 뒤 다시 시도해 주세요.');
+  return token.raw;
+}
+
+/**
+ * 블록 하나를 새 마크다운으로 바꿔 절 전체를 저장한다. 비우면 그 블록을 지운다.
+ * original은 편집을 시작할 때 받은 원고 — 그새 달라졌으면 덮어쓰지 않는다.
+ */
+export async function replaceSectionBlock(
+  bookId: string,
+  sectionId: string,
+  index: number,
+  original: string,
+  replacement: string,
+): Promise<string> {
+  const { markdown, tokens } = await sectionSource(bookId, sectionId);
+  const token = tokens[index];
+  const conflict = new BlockConflictError('그새 이 절이 수정되었습니다. 새로고침한 뒤 다시 고쳐 주세요.');
+  if (!token || token.type === 'space' || token.raw !== original) throw conflict;
+
+  // 앞 토큰 길이의 합이 원고 위치. 어긋나면(드문 경우) 원고에서 한 번만 나오는지로 찾는다
+  let offset = tokens.slice(0, index).reduce((n, t) => n + t.raw.length, 0);
+  if (markdown.slice(offset, offset + original.length) !== original) {
+    offset = markdown.indexOf(original);
+    if (offset < 0 || markdown.indexOf(original, offset + 1) >= 0) throw conflict;
+  }
+  const body = replacement.replace(/\r\n?/g, '\n').trim();
+  const trailing = original.match(/\s*$/)![0];   // 블록 뒤 줄바꿈은 원고 그대로 둔다
+  const before = markdown.slice(0, offset);
+  const after = markdown.slice(offset + original.length);
+  // 지울 때는 앞뒤 빈 줄을 하나로 모은다
+  const next = body
+    ? before + body + trailing + after
+    : before.replace(/\n*$/, '') + (before.trim() && after.trim() ? '\n\n' : '') + after.replace(/^\n*/, '');
+  return saveSectionMarkdown(bookId, sectionId, next);
+}

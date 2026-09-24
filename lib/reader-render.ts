@@ -17,6 +17,7 @@ import { removeEmptyStudyLabels } from './reader-presentation';
  *  - 코너 박스: 인용문 첫 줄이 **NOTE**·**프롬프트**·**AI 답변**·**잠깐 퀴즈**·**1:1 코칭 · …**·**바로 핵심 요약** 등이면 종류별 스타일
  *  - 이미지만 있는 문단: 크기(images.json)를 넣은 figure
  *  - h2: 앵커 id, "[연습 NN]"·"바로 NN" 은 번호 라벨로 분리
+ *  - 관리자 바로 고치기용 원고 위치: 블록마다 data-src(원고 marked 토큰 번호, components/InlineBookEditor.tsx)
  *  - 문단 댓글용 키: 문단·목록·코너·그림·코드·실습 단계에 data-pk(글 내용 해시)를 붙인다.
  *    순서가 아니라 내용으로 정하므로 앞에 문단이 끼어도 댓글이 제자리에 남는다 (lib/book-comments.ts)
  * 사용자 원고에서 온 HTML은 토큰 단위로 sanitizeBookHtml()을 거친다.
@@ -110,6 +111,12 @@ export async function renderReaderSection(
     // 워드 원고의 자동 링크: [<u>test.py</u>](http://test.py) → `test.py` (운영 오버레이 원고에도 남아 있다)
     .replace(/\[(?:<u>)?([\w-]+\.(?:py|js|ts|txt|csv|json|html|css|md))(?:<\/u>)?\]\(http:\/\/\1\/?\)/gi, '`$1`');
   const tokens = marked.lexer(markdown);
+  // 표시용 치환은 줄 안에서만 일어나 블록 구조는 원고와 같다. 같을 때만 원고 토큰 번호(data-src)를 붙인다
+  const srcTokens = marked.lexer(raw);
+  const aligned = srcTokens.length === tokens.length && srcTokens.every((t, i) => t.type === tokens[i].type);
+  /** 블록 HTML의 첫 태그에 원고 토큰 번호를 붙인다 */
+  const withSrc = (blockHtml: string, i: number) =>
+    aligned ? blockHtml.replace(/^\s*<([a-z][a-z0-9]*)(?=[\s>])/, `<$1 data-src="${i}"`) : blockHtml;
   const hl = await getHighlighter();
   const sizes = imageSizes(bookId);
 
@@ -142,17 +149,17 @@ export async function renderReaderSection(
   const headings: ReaderHeading[] = [];
   let codeCount = 0;
   let html = '';
-  let steps: { no: string; html: string }[] | null = null;
+  let steps: { no: string; html: string; src: number }[] | null = null;
   const closeSteps = () => {
     if (steps) {
       html += `<ol class="steps">${steps
-        .map((s) => `<li data-no="${s.no}" data-pk="${pkOf(`${s.no} ${stripTags(s.html)}`)}">${s.html}</li>`)
+        .map((s) => withSrc(`<li data-no="${s.no}" data-pk="${pkOf(`${s.no} ${stripTags(s.html)}`)}">${s.html}</li>`, s.src))
         .join('')}</ol>`;
     }
     steps = null;
   };
 
-  for (const t of tokens) {
+  for (const [i, t] of tokens.entries()) {
     if (t.type === 'space') continue;
 
     // 실습 단계: "01 설명..." 문단 + 뒤따르는 이미지
@@ -160,7 +167,7 @@ export async function renderReaderSection(
     if (stepNo) {
       const text = (t as Tokens.Paragraph).text.replace(/^\d{2}\s+/, '');
       steps ??= [];
-      steps.push({ no: stepNo[1], html: parse([{ ...(t as Tokens.Paragraph), text, tokens: marked.Lexer.lexInline(text) }]) });
+      steps.push({ no: stepNo[1], src: i, html: parse([{ ...(t as Tokens.Paragraph), text, tokens: marked.Lexer.lexInline(text) }]) });
       continue;
     }
     if (steps && isImageOnly(t)) {
@@ -170,7 +177,7 @@ export async function renderReaderSection(
     closeSteps();
 
     if (isImageOnly(t)) {
-      html += withPk(figure(t.tokens[0] as Tokens.Image), `img:${(t.tokens[0] as Tokens.Image).href}`);
+      html += withSrc(withPk(figure(t.tokens[0] as Tokens.Image), `img:${(t.tokens[0] as Tokens.Image).href}`), i);
       continue;
     }
     if (t.type === 'code') {
@@ -179,7 +186,7 @@ export async function renderReaderSection(
       const lines = code.text.split('\n').length;
       codeCount++;
       const body = hl.codeToHtml(code.text, { lang, theme: 'barobaro-light' });
-      html += `<div class="code" data-pk="${pkOf(`code:${code.text}`)}"><div class="code-head"><span>${LANG_LABEL[lang] ?? '코드'} · ${lines}줄</span><button type="button" data-copy>복사</button></div>${body}</div>`;
+      html += `<div class="code"${aligned ? ` data-src="${i}"` : ''} data-pk="${pkOf(`code:${code.text}`)}"><div class="code-head"><span>${LANG_LABEL[lang] ?? '코드'} · ${lines}줄</span><button type="button" data-copy>복사</button></div>${body}</div>`;
       continue;
     }
     if (t.type === 'heading' && (t as Tokens.Heading).depth === 2) {
@@ -190,14 +197,18 @@ export async function renderReaderSection(
       const id = label ? `ex-${label.replace(/\D/g, '')}` : `h-${headings.length + 1}`;
       const inner = sanitizeBookHtml(marked.parseInline(rest, { async: false }) as string);
       headings.push({ id, text: (label ? `${label} ` : '') + stripTags(inner) });
-      html += `<h2 id="${id}">${label ? `<span class="no mark">${label}</span>` : ''}${inner}</h2>`;
+      html += `<h2 id="${id}"${aligned ? ` data-src="${i}"` : ''}>${label ? `<span class="no mark">${label}</span>` : ''}${inner}</h2>`;
       continue;
     }
     if (t.type === 'blockquote') {
-      html += withPk(corner(parse([t])));
+      html += withSrc(withPk(corner(parse([t]))), i);
       continue;
     }
-    html += ['paragraph', 'list'].includes(t.type) ? withPk(parse([t])) : parse([t]);
+    if (t.type === 'hr' || t.type === 'html' || t.type === 'def') {
+      html += parse([t]);
+      continue;
+    }
+    html += withSrc(['paragraph', 'list'].includes(t.type) ? withPk(parse([t])) : parse([t]), i);
   }
   closeSteps();
 

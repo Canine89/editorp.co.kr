@@ -261,3 +261,46 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
   .rd-pc-btn, .rd-prose ul[data-pk] .rd-pc-btn, .rd-prose ol[data-pk] .rd-pc-btn { right: -20px; width: 20px; }
   .rd-pc-btn.has { right: -20px; padding: 0 2px; flex-direction: column; height: auto; font-size: 11px; }
 }
+
+/* 관리자 바로 고치기 (components/InlineBookEditor.tsx): 왼쪽 여백의 수정 버튼 + 제자리 편집기 */
+.rd-admin .rd-prose [data-src] { position: relative; }
+.rd-admin .rd-prose ul[data-src] > li:first-child, .rd-admin .rd-prose ol[data-src] > li:first-child { position: relative; }
+.rd-admin .rd-prose [data-src]:hover { outline: 1px dashed var(--colors-hairline); outline-offset: 6px; border-radius: 2px; }
+.rd-edit-btn {
+  position: absolute; top: .1em; left: -52px; height: 26px; min-height: 0; padding: 0 6px;
+  display: inline-flex; align-items: center; gap: 3px; border: 0; border-radius: 6px;
+  background: var(--colors-canvas); color: var(--colors-muted-soft); cursor: pointer;
+  font: 600 12px/1 var(--font-sans); opacity: 0; transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+.rd-prose .steps .rd-edit-btn { left: -52px; }
+.rd-prose [data-src]:hover > .rd-edit-btn, .rd-prose [data-src] > li:first-child:hover > .rd-edit-btn,
+.rd-prose ul[data-src]:hover .rd-edit-btn, .rd-prose ol[data-src]:hover > li:first-child > .rd-edit-btn,
+.rd-prose .pc-show .rd-edit-btn, .rd-edit-btn:focus-visible { opacity: 1; }
+.rd-edit-btn:hover { color: var(--colors-primary); background: var(--colors-surface-soft); }
+.rd-prose .rd-edit-pending { opacity: .45; transition: opacity .2s; }
+.rd-prose .rd-edit-host { list-style: none; margin: 1em 0; }
+.rd-prose .steps > .rd-edit-host::before { content: none; }
+.rd-edit { border: 1px solid var(--colors-primary); border-radius: var(--rounded-md); padding: 10px; background: var(--colors-canvas); }
+.rd-edit textarea {
+  display: block; width: 100%; resize: vertical; border: 0; padding: 4px 6px; background: none;
+  font: inherit; font-size: 15px; line-height: 1.7; color: var(--colors-ink);
+}
+.rd-edit textarea.mono { font-family: var(--font-mono); font-size: 14px; line-height: 1.6; white-space: pre; overflow-x: auto; }
+.rd-edit textarea:focus { outline: none; }
+.rd-edit-foot { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--colors-hairline-soft); }
+.rd-edit-foot small { margin-right: auto; font-size: 12px; color: var(--colors-muted); }
+.rd-edit-foot .btn { min-height: 34px; height: 34px; padding: 0 14px; font-size: 14px; }
+.rd-edit-error { margin-top: 8px; font-size: 14px; color: var(--colors-error); }
+.rd-edit-toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 70;
+  padding: 10px 16px; border-radius: var(--rounded-md); background: var(--colors-surface-dark); color: var(--colors-on-dark); font-size: 14px;
+}
+@media (max-width: 1279px) {
+  .rd-edit-btn, .rd-prose .steps .rd-edit-btn { left: -24px; width: 22px; padding: 0; justify-content: center; }
+  .rd-edit-btn span { display: none; }
+}
+@media (max-width: 960px) {
+  .rd-edit-btn, .rd-prose .steps .rd-edit-btn { left: -20px; width: 20px; }
+  .rd-edit-foot { flex-wrap: wrap; }
+  .rd-edit-foot small { flex-basis: 100%; }
+}

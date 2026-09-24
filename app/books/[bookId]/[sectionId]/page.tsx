@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -8,6 +9,7 @@ import { ReaderClient } from "@/components/ReaderClient";
 import { TocMarks } from "@/components/TocMarks";
 import { PreviewEnd } from "@/components/BookPurchase";
 import { ParagraphComments } from "@/components/ParagraphComments";
+import { InlineBookEditor } from "@/components/InlineBookEditor";
 import "../../reader.css";
 
 // 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
@@ -71,6 +73,8 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
   if (!rendered) notFound();
 
   const sectionIds = flat.map((f) => f.section.id);
+  // 본문이 바뀌면(관리자 바로 고치기 후 새로고침) 본문에 버튼을 다는 컴포넌트를 다시 붙인다
+  const version = `${current.section.id}-${createHash("sha1").update(rendered.html).digest("hex").slice(0, 8)}`;
   const prevHref = prev ? `/books/${book.id}/${prev.section.id}` : null;
   const nextHref = next ? `/books/${book.id}/${next.section.id}` : null;
 
@@ -116,8 +120,9 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
           </p>
 
           <div className="rd-prose" dangerouslySetInnerHTML={{ __html: rendered.html }} />
+          <InlineBookEditor key={`edit-${version}`} bookId={book.id} sectionId={current.section.id} />
           <ParagraphComments
-            key={current.section.id}
+            key={version}
             bookId={book.id}
             sectionId={current.section.id}
             paragraphKeys={rendered.paragraphKeys}

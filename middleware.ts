@@ -32,6 +32,10 @@ export default withAuth(
       signIn: '/api/auth/signin',
       error: '/auth/unauthorized',
     },
+    // authOptions와 같은 규칙: 운영은 AUTH_SECRET 필수, 개발 모드에만 같은 대체 키
+    secret:
+      process.env.AUTH_SECRET ||
+      (process.env.NODE_ENV === 'development' ? 'dev-only-secret-not-for-production' : undefined),
   }
 );
 

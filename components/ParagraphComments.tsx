@@ -51,7 +51,7 @@ export function ParagraphComments({
   const [error, setError] = useState("");
   const sheet = useRef<HTMLDialogElement>(null);
 
-  // 절이 바뀌면 page가 key로 새로 그리므로 처음 한 번만 불러온다
+  // 절이나 본문이 바뀌면 page가 key로 새로 그리므로 처음 한 번만 불러온다
   useEffect(() => {
     let alive = true;
     fetch(api, { cache: "no-store" })

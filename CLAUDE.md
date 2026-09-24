@@ -62,6 +62,9 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
   독자 화면은 `lib/reader-render.ts`(Shiki 구문 강조, 실습 단계 묶기, 이미지 크기)로 그리고,
   관리자 편집기는 단순 HTML인 `renderSectionHtml()`을 그대로 쓴다. 두 경로를 섞지 말 것.
   독서 진도는 브라우저 `localStorage`(`lib/reading-progress.ts`)에만 저장한다.
+  **관리자 바로 고치기**: 관리자로 로그인하면 리더의 블록마다 수정 버튼이 생긴다(`components/InlineBookEditor.tsx`).
+  리더가 블록에 원고 marked 토큰 번호(`data-src`)를 붙이고, `/api/admin/books/block`이 그 블록의 원고만
+  바꿔 `saveSectionMarkdown()`으로 저장한다(편집 시작 때 원고와 다르면 409). 즉 운영에서는 오버레이가 생긴다.
 - **Q&A 게시판** (`lib/qna.ts`): Firestore 전용(폴백 없음). `questions/{id}` + 하위 `comments/`.
   전문 검색이 없어 최신 500개(`MAX_SCAN`)를 서버 메모리에서 필터링·페이징한다.
   `userActivity/{email}` 문서로 도배 방지(글 60초/일 20개, 댓글 10초) — 트랜잭션 안에서
@@ -87,6 +90,8 @@ Node 전용 모듈을 넣지 말 것.
 1. `middleware.ts` — `/admin/*`, `/api/admin/*`에 대해 관리자 이메일 검사 + 상태 변경
    메서드(POST/PUT/PATCH/DELETE)의 same-origin 강제(CSRF 완화).
 2. 각 `app/api/admin/**/route.ts`의 `requireAdmin()` — `getServerSession`으로 재검사.
+
+middleware도 `authOptions`와 같은 서명 키 규칙(운영 `AUTH_SECRET` 필수, 개발 모드만 대체 키)을 쓴다.
 
 새 관리자 API를 추가할 때 두 겹 모두 유지한다. 세션에는 `session.user.isAdmin` 플래그가
 실려 있어 클라이언트에서 이메일 비교 없이 UI를 분기할 수 있다 (`types/next-auth.d.ts`).
