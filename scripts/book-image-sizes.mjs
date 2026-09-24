@@ -4,7 +4,7 @@
  *
  * 사용법: node scripts/book-image-sizes.mjs [책-id ...]   (생략 시 전체)
  *
- * public/books/<책-id>/ 의 PNG·JPEG 크기를 읽어 content/books/<책-id>/images.json 에 기록한다.
+ * public/books/<책-id>/ 의 PNG·JPEG·WebP 크기를 읽어 content/books/<책-id>/images.json 에 기록한다.
  * 리더가 <img>에 width/height를 넣어 로딩 중 레이아웃이 밀리지 않게 하기 위함이다.
  * public/ 은 서버리스 번들에 포함되지 않으므로 크기는 content/books 쪽에 둔다.
  * 원고 이미지를 바꾸거나 새 책을 임포트한 뒤 다시 실행한다.
@@ -32,6 +32,16 @@ function imageSize(file) {
       i += 2 + len;
     }
   }
+  // WebP: VP8(손실) / VP8L(무손실) / VP8X(확장) 헤더
+  if (b.toString('ascii', 0, 4) === 'RIFF' && b.toString('ascii', 8, 12) === 'WEBP') {
+    const kind = b.toString('ascii', 12, 16);
+    if (kind === 'VP8 ') return { width: b.readUInt16LE(26) & 0x3fff, height: b.readUInt16LE(28) & 0x3fff };
+    if (kind === 'VP8L') {
+      const bits = b.readUInt32LE(21);
+      return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+    }
+    if (kind === 'VP8X') return { width: b.readUIntLE(24, 3) + 1, height: b.readUIntLE(27, 3) + 1 };
+  }
   return null;
 }
 
@@ -47,7 +57,7 @@ for (const id of ids) {
   }
   const sizes = {};
   for (const name of fs.readdirSync(dir).sort()) {
-    if (!/\.(png|jpe?g)$/i.test(name)) continue;
+    if (!/\.(png|jpe?g|webp)$/i.test(name)) continue;
     const size = imageSize(path.join(dir, name));
     if (size) sizes[`/books/${id}/${name}`] = size;
   }

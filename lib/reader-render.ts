@@ -12,9 +12,10 @@ import { removeEmptyStudyLabels } from './reader-presentation';
  * 관리자 편집기는 renderSectionHtml()의 단순 HTML을 받아 편집·역변환하므로 그대로 두고,
  * 독자 화면만 이 렌더러로 꾸민다.
  *  - 코드 블록: Shiki 서버 구문 강조(바로바로 팔레트 전용 테마)
- *  - "01 ..." 로 시작하는 실습 단계 문단과 뒤따르는 이미지를 번호 절차로 묶음
+ *  - "01 ..." 로 시작하는 실습 단계 문단과 뒤따르는 이미지를 번호 절차로 묶음 (책의 번호를 그대로 표시)
+ *  - 코너 박스: 인용문 첫 줄이 **NOTE**·**프롬프트**·**1:1 코칭 · …**·**바로 핵심 요약** 등이면 종류별 스타일
  *  - 이미지만 있는 문단: 크기(images.json)를 넣은 figure
- *  - h2: 앵커 id, "[연습 NN]" 은 번호 라벨로 분리
+ *  - h2: 앵커 id, "[연습 NN]"·"바로 NN" 은 번호 라벨로 분리
  * 사용자 원고에서 온 HTML은 토큰 단위로 sanitizeBookHtml()을 거친다.
  */
 
@@ -75,6 +76,21 @@ const stripTags = (s: string) => s.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' 
 /** 원고 이미지 경로는 사이트 내부 경로 또는 https만 허용 */
 const safeSrc = (src: string) => /^\/(?!\/)[\w\-./%]+$/.test(src) || /^https:\/\//.test(src);
 
+const CORNERS: [RegExp, string][] = [
+  [/^NOTE$/, 'note'],
+  [/^프롬프트$/, 'prompt'],
+  [/^1:1 코칭/, 'coach'],
+  [/^바로 핵심 요약$/, 'summary'],
+  [/^(미리 알아두세요|기억하고 있나요)/, 'side'],
+];
+/** 인용문 첫 줄의 굵은 라벨로 코너 종류를 정해 class를 붙인다 (정화가 끝난 HTML에만 적용) */
+function corner(quoteHtml: string): string {
+  const m = quoteHtml.match(/^<blockquote>\s*<p><strong>([^<]+)<\/strong><\/p>/);
+  const kind = m && CORNERS.find(([re]) => re.test(m[1].trim()))?.[1];
+  if (!m || !kind) return quoteHtml;
+  return quoteHtml.replace(m[0], `<blockquote class="corner corner-${kind}"><p class="corner-label">${m[1]}</p>`);
+}
+
 export async function renderReaderSection(
   bookId: string,
   section: BookSectionMeta,
@@ -107,9 +123,9 @@ export async function renderReaderSection(
   const headings: ReaderHeading[] = [];
   let codeCount = 0;
   let html = '';
-  let steps: string[] | null = null;
+  let steps: { no: string; html: string }[] | null = null;
   const closeSteps = () => {
-    if (steps) html += `<ol class="steps">${steps.map((s) => `<li>${s}</li>`).join('')}</ol>`;
+    if (steps) html += `<ol class="steps">${steps.map((s) => `<li data-no="${s.no}">${s.html}</li>`).join('')}</ol>`;
     steps = null;
   };
 
@@ -117,14 +133,15 @@ export async function renderReaderSection(
     if (t.type === 'space') continue;
 
     // 실습 단계: "01 설명..." 문단 + 뒤따르는 이미지
-    if (t.type === 'paragraph' && /^0\d\s/.test((t as Tokens.Paragraph).text)) {
-      const text = (t as Tokens.Paragraph).text.replace(/^0\d\s+/, '');
+    const stepNo = t.type === 'paragraph' ? (t as Tokens.Paragraph).text.match(/^(\d{2})\s/) : null;
+    if (stepNo) {
+      const text = (t as Tokens.Paragraph).text.replace(/^\d{2}\s+/, '');
       steps ??= [];
-      steps.push(parse([{ ...(t as Tokens.Paragraph), text, tokens: marked.Lexer.lexInline(text) }]));
+      steps.push({ no: stepNo[1], html: parse([{ ...(t as Tokens.Paragraph), text, tokens: marked.Lexer.lexInline(text) }]) });
       continue;
     }
     if (steps && isImageOnly(t)) {
-      steps[steps.length - 1] += figure(t.tokens[0] as Tokens.Image);
+      steps[steps.length - 1].html += figure(t.tokens[0] as Tokens.Image);
       continue;
     }
     closeSteps();
@@ -144,11 +161,17 @@ export async function renderReaderSection(
     }
     if (t.type === 'heading' && (t as Tokens.Heading).depth === 2) {
       const heading = t as Tokens.Heading;
-      const exercise = heading.text.match(/^\\?\[연습 (\d+)\\?\]\s*(.*)$/);
-      const id = exercise ? `ex-${exercise[1]}` : `h-${headings.length + 1}`;
-      const inner = sanitizeBookHtml(marked.parseInline(exercise ? exercise[2] : heading.text, { async: false }) as string);
-      headings.push({ id, text: (exercise ? `연습 ${exercise[1]} ` : '') + stripTags(inner) });
-      html += `<h2 id="${id}">${exercise ? `<span class="no mark">연습 ${exercise[1]}</span>` : ''}${inner}</h2>`;
+      const m = heading.text.match(/^\\?\[연습 (\d+)\\?\]\s*(.*)$/) ?? heading.text.match(/^(바로) (\d+)\s+(.*)$/);
+      const label = m ? (m.length === 4 ? `바로 ${m[2]}` : `연습 ${m[1]}`) : null;
+      const rest = m ? m[m.length - 1] : heading.text;
+      const id = label ? `ex-${label.replace(/\D/g, '')}` : `h-${headings.length + 1}`;
+      const inner = sanitizeBookHtml(marked.parseInline(rest, { async: false }) as string);
+      headings.push({ id, text: (label ? `${label} ` : '') + stripTags(inner) });
+      html += `<h2 id="${id}">${label ? `<span class="no mark">${label}</span>` : ''}${inner}</h2>`;
+      continue;
+    }
+    if (t.type === 'blockquote') {
+      html += corner(parse([t]));
       continue;
     }
     html += parse([t]);

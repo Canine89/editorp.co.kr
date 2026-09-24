@@ -6,6 +6,7 @@ import { renderReaderSection } from "@/lib/reader-render";
 import { Character } from "@/components/Character";
 import { ReaderClient } from "@/components/ReaderClient";
 import { TocMarks } from "@/components/TocMarks";
+import { PreviewEnd } from "@/components/BookPurchase";
 import "../../reader.css";
 
 // 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
@@ -115,6 +116,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
           <div className="rd-prose" dangerouslySetInnerHTML={{ __html: rendered.html }} />
 
           <footer className="rd-end">
+            {!next && <PreviewEnd book={book} />}
             <p className="rd-done">
               <i aria-hidden="true">✓</i>
               <b>끝까지 읽으면 완료로 표시됩니다</b>
@@ -210,10 +212,8 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
           </div>
         </div>
       </dialog>
-      <dialog className="rd-zoom" aria-label="이미지 확대">
-        {/* eslint-disable-next-line @next/next/no-img-element -- 누른 본문 이미지의 주소를 그대로 띄운다 */}
-        <img alt="" />
-      </dialog>
+      {/* 확대 이미지는 누를 때 ReaderClient가 넣는다 */}
+      <dialog className="rd-zoom" aria-label="이미지 확대" />
 
       <ReaderClient bookId={book.id} sectionId={current.section.id} sectionIds={sectionIds} prevHref={prevHref} nextHref={nextHref} />
       <TocMarks bookId={book.id} sectionIds={sectionIds} />

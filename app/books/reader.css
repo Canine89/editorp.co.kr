@@ -75,11 +75,25 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-prose figure { margin-top: 1.4em; }
 .rd-prose figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--colors-hairline); border-radius: 2px; cursor: zoom-in; background: var(--colors-canvas); }
 .rd-prose img { max-width: 100%; height: auto; }
-.rd-prose .steps { list-style: none; counter-reset: step; padding: 0; }
-.rd-prose .steps > li { counter-increment: step; position: relative; padding-left: 2.6em; }
+.rd-prose .steps { list-style: none; padding: 0; }
+.rd-prose .steps > li { position: relative; padding-left: 2.6em; }
 .rd-prose .steps > li + li { margin-top: 1.8em; }
-.rd-prose .steps > li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 0; top: .1em; font-size: .82em; font-weight: 700; color: var(--colors-primary); font-variant-numeric: tabular-nums; }
+.rd-prose .steps > li::before { content: attr(data-no); position: absolute; left: 0; top: .1em; font-size: .82em; font-weight: 700; color: var(--colors-primary); font-variant-numeric: tabular-nums; }
 .rd-prose .steps > li > * + * { margin-top: .8em; }
+
+/* 코너 박스 (책의 NOTE·프롬프트·1:1 코칭·핵심 요약·곁단) */
+.rd-prose blockquote.corner { border: 0; padding: 14px 18px; border-radius: 6px; background: var(--colors-surface-soft); font-size: .94em; }
+.rd-prose blockquote.corner > * + * { margin-top: .5em; }
+.rd-prose .corner-label { font-size: 13px; font-weight: 700; color: var(--colors-primary); letter-spacing: .02em; }
+.rd-prose .corner ul { padding-left: 1.2em; }
+.rd-prose blockquote.corner-note { background: none; border-left: 2px solid var(--colors-yellow); border-radius: 0; padding: 4px 0 4px 14px; color: var(--colors-body); }
+.rd-prose blockquote.corner-prompt { background: var(--colors-surface-soft); border-left: 3px solid var(--colors-primary); border-radius: 0 6px 6px 0; }
+.rd-prose .corner-prompt > p:not(.corner-label) { color: var(--colors-ink); font-weight: 500; }
+.rd-prose blockquote.corner-coach { background: none; border: 1px solid var(--colors-hairline); }
+.rd-prose .corner-coach .corner-label { font-size: 15px; color: var(--colors-ink); }
+.rd-prose blockquote.corner-summary { background: none; border-top: 2px solid var(--colors-primary); border-bottom: 1px solid var(--colors-hairline); border-radius: 0; padding: 14px 0; }
+.rd-prose .corner-summary li + li { margin-top: .5em; }
+.rd-prose blockquote.corner-side { background: none; border: 1px dashed var(--colors-hairline); }
 
 /* 코드 */
 .rd-prose .code { margin-top: 1.4em; border: 1px solid var(--colors-hairline); border-radius: 6px; background: var(--colors-surface-soft); overflow: hidden; }
@@ -162,3 +176,24 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 }
 .rd-seg .rd-size-s { font-size: 13px; }
 .rd-seg .rd-size-l { font-size: 17px; }
+
+/* 일부만 공개한 책: 이어지는 목차와 구매 안내 */
+.rd-buy { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.rd-rest { margin-top: 32px; }
+.rd-rest h2 { font-size: 14px; font-weight: 600; color: var(--colors-muted); margin-bottom: 6px; letter-spacing: 0; }
+.rd-rest-note { font-size: 14px; color: var(--colors-muted); margin-bottom: 12px; }
+.rd-chapter-locked h3 { color: var(--colors-muted); }
+.rd-chapter-locked ul { list-style: none; margin-top: 4px; columns: 2; column-gap: 32px; }
+.rd-chapter-locked li { break-inside: avoid; padding: 5px 0 5px 20px; font-size: 15px; color: var(--colors-muted); position: relative; }
+.rd-chapter-locked li::before { content: '·'; position: absolute; left: 6px; }
+.rd-more { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-top: 8px; padding: 20px 0 0; border-top: 2px solid var(--colors-primary); border-bottom: 1px solid var(--colors-hairline); }
+.rd-more > div { padding-bottom: 20px; }
+.rd-more h2 { font-size: 20px; line-height: 1.4; }
+.rd-more p { font-size: 15px; color: var(--colors-body); margin-top: 6px; }
+.rd-more ul { list-style: none; margin-top: 10px; font-size: 15px; color: var(--colors-muted); }
+.rd-more li { padding: 2px 0; }
+.rd-more > .perch { margin: 0 0 -1px; flex-shrink: 0; }
+@media (max-width: 960px) {
+  .rd-chapter-locked ul { columns: 1; }
+  .rd-more > .perch { display: none; }
+}

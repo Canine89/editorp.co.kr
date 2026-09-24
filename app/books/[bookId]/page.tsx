@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getBook, flattenSections, sectionLabel } from "@/lib/books";
 import { BookProgress } from "@/components/BookProgress";
 import { TocMarks } from "@/components/TocMarks";
+import { PreviewRest } from "@/components/BookPurchase";
 import "../reader.css";
 
 // 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
@@ -77,6 +78,7 @@ export default async function BookTocPage({ params }: { params: Promise<{ bookId
             ))}
           </div>
         ))}
+        <PreviewRest book={book} />
       </section>
       <TocMarks bookId={book.id} sectionIds={sections.map((s) => s.id)} />
     </div>

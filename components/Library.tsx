@@ -41,6 +41,16 @@ export function FreeBooks({ books }: { books: Book[] }) {
                   {book.author} · {sections.length}절{published && ` · ${published} 공개`}
                 </p>
                 <p className={styles.desc}>{book.description}</p>
+                {book.purchase?.length ? (
+                  <p className={styles.buy}>
+                    전체는 책으로
+                    {book.purchase.map((p) => (
+                      <a key={p.url} className="ext" href={p.url} target="_blank" rel="noopener noreferrer">
+                        {p.label}
+                      </a>
+                    ))}
+                  </p>
+                ) : null}
                 <BookProgress bookId={book.id} sections={sections}>
                   <Character id="reader-bookmark" height={84} />
                 </BookProgress>

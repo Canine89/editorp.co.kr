@@ -21,6 +21,9 @@
 .free + .free { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--colors-hairline); }
 .feature { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; align-items: start; }
 .empty { font-size: 15px; color: var(--colors-muted); }
+.buy { display: flex; gap: 6px 14px; flex-wrap: wrap; align-items: baseline; font-size: 14px; color: var(--colors-muted); margin-top: 8px; }
+.buy a { color: var(--colors-ink); text-decoration: underline; text-decoration-color: var(--colors-hairline); text-underline-offset: 3px; }
+.buy a:hover { text-decoration-color: var(--colors-primary); }
 /* 장 목차: 장으로 바로 들어가고, 장마다 읽은 절 수를 보여준다 */
 .chapters { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 32px; margin-top: 24px; border-top: 1px solid var(--colors-hairline); }
 .chapters li { border-bottom: 1px solid var(--colors-hairline); }

@@ -49,3 +49,7 @@ next-env.d.ts
 
 # 캐릭터 일러스트 생성 원본(후보). 최종본만 public/character/로 옮겨 커밋한다
 assets/character/generated/
+
+# 도서 원본(인쇄용 PDF·표지 원본)은 커밋하지 않는다. 변환 결과만 content/·public/에 둔다
+/*.pdf
+/cover(*

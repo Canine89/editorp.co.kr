@@ -103,9 +103,10 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
       }
       const img = target.closest<HTMLImageElement>(".rd-prose figure img");
       if (img && zoom) {
-        const big = zoom.querySelector("img")!;
+        const big = new Image();
         big.src = img.currentSrc || img.src;
         big.alt = img.alt;
+        zoom.replaceChildren(big);
         zoom.showModal();
         return;
       }
