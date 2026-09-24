@@ -110,9 +110,11 @@ export default async function HomePage() {
                 <a href="#library">
                   <b>서재</b>
                   <span>
-                    직접 쓴 책과 무료로 읽는 책
+                    무료로 공개한 책을 브라우저에서 읽기
                     <small>
-                      직접 쓴 책 {authoredCount}권{books[0] && ` · ${books[0].title} 무료 공개`}
+                      {books.length > 0
+                        ? books.map((b) => `${b.title} ${flattenSections(b).length}절`).join(" · ")
+                        : "공개 준비 중"}
                     </small>
                   </span>
                 </a>
@@ -121,8 +123,10 @@ export default async function HomePage() {
                 <a href="#about">
                   <b>소개</b>
                   <span>
-                    강의 이력과 문의
-                    <small>강의 {lectures.length}건 · 기업·학교·공공기관</small>
+                    쓴 책, 만든 책, 강의 이력
+                    <small>
+                      직접 쓴 책 {authoredCount}권 · 참여한 책 {bookCount}권 · 강의 {lectures.length}건
+                    </small>
                   </span>
                 </a>
               </li>
@@ -246,17 +250,12 @@ export default async function HomePage() {
           <header className={styles.secHead}>
             <div>
               <h2>서재</h2>
-              <p>제가 쓴 책과, 브라우저에서 바로 읽는 책입니다.</p>
+              <p>무료로 공개한 책입니다. 브라우저에서 바로 읽고, 읽은 곳은 이 브라우저에 기억됩니다.</p>
             </div>
-            <Link className={styles.more} href="/books">
-              서재 전체
-            </Link>
             <Character id="library-books" height={88} />
           </header>
           <div>
-            <AuthoredBooks />
             <FreeBooks books={books} />
-            <JoinedBooks limit={10} />
           </div>
         </section>
 
@@ -264,7 +263,7 @@ export default async function HomePage() {
           <header className={styles.secHead}>
             <div>
               <h2>소개</h2>
-              <p>책을 만들고, 그 내용을 강의합니다.</p>
+              <p>책을 쓰고 기획하고, 그 내용을 강의합니다.</p>
             </div>
             <Link className={styles.more} href="/about">
               프로필 전체
@@ -272,6 +271,8 @@ export default async function HomePage() {
             <Character id="about-lecture" height={88} />
           </header>
           <div>
+            <AuthoredBooks />
+            <JoinedBooks limit={10} />
             <h3 className={styles.subHead}>
               최근 강의
               <Link className={styles.more} href="/about#lectures">

@@ -61,7 +61,7 @@ export default async function BookTocPage({ params }: { params: Promise<{ bookId
               <div key={chapter.id} className="rd-chapter">
                 <h3>
                   {chapter.title}
-                  <small data-chapter-count={chapter.sections.map((s) => s.id).join(",")}>0/{chapter.sections.length}</small>
+                  <small data-chapter-count={chapter.sections.map((s) => s.id).join(",")}>{chapter.sections.length}절</small>
                 </h3>
                 <ol>
                   {chapter.sections.map((s) => (

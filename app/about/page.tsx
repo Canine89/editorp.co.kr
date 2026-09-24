@@ -1,11 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { countEditedBooks, getEditedBooksData } from "@/lib/edited-books";
 import profile from "@/data/profile.json";
 import styles from "./about.module.css";
-import { FeaturedBooks } from "@/components/FeaturedBooks";
-import { getAuthoredBooks, getLectureHighlights, getSelectedBooks } from "@/lib/editorial-content";
+import { AuthoredBooks, JoinedBooks } from "@/components/Library";
+import { getAuthoredBooks, getLectureHighlights } from "@/lib/editorial-content";
 import { Character } from "@/components/Character";
 export const metadata = {
   title: "소개 | 편집자P의 AI 서재",
@@ -16,8 +15,6 @@ export default function AboutPage() {
   const totalBooks = countEditedBooks(getEditedBooksData());
   const publishers = getEditedBooksData().publishers.map((p) => p.name).sort().join("과 ");
   const authoredCount = getAuthoredBooks().length;
-  const featuredUrls = new Set(getSelectedBooks().map((book) => book.url));
-  const otherBooks = profile.books.filter((book) => !featuredUrls.has(book.url));
   // 연도별로 묶은 타임라인. profile.lectures는 최신순으로 정렬되어 있다.
   const byYear = (list: typeof profile.lectures) =>
     list.reduce<{ year: string; items: typeof profile.lectures }[]>((groups, lecture) => {
@@ -34,7 +31,7 @@ export default function AboutPage() {
     <div className={`container ${styles.page}`}>
       <nav className={styles.sectionNav} aria-label="소개 목차">
         <a href="#story">소개</a>
-        <a href="#authored-books">집필 도서</a>
+        <a href="#authored-books">책</a>
         <a href="#lectures">강의 이력</a>
         <a href="#profile">프로필</a>
         <a href="#contact">강의 문의</a>
@@ -55,28 +52,13 @@ export default function AboutPage() {
       <section className={styles.books} id="authored-books">
         <div className={styles.sectionHeading}>
           <div>
-            <h2>대표 도서</h2>
-            <p>도서별 참여 역할과 함께 볼 수 있는 강의를 연결했습니다.</p>
+            <h2>책</h2>
+            <p>직접 쓴 책과 기획·편집으로 참여한 책입니다. 영상 강의가 있는 책은 관련 강의로 이어집니다.</p>
           </div>
-          <Link href="/books">서재에서 모두 보기</Link>
+          <Character id="library-books" height={96} />
         </div>
-        <FeaturedBooks />
-        <div className={styles.otherBooks}>
-          <h3>그 외 집필·편저서 {otherBooks.length}권</h3>
-          <div className={styles.bookList}>
-            {otherBooks.map((book) => (
-              <a
-                key={book.url}
-                href={book.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>{book.title}</span>
-                <ArrowUpRight size={14} />
-              </a>
-            ))}
-          </div>
-        </div>
+        <AuthoredBooks />
+        <JoinedBooks />
       </section>
       <section className={styles.lectures} id="lectures">
         <div className={styles.sectionHeading}>

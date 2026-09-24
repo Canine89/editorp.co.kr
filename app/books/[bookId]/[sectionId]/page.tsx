@@ -30,7 +30,7 @@ function BookToc({ book, currentId }: { book: Book; currentId: string }) {
         <details key={chapter.id} open={chapter.sections.some((s) => s.id === currentId)}>
           <summary>
             {chapter.title}
-            <small data-chapter-count={chapter.sections.map((s) => s.id).join(",")}>0/{chapter.sections.length}</small>
+            <small data-chapter-count={chapter.sections.map((s) => s.id).join(",")}>{chapter.sections.length}절</small>
           </summary>
           <ol>
             {chapter.sections.map((s) => (

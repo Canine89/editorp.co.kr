@@ -58,8 +58,8 @@ export function Header() {
   const isActive = (href: string) =>
     href === "/"
       ? pathname === "/" || pathname.startsWith("/learn/") || pathname.startsWith("/roadmaps/") || pathname.startsWith("/videos")
-      : href === "/books"
-        ? pathname.startsWith("/books") || pathname.startsWith("/edited-books")
+      : href === "/about"
+        ? pathname.startsWith("/about") || pathname.startsWith("/edited-books")
         : pathname === href || pathname.startsWith(href + "/");
 
   const close = () => setIsOpen(false);

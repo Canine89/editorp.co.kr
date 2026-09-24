@@ -1,4 +1,4 @@
-/* 서재 공용 블록: 직접 쓴 책 · 무료로 읽기 · 참여한 책 */
+/* 서재(무료로 읽는 책)와 소개(직접 쓴 책 · 참여한 책)의 책 블록 */
 .subHead { font-size: 14px; font-weight: 600; color: var(--colors-muted); margin: 40px 0 12px; letter-spacing: 0; line-height: 1.5; }
 .subHead:first-child { margin-top: 0; }
 .more { font-weight: 400; margin-left: 12px; color: var(--colors-ink); text-decoration: underline; text-decoration-color: var(--colors-hairline); text-underline-offset: 4px; }
@@ -8,15 +8,26 @@
 
 /* 직접 쓴 책 7권을 한 줄에 */
 .authored { list-style: none; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 24px 18px; }
+.authored li { display: grid; gap: 2px; align-content: start; }
 .authored a { display: grid; gap: 4px; align-content: start; }
+.lecture { font-size: 13px; color: var(--colors-primary); text-decoration: underline; text-decoration-color: var(--colors-hairline); text-underline-offset: 3px; justify-self: start; }
+.lecture:hover { text-decoration-color: var(--colors-primary); }
 .authored .cover { aspect-ratio: 3 / 4.2; object-fit: cover; margin-bottom: 6px; transition: transform .2s; }
 .authored a:hover .cover { transform: translateY(-4px); }
 .authored b { font-size: 14px; font-weight: 600; color: var(--colors-ink); line-height: 1.45; transition: color var(--transition-fast); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .authored a:hover b { color: var(--colors-primary); }
 .authored span { font-size: 13px; color: var(--colors-muted); }
 
+.free + .free { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--colors-hairline); }
 .feature { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; align-items: start; }
-.feature + .feature { margin-top: 32px; }
+.empty { font-size: 15px; color: var(--colors-muted); }
+/* 장 목차: 장으로 바로 들어가고, 장마다 읽은 절 수를 보여준다 */
+.chapters { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 32px; margin-top: 24px; border-top: 1px solid var(--colors-hairline); }
+.chapters li { border-bottom: 1px solid var(--colors-hairline); }
+.chapters a { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 11px 0; }
+.chapters b { font-size: 15px; font-weight: 600; color: var(--colors-ink); transition: color var(--transition-fast); }
+.chapters a:hover b { color: var(--colors-primary); }
+.chapters small { font-size: 14px; color: var(--colors-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .feature h3 { font-size: 22px; line-height: 1.3; }
 .sub { font-size: 16px; color: var(--colors-body); margin-top: 4px; }
 .meta { font-size: 14px; color: var(--colors-muted); margin-top: 8px; }
@@ -43,4 +54,5 @@
   .feature { grid-template-columns: 104px minmax(0, 1fr); gap: 16px; }
   .feature h3 { font-size: 20px; }
   .actions { grid-column: 1 / -1; }
+  .chapters { grid-template-columns: minmax(0, 1fr); }
 }
