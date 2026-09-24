@@ -19,6 +19,7 @@ npm run character:generate -- [샷id] [--dry] [--n 3]  # 캐릭터 삽화 생성
 python scripts/export-character.py  # 생성 원본 → public/character/*.webp + manifest.json
 python scripts/pdf-book/extract.py scripts/pdf-book/books/<id>.json   # 인쇄용 PDF → 무료 도서 1단계(역할·그림 검출)
 python scripts/pdf-book/assemble.py scripts/pdf-book/books/<id>.json  # 2단계(원고·그림·표지). 절차는 import-book 스킬
+python scripts/make-og-images.py     # 공유 미리보기 1200×630 (public/og/site.jpg, <책-id>.jpg). 새 책·표지 변경 후
 ```
 
 테스트 러너는 없다. 검증은 `npm run build` + dev 서버에서 라우트 200 확인으로 한다

@@ -11,13 +11,16 @@ export const metadata: Metadata = {
   title: "편집자P의 AI 서재",
   description:
     "IT 도서 편집자 박현규(편집자P)가 AI 강의를 배울 순서대로 엮은 로드맵, 무료로 읽는 책, 강의 이력을 모았습니다.",
+  // 공유 미리보기: 카카오톡 등은 200px 미만 이미지를 무시하므로 1200×630 전용 이미지를 쓴다 (scripts/make-og-images.py)
   openGraph: {
+    siteName: "편집자P의 AI 서재",
     title: "편집자P의 AI 서재",
     description: "AI 강의 로드맵, 무료로 읽는 책, 강의 이력.",
     locale: "ko_KR",
     type: "website",
-    images: ["/p.png"],
+    images: [{ url: "/og/site.jpg", width: 1200, height: 630, alt: "편집자P의 AI 서재" }],
   },
+  twitter: { card: "summary_large_image", images: ["/og/site.jpg"] },
 };
 export default function RootLayout({
   children,

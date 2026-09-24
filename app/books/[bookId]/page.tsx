@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getBook, flattenSections, sectionLabel } from "@/lib/books";
+import { getBook, flattenSections, sectionLabel, bookShareMetadata } from "@/lib/books";
 import { BookProgress } from "@/components/BookProgress";
 import { TocMarks } from "@/components/TocMarks";
 import { PreviewRest } from "@/components/BookPurchase";
@@ -14,10 +14,11 @@ export async function generateMetadata({ params }: { params: Promise<{ bookId: s
   const { bookId } = await params;
   const book = await getBook(bookId);
   if (!book) return {};
-  return {
+  return bookShareMetadata(book, {
     title: `${book.title} | 편집자P의 AI 서재`,
     description: book.description,
-  };
+    path: `/books/${book.id}`,
+  });
 }
 
 export default async function BookTocPage({ params }: { params: Promise<{ bookId: string }> }) {

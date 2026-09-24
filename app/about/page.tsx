@@ -1,3 +1,4 @@
+import { pageShareMetadata } from "@/lib/share";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { countEditedBooks, getEditedBooksData } from "@/lib/edited-books";
@@ -6,11 +7,12 @@ import styles from "./about.module.css";
 import { AuthoredBooks, JoinedBooks } from "@/components/Library";
 import { getAuthoredBooks, getLectureHighlights } from "@/lib/editorial-content";
 import { Character } from "@/components/Character";
-export const metadata = {
+export const metadata = pageShareMetadata({
   title: "소개 | 편집자P의 AI 서재",
   description:
     "IT 도서 기획·편집자이자 개발자 박현규, 편집자P의 이야기. 집필 도서, 편집한 책, 주요 강의 이력과 강의 문의를 만나보세요.",
-};
+  path: "/about",
+});
 export default function AboutPage() {
   const totalBooks = countEditedBooks(getEditedBooksData());
   const publishers = getEditedBooksData().publishers.map((p) => p.name).sort().join("과 ");

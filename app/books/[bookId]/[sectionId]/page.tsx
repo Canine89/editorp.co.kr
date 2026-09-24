@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getBook, flattenSections, sectionLabel, type Book } from "@/lib/books";
+import { getBook, flattenSections, sectionLabel, bookShareMetadata, type Book } from "@/lib/books";
 import { renderReaderSection } from "@/lib/reader-render";
 import { Character } from "@/components/Character";
 import { ReaderClient } from "@/components/ReaderClient";
@@ -17,10 +17,11 @@ export async function generateMetadata({ params }: { params: Promise<{ bookId: s
   const book = await getBook(bookId);
   const flat = book ? flattenSections(book).find((f) => f.section.id === sectionId) : null;
   if (!book || !flat) return {};
-  return {
+  return bookShareMetadata(book, {
     title: `${flat.section.title} — ${book.title} | 편집자P의 AI 서재`,
     description: book.description,
-  };
+    path: `/books/${book.id}/${flat.section.id}`,
+  });
 }
 
 function BookToc({ book, currentId }: { book: Book; currentId: string }) {

@@ -39,7 +39,10 @@ description: 구글 독스/워드(.docx) 원고와 이미지를 무료 도서(co
    - 코드 블록: 코드 많은 절 HTML에서 `language-python` 존재 확인
    - 목차: book.json의 장/절 제목에 이미지 참조나 깨진 제목이 없는지
 6. **눈 검수 요청**: 코드 오분류(산문이 코드로/코드가 산문으로), 이미지 위치, [실행 결과] 출력부는 평문임을 안내.
-7. **빌드 확인 후 커밋**: dev 서버 끄고 `npm run build` 통과 확인. 커밋 메시지는 한글, 푸시 전 `git pull --rebase origin main` (AGENTS.md 규칙).
+7. **공유 미리보기 이미지**: 표지가 있는 책이면 `python scripts/make-og-images.py`로 `public/og/<id>.jpg`(1200×630)를
+   만든다. 없으면 카카오톡·페이스북 공유 썸네일이 비거나 사이트 기본 이미지로 나온다.
+   이미 공유된 주소는 카카오 공유 디버거(developers.kakao.com/tool/debugger/sharing)에서 캐시를 지워야 새 썸네일이 보인다.
+8. **빌드 확인 후 커밋**: dev 서버 끄고 `npm run build` 통과 확인. 커밋 메시지는 한글, 푸시 전 `git pull --rebase origin main` (AGENTS.md 규칙).
 
 ## 변환기가 자동 처리하는 것 (다시 구현하지 말 것)
 

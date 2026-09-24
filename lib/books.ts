@@ -144,6 +144,26 @@ export async function getBook(bookId: string, includeUnpublished = false): Promi
   return book;
 }
 
+/** 책 페이지의 공유 미리보기(Open Graph). 이미지는 scripts/make-og-images.py가 만든 public/og/<책-id>.jpg */
+export function bookShareMetadata(book: Book, opts: { title: string; description: string; path: string }) {
+  const image = { url: `/og/${book.id}.jpg`, width: 1200, height: 630, alt: `${book.title} 표지` };
+  return {
+    title: opts.title,
+    description: opts.description,
+    alternates: { canonical: opts.path },
+    openGraph: {
+      siteName: '편집자P의 AI 서재',
+      title: opts.title,
+      description: opts.description,
+      url: opts.path,
+      locale: 'ko_KR',
+      type: 'article' as const,
+      images: [image],
+    },
+    twitter: { card: 'summary_large_image' as const, title: opts.title, description: opts.description, images: [image.url] },
+  };
+}
+
 /** 마당 > 장 > 절 트리를 읽기 순서대로 평탄화 — 이전/다음 절 내비게이션용 */
 export function flattenSections(book: Book): FlatSection[] {
   return book.parts.flatMap((part) =>
