@@ -18,12 +18,14 @@ node scripts/book-image-sizes.mjs   # 도서 이미지 크기 → content/books/
 npm run character:generate -- [샷id] [--dry] [--n 3]  # 캐릭터 삽화 생성(OpenAI, .env 필요)
 python scripts/export-character.py  # 생성 원본 → public/character/*.webp + manifest.json
 python scripts/pdf-book/extract.py scripts/pdf-book/books/<id>.json   # 인쇄용 PDF → 무료 도서 1단계(역할·그림 검출)
-python scripts/pdf-book/assemble.py scripts/pdf-book/books/<id>.json  # 2단계(원고·그림·표지). 절차는 import-book 스킬
+python scripts/pdf-book/assemble.py scripts/pdf-book/books/<id>.json  # 2단계(원고·그림·표지). 절차는 import-pdf-book 스킬
+python scripts/pdf-book/fonts.py scripts/pdf-book/books/<id>.json     # 새 책의 글꼴 조합 조사(역할표 roles 정하기)
 python scripts/make-og-images.py     # 공유 미리보기 1200×630 (public/og/site.jpg, <책-id>.jpg). 새 책·표지 변경 후
 ```
 
 테스트 러너는 없다. 검증은 `npm run build` + dev 서버에서 라우트 200 확인으로 한다
-(도서 임포트 검증 절차는 `.claude/skills/import-book/SKILL.md` 참고).
+(도서 임포트 검증 절차는 `.claude/skills/import-book/SKILL.md`, 인쇄용 PDF 일부 공개는
+`.claude/skills/import-pdf-book/SKILL.md` 참고).
 
 ## 환경 변수
 

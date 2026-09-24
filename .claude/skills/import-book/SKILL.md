@@ -55,28 +55,8 @@ description: 구글 독스/워드(.docx) 원고와 이미지를 무료 도서(co
 
 ## 인쇄용 PDF에서 가져오기 (일부 공개 + 구매 안내)
 
-InDesign으로 만든 인쇄용 PDF(재단선 포함)는 docx 변환기 대신 `scripts/pdf-book/`을 쓴다.
-글은 PDF의 글꼴 정보로 추출하고, 그림은 쪽을 216dpi로 렌더링해 잘라낸다(스크린샷 위 말풍선·화살표 보존).
-
-1. **설정 파일**: `scripts/pdf-book/books/<책-id>.json`을 기존 파일을 본떠 만든다.
-   - `pdf`, `cover`: 저장소 루트의 원본 파일명(루트의 `*.pdf`, `cover(*`는 .gitignore로 커밋되지 않음)
-   - `pages`: 변환할 쪽 범위. 공개 비율은 쪽 수로 계산해 절이 끝나는 경계에서 자른다
-   - `chapters`: 쪽 범위로 정한 절(`sections`) 또는 쪽 범위 + 목차 제목(`headings`, 본문 h2·'바로 NN'과 순서대로 맞춤)
-   - `book`: 제목·부제·소개·저자·공개일·표지 + `purchase`(구매처 버튼) + `preview`(공개 범위 설명, 책에서 이어지는 목차)
-2. **실행** (poppler, pillow, numpy 필요):
-   ```bash
-   python scripts/pdf-book/extract.py scripts/pdf-book/books/<id>.json   # 쪽 역할·그림 검출 (/tmp/pdf-book/<id>)
-   python scripts/pdf-book/assemble.py scripts/pdf-book/books/<id>.json  # 원고·그림·표지 생성
-   node scripts/book-image-sizes.mjs <id>
-   ```
-3. **검수**: `/tmp/pdf-book/<id>/debug/pNNN.png`(빨간 상자 = 그림)로 그림 검출을 확인한다.
-   장식(제목 띠·마스코트)이 그림으로 잡히거나 표가 쪼개지면 `extract.py`의 그림 필터를 고친다.
-   글꼴 역할표(`role_of`)는 골든래빗 '바로바로' 시리즈 판면 기준이다.
-4. 위 "검증" 절차(모든 절·이미지 200, 빌드)를 그대로 따른다.
-
-코너(NOTE·프롬프트·1:1 코칭·바로 핵심 요약·미리 알아두세요)는 인용문 첫 줄 라벨로 적히고,
-리더가 라벨을 보고 코너 스타일을 붙인다. AI 답변은 원서에서도 화면 이미지라 그림으로 들어간다.
-마지막 공개 절 끝과 책 소개 목차 아래에 `purchase`·`preview`로 구매 안내가 자동으로 나온다.
+InDesign 인쇄용 PDF는 이 변환기 대신 `scripts/pdf-book/`을 쓴다.
+절차 전체(공개 범위, 설정 파일, 글꼴 역할표, 검수, 구매 링크)는 `import-pdf-book` 스킬을 따른다.
 
 ## 관리자 패널과의 관계
 

@@ -13,7 +13,7 @@ import { removeEmptyStudyLabels } from './reader-presentation';
  * 독자 화면만 이 렌더러로 꾸민다.
  *  - 코드 블록: Shiki 서버 구문 강조(바로바로 팔레트 전용 테마)
  *  - "01 ..." 로 시작하는 실습 단계 문단과 뒤따르는 이미지를 번호 절차로 묶음 (책의 번호를 그대로 표시)
- *  - 코너 박스: 인용문 첫 줄이 **NOTE**·**프롬프트**·**1:1 코칭 · …**·**바로 핵심 요약** 등이면 종류별 스타일
+ *  - 코너 박스: 인용문 첫 줄이 **NOTE**·**프롬프트**·**AI 답변**·**잠깐 퀴즈**·**1:1 코칭 · …**·**바로 핵심 요약** 등이면 종류별 스타일
  *  - 이미지만 있는 문단: 크기(images.json)를 넣은 figure
  *  - h2: 앵커 id, "[연습 NN]"·"바로 NN" 은 번호 라벨로 분리
  * 사용자 원고에서 온 HTML은 토큰 단위로 sanitizeBookHtml()을 거친다.
@@ -79,6 +79,8 @@ const safeSrc = (src: string) => /^\/(?!\/)[\w\-./%]+$/.test(src) || /^https:\/\
 const CORNERS: [RegExp, string][] = [
   [/^NOTE$/, 'note'],
   [/^프롬프트$/, 'prompt'],
+  [/^AI 답변$/, 'answer'],
+  [/^잠깐 퀴즈$/, 'quiz'],
   [/^1:1 코칭/, 'coach'],
   [/^바로 핵심 요약$/, 'summary'],
   [/^(미리 알아두세요|기억하고 있나요)/, 'side'],

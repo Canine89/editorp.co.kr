@@ -89,6 +89,11 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-prose blockquote.corner-note { background: none; border-left: 2px solid var(--colors-yellow); border-radius: 0; padding: 4px 0 4px 14px; color: var(--colors-body); }
 .rd-prose blockquote.corner-prompt { background: var(--colors-surface-soft); border-left: 3px solid var(--colors-primary); border-radius: 0 6px 6px 0; }
 .rd-prose .corner-prompt > p:not(.corner-label) { color: var(--colors-ink); font-weight: 500; }
+.rd-prose blockquote.corner-answer { background: none; border-left: 3px solid var(--colors-hairline); border-radius: 0; padding: 4px 0 4px 16px; }
+.rd-prose .corner-answer .corner-label { color: var(--colors-muted); }
+.rd-prose blockquote.corner-quiz { background: none; border: 1px solid var(--colors-yellow); }
+.rd-prose .corner-quiz .corner-label { color: var(--colors-ink); }
+.rd-prose .corner-quiz > p:last-child:not(:nth-child(2)) { color: var(--colors-muted); font-size: .92em; }
 .rd-prose blockquote.corner-coach { background: none; border: 1px solid var(--colors-hairline); }
 .rd-prose .corner-coach .corner-label { font-size: 15px; color: var(--colors-ink); }
 .rd-prose blockquote.corner-summary { background: none; border-top: 2px solid var(--colors-primary); border-bottom: 1px solid var(--colors-hairline); border-radius: 0; padding: 14px 0; }

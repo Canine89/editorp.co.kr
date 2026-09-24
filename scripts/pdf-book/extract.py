@@ -35,30 +35,59 @@ fonts = {m.group(1): (m.group(3).split('+')[-1], int(m.group(2)), m.group(4).low
          for m in re.finditer(r'<fontspec id="(\d+)" size="(-?\d+)" family="([^"]+)" color="([^"]+)"/>', src)}
 pages = {int(m.group(1)): m.group(2) for m in re.finditer(r'<page number="(\d+)"[^>]*>(.*?)</page>', src, re.S)}
 
-INK, GREEN, WHITE = '#231f20', '#60c33d', '#ffffff'
+INK, WHITE = '#231f20', '#ffffff'
+
+
+def is_accent(color):
+    """강조색(초록·파랑·분홍 등 채도 높은 색). 책마다 강조색이 달라 색을 고정하지 않는다"""
+    try:
+        r, g, b = (int(color[i:i + 2], 16) for i in (1, 3, 5))
+    except ValueError:
+        return False
+    return max(r, g, b) - min(r, g, b) > 60 and color not in (INK, WHITE)
+
+
+def rule_match(rule, fam, size, color, text):
+    font = rule['font']
+    if not (fam.startswith(font[:-1]) if font.endswith('*') else fam == font): return False
+    if rule.get('size', '*') != '*' and rule['size'] != size: return False
+    c = rule.get('color', '*')
+    if c == 'accent' and not is_accent(color): return False
+    if c not in ('*', 'accent') and c.lower() != color: return False
+    if rule.get('text') and not re.fullmatch(rule['text'], text.strip()): return False
+    return True
+
 
 def role_of(fam, size, color, text):
+    # 책별 설정의 역할표가 먼저 (같은 글꼴이 책마다 다른 뜻으로 쓰인다)
+    for rule in CFG.get('roles', []):
+        if rule_match(rule, fam, size, color, text): return rule['role']
     f = fam
+    accent = is_accent(color)
+    if size >= 14 and re.fullmatch(r'\s*[①-⑳❶-❿➀-➓]\s*', text): return 'body'     # 본문 속 원문자 (그림 속이면 그림에 남는다)
+    if f.startswith('D2Coding'): return 'code'
     if f.startswith('KoPubWorldBatang') and size == 15: return 'body'
     if f == 'NotoSansKR' and size == 14 and color == INK: return 'body'        # 본문 속 굵은 말
     if f.startswith('NotoSansCJKkr') and size == 17: return 'body'
     if f.startswith('KoPubDotum') and size == 9: return 'annot'                # 영문 병기
     if f == 'NotoSansKR-Black' and size == 21: return 'h2'
-    if f == 'NotoSansKR-Black' and size == 20 and color == GREEN: return 'h2'   # 앞부분 Q&A 제목
+    if f == 'NotoSansKR-Black' and size == 20 and accent: return 'h2'           # 앞부분 Q&A 제목
     if f.startswith('UniversNext') and re.fullmatch(r'Q\d+', text.strip()): return 'qnum'
     if f == 'NotoSansKR' and size == 17 and color == INK: return 'h3'
-    if f == 'NotoSansKR' and size == 15 and color == GREEN: return 'h4'
-    if f.startswith('SLEIGothic') and size == 15 and color == GREEN: return 'step'
-    if f == 'NotoSansKR' and size == 14 and color == GREEN:
+    if f == 'NotoSansKR' and size == 15 and accent: return 'h4'
+    if f.startswith('SLEIGothic') and size == 15 and accent: return 'step'
+    if f == 'NotoSansKR' and size == 14 and accent:
         return 'step' if re.fullmatch(r'\s*\d{2}\s*', text) else 'label'
-    if f.startswith('SLEIGothic') and size == 14 and color == GREEN: return 'label'
+    if f.startswith('SLEIGothic') and size == 14 and accent: return 'label'
     if f.startswith('KCC-Ganpan') and color == WHITE: return 'note_label'
-    if f == 'NotoSansKR' and size == 10 and color == GREEN: return 'box_label'   # 프롬프트 / AI
+    if f == 'NotoSansKR' and size == 10 and accent: return 'box_label'   # 프롬프트 / AI
     if f.startswith('NotoSansCJKkr') and size == 14 and color == INK: return 'box_text'
     if f == 'NotoSansKR' and size == 14 and color == WHITE: return 'coach_title'
+    if f.startswith('NotoSansKR-Medium') and size <= 10 and color == WHITE: return 'kbd'   # 키보드 키 모양
     if f.startswith('GoodNeighbor') and size == 14 and color == WHITE:
         return 'coach_tag' if '코칭' in text else 'tag'                            # PC / 모바일
-    if f.startswith('GoodNeighbor') and size == 13 and color == WHITE: return 'ex_label'   # 바로 01
+    if f.startswith('GoodNeighbor') and size in (12, 13) and color == WHITE:
+        return 'quiz_label' if '퀴즈' in text else 'ex_label'                      # 바로 01 / 잠깐 퀴즈
     if f.startswith('GoodNeighbor') and size == 17 and color == WHITE:
         return 'summary_label' if '요약' in text else 'decor'
     if f.startswith('Gangwon') and size == 18: return 'summary'
@@ -72,10 +101,10 @@ def role_of(fam, size, color, text):
     if f.startswith('NotoSansKR-Light') and size in (12,) or f.startswith('NotoSansCJKkr-Light') and size == 12: return 'small'
     return 'fig'   # 그림 속 글자(말풍선·표·일러스트)로 추정
 
-FLOW = {'qnum', 'body', 'annot', 'h2', 'h3', 'h4', 'step', 'label', 'note_label', 'box_label', 'box_text',
+FLOW = {'qnum', 'code', 'kbd', 'quiz_label', 'quiz_answer', 'body', 'annot', 'h2', 'h3', 'h4', 'step', 'label', 'note_label', 'box_label', 'box_text',
         'coach_title', 'coach_tag', 'tag', 'ex_label', 'summary_label', 'summary', 'sec_title',
         'side_title', 'side_text', 'small'}
-DECOR_IN_BOX = {'sec_title', 'ex_label', 'coach_title', 'coach_tag', 'tag', 'note_label', 'summary_label', 'decor', 'box_label', 'side_title'}
+DECOR_IN_BOX = {'quiz_label', 'sec_title', 'ex_label', 'coach_title', 'coach_tag', 'tag', 'note_label', 'summary_label', 'decor', 'box_label', 'side_title'}
 
 def runs_of(n):
     out = []
@@ -153,11 +182,26 @@ def figures(n, runs):
                                    right=max(a['right'], b['right']), bottom=max(a['bottom'], b['bottom']))
                     del figs[j]; changed = True; break
             if changed: break
+    # 그림 테두리에 걸친 본문 줄(화살표·점선이 본문 쪽으로 뻗어 상자가 커진 경우)은 그림 밖으로 밀어낸다
+    # (바로 위·아래 줄이 그림 밖 본문일 때만: 문단이 그림 속으로 이어지는 경우)
+    body = [r for r in runs if r['role'] == 'body']
+    def inside(f, r):
+        cx, cy = (r['left'] + r['right']) / 2, (r['top'] + r['bottom']) / 2
+        return f['left'] - 4 <= cx <= f['right'] + 4 and f['top'] - 4 <= cy <= f['bottom'] + 4
+    for f in figs:
+        for r in sorted((r for r in body if inside(f, r)), key=lambda r: r['top']):
+            above = any(0 < r['top'] - o['top'] < 36 and not inside(f, o) for o in body)
+            below = any(0 < o['top'] - r['top'] < 36 and not inside(f, o) for o in body)
+            if above and r['top'] - f['top'] < 20 and f['bottom'] - r['bottom'] > 40: f['top'] = r['bottom'] + 3
+            elif below and f['bottom'] - r['bottom'] < 20 and r['top'] - f['top'] > 40: f['bottom'] = r['top'] - 3
     return sorted(figs, key=lambda f: (f['top'], f['left']))
 
 def main(pages_range):
     for n in pages_range:
         runs = runs_of(n)
+        if not any(r['role'] == 'summary_label' for r in runs):   # 손글씨 글꼴이 그림 설명으로 쓰인 쪽
+            for r in runs:
+                if r['role'] == 'summary': r['role'] = 'fig'
         figs = figures(n, runs)
         for r in runs:
             cx, cy = (r['left'] + r['right']) / 2, (r['top'] + r['bottom']) / 2

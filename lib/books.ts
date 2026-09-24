@@ -54,7 +54,7 @@ export interface Book {
   /** 종이책·전자책 구매처. 일부만 공개한 책은 마지막 절과 목차에서 안내한다 */
   purchase?: { label: string; url: string }[];
   /** 일부만 공개한 책: 공개 범위 설명과, 책에서 이어지는 목차(링크 없음) */
-  preview?: { note: string; rest: { title: string; items: string[] }[] };
+  preview?: { note: string; badge?: string; rest: { title: string; items: string[] }[] };
 }
 
 export interface FlatSection {

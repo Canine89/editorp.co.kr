@@ -53,3 +53,4 @@ assets/character/generated/
 # 도서 원본(인쇄용 PDF·표지 원본)은 커밋하지 않는다. 변환 결과만 content/·public/에 둔다
 /*.pdf
 /cover(*
+/cover_*

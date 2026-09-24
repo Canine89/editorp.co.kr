@@ -104,7 +104,7 @@ def book_image(book_id, book):
         for line in wrap(d, book['subtitle'], font_for(book['subtitle'], f_sub), width)[:2]:
             text(d, (x, y), line, f_sub, BODY); y += 42
     y += 22
-    meta = '앞부분 약 35% 무료 공개' if book.get('preview') else '전체 무료 공개'
+    meta = book['preview'].get('badge', '앞부분 무료 공개') if book.get('preview') else '전체 무료 공개'
     tw = d.textlength(meta, font=font_for(meta, f_meta))
     d.rectangle([x - 4, y + 18, x + tw + 4, y + 34], fill=(247, 221, 176))   # 형광펜
     text(d, (x, y), meta, f_meta, INK)
