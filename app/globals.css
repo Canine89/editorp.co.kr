@@ -801,6 +801,10 @@ html { scroll-padding-top:84px; }
 .site-footer .container { display: flex; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; }
 .site-footer nav { display: flex; gap: 8px 20px; flex-wrap: wrap; }
 .site-footer a:hover { color: var(--colors-ink); }
+.site-footer .site-biz { display: block; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--colors-hairline-soft); }
+.site-biz nav { margin-bottom: 8px; }
+.site-biz nav b { font-weight: 700; color: var(--colors-body); }
+.site-biz p { display: flex; flex-wrap: wrap; gap: 2px 14px; line-height: 1.7; font-size: 14px; color: var(--colors-muted); }
 .ext::after { content: ' ↗'; font-size: .85em; }
 
 @media (prefers-reduced-motion: reduce) {

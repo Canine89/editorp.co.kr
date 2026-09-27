@@ -75,6 +75,10 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
   원고가 바뀌면 옛 댓글은 절 끝 "원문이 바뀐 문단의 댓글"로 모인다. 쓰기는 로그인 사용자만,
   하루 5개(한국 시간)·10초 간격·직전과 같은 내용 금지(`userActivity/{email}`의 `bookComments*` 필드,
   트랜잭션, 관리자 면제). 지워도 그날 개수는 돌아오지 않는다. 화면은 `components/ParagraphComments.tsx`.
+- **판매자 정보·약관** (`lib/business.ts`): 상호·대표·사업자번호·통신판매업 번호·주소·연락처의 단일 출처.
+  하단(`app/layout.tsx`)과 `/terms`·`/privacy`·`/refund`가 여기서 읽는다(PG 카드사 심사·전자상거래법 제10조).
+  회원 탈퇴는 `/account` → `lib/account.ts`(문단 댓글 삭제, 질문 게시판 글·댓글 익명화, `userActivity` 삭제).
+  Firestore에 `comments` 컬렉션 그룹의 `authorEmail` 단일 필드 색인이 있어야 한다.
 - **편집 도서 목록** (`lib/edited-books.ts`): `data/edited-books.json` 정적 읽기만.
 
 Firestore는 서버(서버 컴포넌트 / 라우트 핸들러)에서만 접근한다. 클라이언트에 Firebase SDK를

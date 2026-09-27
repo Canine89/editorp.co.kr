@@ -5,6 +5,7 @@ import { Providers } from "@/components/Providers";
 import { Header } from "@/components/Header";
 import { Character } from "@/components/Character";
 import { ScrollEffects } from "@/components/ScrollEffects";
+import { BUSINESS, BUSINESS_LOOKUP_URL } from "@/lib/business";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://editorp.co.kr"),
@@ -87,6 +88,30 @@ export default function RootLayout({
                   </a>
                   <a href="mailto:hgpark@goldenrabbit.co.kr">hgpark@goldenrabbit.co.kr</a>
                 </nav>
+              </div>
+              {/* 사업자 정보 (전자상거래법 제10조). 값은 lib/business.ts 한 곳에서 관리한다 */}
+              <div className="container site-biz">
+                <nav aria-label="약관과 정책">
+                  <Link href="/terms">이용약관</Link>
+                  <Link href="/privacy">
+                    <b>개인정보처리방침</b>
+                  </Link>
+                  <Link href="/refund">환불 규정</Link>
+                </nav>
+                <p>
+                  <span>상호 {BUSINESS.name}</span>
+                  <span>대표 {BUSINESS.owner}</span>
+                  <span>사업자등록번호 {BUSINESS.registrationNo}</span>
+                  {BUSINESS.mailOrderNo && <span>통신판매업 신고 {BUSINESS.mailOrderNo}</span>}
+                  <a className="ext" href={BUSINESS_LOOKUP_URL} target="_blank" rel="noopener noreferrer">
+                    사업자정보 확인
+                  </a>
+                </p>
+                <p>
+                  <span>주소 {BUSINESS.address}</span>
+                  {BUSINESS.phone && <span>고객센터 {BUSINESS.phone}</span>}
+                  <span>이메일 {BUSINESS.email}</span>
+                </p>
               </div>
             </footer>
           </div>

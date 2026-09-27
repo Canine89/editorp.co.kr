@@ -206,7 +206,10 @@ export function ParagraphComments({
             </form>
           ) : (
             <div className="rd-pc-login">
-              <p>댓글은 구글 계정으로 로그인한 뒤 남길 수 있어요. 한 사람당 하루 {data.limit}개까지입니다.</p>
+              <p>
+                댓글은 구글 계정으로 로그인한 뒤 남길 수 있어요. 한 사람당 하루 {data.limit}개까지입니다. 로그인하면{" "}
+                <a href="/terms">이용약관</a>과 <a href="/privacy">개인정보처리방침</a>에 동의하게 됩니다.
+              </p>
               <button type="button" className="btn btn-primary" onClick={() => signIn("google", { callbackUrl: location.href })}>
                 구글로 로그인하고 댓글 남기기
               </button>

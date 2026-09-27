@@ -198,3 +198,16 @@ export async function deleteSectionComment(
   await batch.commit();
   return 'ok';
 }
+
+/** 개발 모드(메모리 저장소)에서 탈퇴한 회원의 문단 댓글과 작성 기록을 지운다. Firestore 모드는 lib/account.ts가 처리 */
+export function deleteMemoryCommentsByAuthor(email: string): number {
+  if (!inMemoryMode()) return 0;
+  let removed = 0;
+  for (const [key, list] of memory.comments) {
+    const kept = list.filter((c) => c.authorEmail !== email);
+    removed += list.length - kept.length;
+    memory.comments.set(key, kept);
+  }
+  memory.activity.delete(email);
+  return removed;
+}

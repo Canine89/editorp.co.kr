@@ -33,7 +33,8 @@ export function AuthButton() {
             관리자 패널
           </Link>
         )}
-        <span
+        <Link
+          href="/account"
           style={{
             fontSize: '13px',
             color: 'var(--colors-body-strong)',
@@ -42,10 +43,10 @@ export function AuthButton() {
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
           }}
-          title={session.user?.email || ''}
+          title="내 정보"
         >
           {session.user?.name || '관리자'}님
-        </span>
+        </Link>
         <button
           onClick={() => signOut({ callbackUrl: '/' })}
           className="btn-text"
