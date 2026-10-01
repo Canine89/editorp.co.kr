@@ -1,8 +1,10 @@
-/** 브라우저 독서 기록. 책마다 읽은 절, 마지막 절, 방문 시각을 저장하고 서버로 보내지 않는다. */
+/** 브라우저 독서 기록. 책마다 읽은 절, 마지막 절, 방문 시각, 읽던 위치를 저장하고 서버로 보내지 않는다. */
 export interface BookProgress {
   read: string[];
   last: string | null;
   visitedAt: number;
+  /** 마지막으로 읽던 절과 그 절 본문 안에서의 위치(0~1). 글자 크기가 바뀌어도 맞도록 비율로 둔다 */
+  pos?: { id: string; r: number };
 }
 
 const PREFIX = "book-progress-";
@@ -43,7 +45,11 @@ export function parseBookProgress(snapshot: string, bookId: string, validIds: st
       : [];
     const last = typeof raw.last === "string" && valid.has(raw.last) ? raw.last : null;
     const visitedAt = typeof raw.visitedAt === "number" ? raw.visitedAt : 0;
-    return { read, last, visitedAt };
+    const pos =
+      raw.pos && typeof raw.pos.id === "string" && valid.has(raw.pos.id) && typeof raw.pos.r === "number" && raw.pos.r >= 0 && raw.pos.r <= 1
+        ? { id: raw.pos.id as string, r: raw.pos.r as number }
+        : undefined;
+    return { read, last, visitedAt, ...(pos && { pos }) };
   } catch {
     return EMPTY;
   }

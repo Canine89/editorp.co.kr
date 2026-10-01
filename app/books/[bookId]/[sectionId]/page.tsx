@@ -117,16 +117,13 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
             </span>
             <span>읽는 시간 약 {rendered.readMinutes}분</span>
             {rendered.codeCount > 0 && <span>코드 {rendered.codeCount}개</span>}
+            {/* 댓글 수(절 끝 댓글 칸으로 가는 링크)와 첫 방문 안내는 ParagraphComments가 채운다 */}
+            <span data-pc-meta />
           </p>
+          <div data-pc-hint />
 
           <div className="rd-prose" dangerouslySetInnerHTML={{ __html: rendered.html }} />
           <InlineBookEditor key={`edit-${version}`} bookId={book.id} sectionId={current.section.id} />
-          <ParagraphComments
-            key={version}
-            bookId={book.id}
-            sectionId={current.section.id}
-            paragraphKeys={rendered.paragraphKeys}
-          />
 
           <footer className="rd-end">
             {!next && <PreviewEnd book={book} />}
@@ -156,8 +153,15 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
                 </Link>
               )}
             </nav>
+            <ParagraphComments
+              key={version}
+              bookId={book.id}
+              sectionId={current.section.id}
+              paragraphKeys={rendered.paragraphKeys}
+            />
             <p className="rd-ask">
-              이 절에서 막힌 곳이 있나요? <Link href="/qna/new">질문 게시판에 질문하기</Link> ·{" "}
+              코드를 붙여 자세히 물어보려면{" "}
+              <Link href={`/qna/new?title=${encodeURIComponent(`[${book.title}] ${sectionLabel(current)} `)}`}>질문 게시판에 질문하기</Link> ·{" "}
               <span className="rd-kbd">←</span> <span className="rd-kbd">→</span> 키로 이동
             </p>
           </footer>

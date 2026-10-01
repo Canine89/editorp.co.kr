@@ -15,6 +15,7 @@ npm run start        # 빌드 결과 실행
 npm run lint         # eslint (eslint-config-next)
 npm run import:book  # scripts/import-book.mjs — .docx 원고 → content/books/ 변환
 node scripts/book-image-sizes.mjs   # 도서 이미지 크기 → content/books/<id>/images.json (임포트·이미지 교체 후)
+python scripts/check-code-blocks.py [책-id]   # 원고의 파이썬 코드 블록 문법 검사(임포트 뒤 들여쓰기 빠짐 찾기)
 npm run character:generate -- [샷id] [--dry] [--n 3]  # 캐릭터 삽화 생성(OpenAI, .env 필요)
 python scripts/export-character.py  # 생성 원본 → public/character/*.webp + manifest.json
 python scripts/pdf-book/extract.py scripts/pdf-book/books/<id>.json   # 인쇄용 PDF → 무료 도서 1단계(역할·그림 검출)
@@ -61,7 +62,8 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
   "원본으로 되돌리기"로 오버레이를 비워야 한다.
   독자 화면은 `lib/reader-render.ts`(Shiki 구문 강조, 실습 단계 묶기, 이미지 크기)로 그리고,
   관리자 편집기는 단순 HTML인 `renderSectionHtml()`을 그대로 쓴다. 두 경로를 섞지 말 것.
-  독서 진도는 브라우저 `localStorage`(`lib/reading-progress.ts`)에만 저장한다.
+  독서 진도(읽은 절, 마지막 절, 그 절 안에서 읽던 위치 비율)는 브라우저 `localStorage`(`lib/reading-progress.ts`)에만
+  저장한다. 다 읽지 않은 절에 다시 오면 `ReaderClient`가 읽던 곳으로 데려간다(Next의 맨 위 스크롤이 멈춘 뒤).
   **관리자 바로 고치기**: 관리자로 로그인하면 리더의 블록마다 수정 버튼이 생긴다(`components/InlineBookEditor.tsx`).
   리더가 블록에 원고 marked 토큰 번호(`data-src`)를 붙이고, `/api/admin/books/block`이 그 블록의 원고만
   바꿔 `saveSectionMarkdown()`으로 저장한다(편집 시작 때 원고와 다르면 409). 즉 운영에서는 오버레이가 생긴다.
@@ -75,6 +77,10 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
   원고가 바뀌면 옛 댓글은 절 끝 "원문이 바뀐 문단의 댓글"로 모인다. 쓰기는 로그인 사용자만,
   하루 5개(한국 시간)·10초 간격·직전과 같은 내용 금지(`userActivity/{email}`의 `bookComments*` 필드,
   트랜잭션, 관리자 면제). 지워도 그날 개수는 돌아오지 않는다. 화면은 `components/ParagraphComments.tsx`.
+  절 전체에 다는 댓글은 pk를 `SECTION_KEY`(`'section'`)로 두고 절 끝 "댓글" 칸에 보인다. 주소 `#c-<pk>`는 그 문단의
+  댓글을 연다(로그인하고 돌아올 때도 이 주소 + 쓰던 글 sessionStorage). 관리자가 쓴 댓글은 "편집자P"로 표시한다.
+  **관리자 댓글 수신함** `/admin/comments`(`lib/comment-inbox.ts`): 책 → 절 순서로 모아 최신순으로 보여 준다
+  (전체 색인 없이, 책 문서의 `count`가 0인 책은 건너뜀). 어느 문단인지 보이려고 댓글 있는 절만 렌더링해 발췌를 붙인다.
 - **판매자 정보·약관** (`lib/business.ts`): 상호·대표·사업자번호·통신판매업 번호·주소·연락처의 단일 출처.
   하단(`app/layout.tsx`)과 `/terms`·`/privacy`·`/refund`가 여기서 읽는다(PG 카드사 심사·전자상거래법 제10조).
   회원 탈퇴는 `/account` → `lib/account.ts`(문단 댓글 삭제, 질문 게시판 글·댓글 익명화, `userActivity` 삭제).

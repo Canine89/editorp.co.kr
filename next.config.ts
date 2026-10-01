@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
     "/books/[bookId]/[sectionId]": ["./content/books/**"],
     "/admin/books": ["./content/books/**"],
     "/admin/books/[bookId]": ["./content/books/**"],
+    // 댓글 수신함은 어느 문단인지 보이려고 절을 렌더링한다
+    "/admin/comments": ["./content/books/**"],
     "/api/admin/books/section": ["./content/books/**"],
     "/api/admin/books/publish": ["./content/books/**"],
     "/api/admin/books/block": ["./content/books/**"],

@@ -9,7 +9,7 @@ import {
   DAILY_COMMENT_LIMIT,
   listSectionComments,
   MAX_COMMENT_LENGTH,
-  PARAGRAPH_KEY,
+  isCommentKey,
   remainingToday,
   type BookComment,
 } from '@/lib/book-comments';
@@ -27,6 +27,7 @@ function toPublic(c: BookComment, email: string | null) {
     authorImage: c.authorImage,
     createdAt: c.createdAt,
     mine: Boolean(email) && c.authorEmail === email,
+    byEditor: isAdminEmail(c.authorEmail),
     canDelete: Boolean(email) && (c.authorEmail === email || isAdminEmail(email)),
   };
 }
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     typeof input.body === 'string'
       ? input.body.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').replace(/\n{3,}/g, '\n\n').trim()
       : '';
-  if (!PARAGRAPH_KEY.test(pk)) return NextResponse.json({ error: '문단을 찾을 수 없습니다.' }, { status: 400 });
+  if (!isCommentKey(pk)) return NextResponse.json({ error: '문단을 찾을 수 없습니다.' }, { status: 400 });
   if (body.length < 1 || body.length > MAX_COMMENT_LENGTH) {
     return NextResponse.json({ error: `댓글은 1~${MAX_COMMENT_LENGTH}자로 남겨 주세요.` }, { status: 400 });
   }

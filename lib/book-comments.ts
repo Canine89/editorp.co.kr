@@ -11,6 +11,7 @@ import { isAdminEmail } from './admin';
  * 없으면 기능을 끈다.
  * 문단은 리더가 붙이는 `data-pk`(문단 글 내용의 해시, lib/reader-render.ts)로 가리킨다.
  * 원고가 바뀌어 문단이 사라진 댓글도 지우지 않고, 화면에서 "원문이 바뀐 문단의 댓글"로 모은다.
+ * 문단이 아니라 절 전체에 다는 댓글은 pk를 SECTION_KEY('section')로 둔다(절 끝 댓글 칸).
  *
  * 도배 방지(관리자 제외): 하루 5개(한국 시간 기준), 작성 간격 10초, 직전과 같은 내용 금지.
  * 지운 댓글도 그날 개수에 남는다(쓰고 지우기로 한도를 피하지 못하게).
@@ -22,6 +23,9 @@ const COOLDOWN_MS = 10_000;
 const MAX_PER_SECTION = 500;
 /** 리더가 붙이는 문단 키 형식: 해시 10자, 같은 글이 또 나오면 -2, -3 … */
 export const PARAGRAPH_KEY = /^[0-9a-f]{10}(?:-\d{1,3})?$/;
+/** 절 전체에 다는 댓글의 키 */
+export const SECTION_KEY = 'section';
+export const isCommentKey = (pk: string) => pk === SECTION_KEY || PARAGRAPH_KEY.test(pk);
 
 export class CommentLimitError extends Error {}
 
@@ -81,6 +85,13 @@ export async function listSectionComments(bookId: string, sectionId: string): Pr
   if (inMemoryMode()) return [...(memory.comments.get(`${bookId}/${sectionId}`) ?? [])];
   const snap = await sectionRef(bookId, sectionId).orderBy('createdAt', 'asc').limit(MAX_PER_SECTION).get();
   return snap.docs.map((d) => toComment(d.id, d.data()));
+}
+
+/** 책에 달린 댓글 수(책 문서의 count). 모르면 null — 관리자 수신함이 댓글 없는 책을 건너뛸 때 쓴다 */
+export async function bookCommentCount(bookId: string): Promise<number | null> {
+  if (inMemoryMode()) return null;
+  const count = (await getDb().collection('bookComments').doc(bookId).get()).data()?.count;
+  return typeof count === 'number' ? count : null;
 }
 
 /** 오늘 더 쓸 수 있는 댓글 수. 관리자는 제한이 없어 null */

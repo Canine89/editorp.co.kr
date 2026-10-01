@@ -9,10 +9,12 @@ interface Props {
   sections: { id: string; title: string }[];
   /** 진도 막대 위에 앉힐 캐릭터 등 */
   children?: React.ReactNode;
+  /** 목차 버튼. 책 소개(목차) 화면에서는 끈다 */
+  toc?: boolean;
 }
 
 /** 책 진도 막대와 이어 읽기 버튼. 기록이 없으면 처음부터 읽기만 보인다 */
-export function BookProgress({ bookId, sections, children }: Props) {
+export function BookProgress({ bookId, sections, children, toc = true }: Props) {
   const snapshot = useSyncExternalStore(subscribeReading, readingSnapshot, () => "");
   const ids = sections.map((s) => s.id);
   const progress = parseBookProgress(snapshot, bookId, ids);
@@ -43,9 +45,11 @@ export function BookProgress({ bookId, sections, children }: Props) {
             처음부터 읽기
           </Link>
         )}
-        <Link className="btn btn-secondary" href={`/books/${bookId}`}>
-          목차
-        </Link>
+        {toc && (
+          <Link className="btn btn-secondary" href={`/books/${bookId}`}>
+            목차
+          </Link>
+        )}
       </div>
     </>
   );

@@ -3,6 +3,7 @@ import path from 'path';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { AdminDashboard } from '@/components/AdminDashboard';
 import { isAdminEmail } from '@/lib/admin';
 
@@ -65,14 +66,18 @@ export default async function AdminPage() {
         style={{
           display: 'flex',
           justifyContent: 'flex-end',
+          gap: '8px',
           padding: '8px 16px',
           borderBottom: '1px solid var(--colors-hairline)',
           backgroundColor: 'var(--colors-surface-soft)',
         }}
       >
-        <a href="/admin/books" className="btn btn-secondary" style={{ height: '30px', padding: '0 12px', fontSize: '12.5px' }}>
+        <Link href="/admin/comments" className="btn btn-secondary" style={{ height: '30px', padding: '0 12px', fontSize: '12.5px' }}>
+          💬 독자 댓글 →
+        </Link>
+        <Link href="/admin/books" className="btn btn-secondary" style={{ height: '30px', padding: '0 12px', fontSize: '12.5px' }}>
           📚 도서 관리 →
-        </a>
+        </Link>
       </div>
       <AdminDashboard initialData={initialData} />
     </div>

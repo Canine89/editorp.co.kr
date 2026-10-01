@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
@@ -16,6 +16,13 @@ export default function QnaNewPage() {
   const [body, setBody] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // 리더 절 끝 '질문 게시판에 질문하기'는 ?title=[책] 절 제목 으로 온다
+  useEffect(() => {
+    const preset = new URLSearchParams(location.search).get('title');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (preset) setTitle((t) => t || preset.slice(0, 100));
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -47,6 +47,9 @@ export function BookAdminList({ initialBooks }: { initialBooks: (Book & { sectio
             <h1 style={{ fontSize: '22px', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
               <BookOpen size={20} /> 도서 관리
             </h1>
+            <Link href="/admin/comments" className="btn btn-secondary" style={{ height: '34px', padding: '0 12px', fontSize: '13px' }}>
+              독자 댓글
+            </Link>
           </div>
           {message && (
             <span

@@ -1,7 +1,7 @@
 /* 무료 도서: 책 소개(목차)와 리더. 본문 HTML(렌더러 출력)에 붙는 클래스가 있어 전역 파일로 두고 rd- 접두어를 쓴다 */
 
 /* ── 책 소개 ─────────────────────────────── */
-.rd-intro { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 48px; padding: 32px 0 32px; align-items: start; }
+.rd-intro { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 48px; padding-top: 32px; padding-bottom: 32px; align-items: start; }
 .rd-intro-side { position: sticky; top: 96px; }
 .rd-intro-side .rd-cover { width: 100%; height: auto; border-radius: 2px; box-shadow: 0 1px 2px rgba(14, 23, 51, .08), 0 6px 18px -8px rgba(14, 23, 51, .28); }
 .rd-intro-side h1 { font-size: 26px; line-height: 1.3; margin-top: 20px; }
@@ -73,6 +73,7 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-prose table { width: 100%; border-collapse: collapse; font-size: .9em; }
 .rd-prose th, .rd-prose td { border-bottom: 1px solid var(--colors-hairline); padding: 8px 12px 8px 0; text-align: left; vertical-align: top; }
 .rd-prose th { color: var(--colors-ink); font-weight: 600; border-bottom-color: var(--colors-ink); }
+.rd-prose th:last-child, .rd-prose td:last-child { padding-right: 0; }
 .rd-prose :not(pre) > code { font-family: var(--font-mono); font-size: .88em; background: var(--colors-surface-soft); padding: .1em .35em; border-radius: 4px; color: var(--colors-ink); }
 .rd-prose figure { margin-top: 1.4em; }
 .rd-prose figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--colors-hairline); border-radius: 2px; cursor: zoom-in; background: var(--colors-canvas); }
@@ -118,6 +119,8 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-done.on { color: var(--colors-ink); font-weight: 600; }
 .rd-done.on i { background: var(--colors-yellow); box-shadow: none; color: var(--colors-ink); }
 .rd-done.on .perch { opacity: 1; transform: none; }
+.rd-more ~ .rd-done { margin-top: 16px; }
+.rd-more ~ .rd-done .perch { display: none; }
 .rd-pager { display: grid; grid-template-columns: 1fr 1fr; margin-top: 20px; border-top: 1px solid var(--colors-hairline); border-bottom: 1px solid var(--colors-hairline); }
 .rd-pager a { padding: 14px 0; display: block; }
 .rd-pager a + a, .rd-pager span + a { text-align: right; border-left: 1px solid var(--colors-hairline); padding-left: 16px; }
@@ -147,7 +150,7 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-sheet { border: 0; padding: 0; width: 100%; max-width: 100%; margin: auto 0 0; background: var(--colors-canvas); color: var(--colors-body); border-radius: 12px 12px 0 0; max-height: 80vh; }
 .rd-sheet::backdrop { background: rgba(14, 23, 51, .35); }
 .rd-sheet-head { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px 8px 20px; border-bottom: 1px solid var(--colors-hairline); position: sticky; top: 0; background: var(--colors-canvas); z-index: 1; }
-.rd-sheet-head button { background: none; border: 0; font-size: 15px; color: var(--colors-ink); cursor: pointer; padding: 0 8px; }
+.rd-sheet-head button { background: none; border: 0; font-size: 15px; color: var(--colors-ink); cursor: pointer; padding: 0 10px; min-height: 44px; }
 .rd-sheet-body { padding: 8px 20px 24px; }
 .rd-sheet-body.rd-toc { position: static; max-height: none; display: block; }
 .rd-zoom { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 94vh; margin: auto; }
@@ -173,9 +176,11 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
   }
   html.header-hidden .rd-mbar { top: 0; }
   .rd-mbar span { margin-right: auto; color: var(--colors-muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  .rd-mbar button { min-height: 40px; padding: 0 10px; border-radius: 6px; color: var(--colors-ink); font-size: 14px; background: none; border: 0; cursor: pointer; }
+  .rd-mbar button { min-height: 44px; padding: 0 10px; border-radius: 6px; color: var(--colors-ink); font-size: 14px; background: none; border: 0; cursor: pointer; }
   .rd-main h1 { font-size: 28px; }
   .rd-prose .code { margin-left: -20px; margin-right: -20px; border-radius: 0; border-left: 0; border-right: 0; }
+  /* 넓은 표는 화면 밖으로 밀어내지 말고 표 안에서 가로로 넘긴다 */
+  .rd-prose table { display: block; overflow-x: auto; }
   .rd-prose .steps > li { padding-left: 2.2em; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -219,7 +224,7 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-prose .code .rd-pc-btn { top: 4px; }
 .rd-prose [data-pk]:hover .rd-pc-btn, .rd-prose .pc-show .rd-pc-btn, .rd-pc-btn:focus-visible { opacity: 1; }
 .rd-pc-btn:hover { color: var(--colors-primary); background: var(--colors-surface-soft); }
-.rd-pc-btn.has { opacity: 1; color: var(--colors-primary); width: auto; padding: 0 4px; }
+.rd-pc-btn.has { opacity: 1; color: var(--colors-primary); width: auto; padding: 0 4px; font-size: 13px; }
 .rd-pc-btn.has::after { content: attr(data-count); }
 .rd-prose .pc-show { background: var(--colors-surface-soft); box-shadow: 0 0 0 6px var(--colors-surface-soft); border-radius: 2px; }
 
@@ -229,11 +234,12 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-pc-empty { font-size: 14px; color: var(--colors-muted); }
 .rd-pc-list { list-style: none; display: grid; gap: 14px; }
 .rd-pc-list li + li { border-top: 1px solid var(--colors-hairline-soft); padding-top: 14px; }
-.rd-pc-who { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--colors-muted); }
+.rd-pc-who { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--colors-muted); }
+.rd-pc-editor { font-style: normal; font-weight: 600; color: var(--colors-primary); }
 .rd-pc-who img, .rd-pc-who > span { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; }
 .rd-pc-who > span { display: grid; place-items: center; background: var(--colors-surface-cream-strong); color: var(--colors-primary); font-weight: 700; font-size: 12px; }
 .rd-pc-who b { color: var(--colors-ink); font-weight: 600; }
-.rd-pc-who button { margin-left: auto; min-height: 0; padding: 2px 6px; border: 0; background: none; font-size: 13px; color: var(--colors-muted); cursor: pointer; }
+.rd-pc-who button { margin-left: auto; min-height: 32px; padding: 2px 6px; border: 0; background: none; font-size: 13px; color: var(--colors-muted); cursor: pointer; }
 .rd-pc-who button:hover { color: var(--colors-error); }
 .rd-pc-list p { margin-top: 6px; font-size: 15px; line-height: 1.7; color: var(--colors-body); white-space: pre-wrap; overflow-wrap: anywhere; }
 .rd-pc-form textarea {
@@ -242,12 +248,49 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 }
 .rd-pc-form textarea:focus { outline: 2px solid var(--colors-primary); outline-offset: -1px; border-color: transparent; }
 .rd-pc-form-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px; }
-.rd-pc-form-foot small { font-size: 13px; color: var(--colors-muted); }
+.rd-pc-form-foot small { font-size: 14px; color: var(--colors-muted); }
 .rd-pc-login { display: grid; gap: 10px; justify-items: start; padding-top: 12px; border-top: 1px solid var(--colors-hairline); }
 .rd-pc-login p { font-size: 14px; color: var(--colors-muted); }
 .rd-pc-error { font-size: 14px; color: var(--colors-error); }
-.rd-pc-orphans { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--colors-hairline); }
-.rd-pc-orphans h2 { font-size: 14px; font-weight: 600; color: var(--colors-muted); margin-bottom: 12px; letter-spacing: 0; }
+.rd-pc-group { display: grid; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--colors-hairline); }
+.rd-pc-group:last-child { border-bottom: 0; }
+.rd-pc-group h3 { font-size: 14px; font-weight: 600; color: var(--colors-muted); }
+.rd-pc-goto { justify-self: start; min-height: 32px; padding: 0; border: 0; background: none; font-size: 14px; color: var(--colors-primary); cursor: pointer; text-decoration: underline; text-decoration-color: var(--colors-hairline); text-underline-offset: 4px; }
+.rd-prose .pc-flash { animation: rd-pc-flash 1.8s ease-out; }
+@keyframes rd-pc-flash { from { background: var(--colors-mark); box-shadow: 0 0 0 6px var(--colors-mark); } to { background: transparent; box-shadow: 0 0 0 6px transparent; } }
+
+/* 메타 줄의 댓글 링크와 첫 방문 안내 */
+[data-pc-meta]:empty { display: none; }
+[data-pc-meta] a { color: var(--colors-primary); text-decoration: underline; text-decoration-color: var(--colors-hairline); text-underline-offset: 4px; }
+[data-pc-meta] a:hover { text-decoration-color: var(--colors-primary); }
+.rd-pc-hint { display: flex; align-items: flex-start; gap: 8px; margin: -8px 0 24px; font-size: 14px; line-height: 1.6; color: var(--colors-muted); }
+.rd-pc-hint > span:first-child { flex-shrink: 0; margin-top: 3px; color: var(--colors-primary); }
+.rd-pc-hint button { flex-shrink: 0; margin-left: auto; min-height: 32px; margin-top: -5px; padding: 0 4px; border: 0; background: none; font-size: 14px; color: var(--colors-ink); cursor: pointer; text-decoration: underline; text-decoration-color: var(--colors-hairline); text-underline-offset: 4px; }
+
+/* 절 끝 댓글 칸 */
+.rd-talk { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--colors-hairline); display: grid; gap: 14px; scroll-margin-top: 90px; }
+.rd-talk h2 { font-size: 20px; line-height: 1.4; }
+.rd-talk h2 small { font-size: 16px; font-weight: 600; color: var(--colors-primary); margin-left: 4px; }
+.rd-talk-lead { font-size: 15px; line-height: 1.7; color: var(--colors-muted); }
+.rd-talk-more { display: flex; align-items: baseline; gap: 12px; font-size: 15px; color: var(--colors-body); }
+.rd-talk-more button { min-height: 32px; padding: 0; border: 0; background: none; font-size: 15px; color: var(--colors-primary); cursor: pointer; text-decoration: underline; text-decoration-color: var(--colors-hairline); text-underline-offset: 4px; }
+.rd-talk .rd-pc-list { padding: 4px 0; }
+.rd-talk .rd-pc-login { padding-top: 0; border-top: 0; }
+
+/* 터치 화면: 문단을 누르면 뜨는 아래 버튼 줄 */
+.rd-pc-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: flex; gap: 8px; align-items: center;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom)) 20px; background: var(--colors-canvas); border-top: 1px solid var(--colors-hairline);
+}
+.rd-pc-bar .btn { flex: 1; min-height: 44px; }
+.rd-pc-bar-close { min-height: 44px; padding: 0 12px; border: 0; background: none; font-size: 15px; color: var(--colors-ink); cursor: pointer; }
+
+/* 읽던 곳으로 옮겼다는 알림 */
+.rd-resume-toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 70; display: flex; align-items: center; gap: 12px;
+  padding: 6px 6px 6px 16px; border-radius: var(--rounded-md); background: var(--colors-surface-dark); color: var(--colors-on-dark); font-size: 14px; white-space: nowrap;
+}
+.rd-resume-toast button { min-height: 36px; padding: 0 12px; border: 0; border-radius: var(--rounded-sm); background: none; color: var(--colors-on-dark); font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
 
 /* 넓은 화면: 댓글 시트는 오른쪽 서랍 */
 @media (min-width: 961px) {
@@ -259,7 +302,10 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 }
 @media (max-width: 960px) {
   .rd-pc-btn, .rd-prose ul[data-pk] .rd-pc-btn, .rd-prose ol[data-pk] .rd-pc-btn { right: -20px; width: 20px; }
-  .rd-pc-btn.has { right: -20px; padding: 0 2px; flex-direction: column; height: auto; font-size: 11px; }
+  .rd-pc-btn.has { right: -20px; padding: 0 2px; flex-direction: column; height: auto; font-size: 13px; }
+}
+@media (hover: none) {
+  .rd-pc-btn:not(.has) { display: none; }
 }
 
 /* 관리자 바로 고치기 (components/InlineBookEditor.tsx): 왼쪽 여백의 수정 버튼 + 제자리 편집기 */
