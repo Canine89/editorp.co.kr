@@ -160,9 +160,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
               paragraphKeys={rendered.paragraphKeys}
             />
             <p className="rd-ask">
-              코드를 붙여 자세히 물어보려면{" "}
-              <Link href={`/qna/new?title=${encodeURIComponent(`[${book.title}] ${sectionLabel(current)} `)}`}>질문 게시판에 질문하기</Link> ·{" "}
-              <span className="rd-kbd">←</span> <span className="rd-kbd">→</span> 키로 이동
+              <span className="rd-kbd">←</span> <span className="rd-kbd">→</span> 키로 이전·다음 절
             </p>
           </footer>
         </article>

@@ -8,7 +8,6 @@ import { AuthButton } from "./AuthButton";
 const links = [
   { href: "/", label: "로드맵" },
   { href: "/books", label: "서재" },
-  { href: "/qna", label: "질문" },
   { href: "/about", label: "소개" },
 ];
 

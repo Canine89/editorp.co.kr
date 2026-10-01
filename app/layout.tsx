@@ -5,7 +5,7 @@ import { Providers } from "@/components/Providers";
 import { Header } from "@/components/Header";
 import { Character } from "@/components/Character";
 import { ScrollEffects } from "@/components/ScrollEffects";
-import { BUSINESS, BUSINESS_LOOKUP_URL } from "@/lib/business";
+import { BUSINESS, BUSINESS_LOOKUP_URL, OPEN_CHAT_URL } from "@/lib/business";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://editorp.co.kr"),
@@ -80,7 +80,7 @@ export default function RootLayout({
                   </a>
                   <a
                     className="ext"
-                    href="https://open.kakao.com/o/ggK7EAJh"
+                    href={OPEN_CHAT_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

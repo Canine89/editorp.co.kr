@@ -5,6 +5,7 @@ import { asRoadmap } from "@/lib/learning-paths";
 import { getLearningPaths, learningMinutes } from "@/lib/learning-data";
 import { getRoadmapData } from "@/lib/roadmap-data";
 import { RoadmapCanvas } from "@/components/RoadmapCanvas";
+import { OPEN_CHAT_URL } from "@/lib/business";
 import styles from "./learn.module.css";
 export const revalidate = 0;
 export async function generateMetadata({
@@ -104,9 +105,9 @@ export default async function LearnPage({
               전체 영상에서 필요한 실습 찾기 <ArrowRight size={16} />
             </Link>
           )}
-          <Link href="/qna">
-            막히는 부분 질문하기 <ArrowRight size={16} />
-          </Link>
+          <a className="ext" href={OPEN_CHAT_URL} target="_blank" rel="noopener noreferrer">
+            막히는 부분은 오픈채팅방에서 질문하기
+          </a>
         </div>
       </section>
     </>

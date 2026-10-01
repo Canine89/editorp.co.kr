@@ -24,6 +24,7 @@ import {
   recordVisit,
   saveCompleted,
 } from "@/lib/learning-progress";
+import { OPEN_CHAT_URL } from "@/lib/business";
 import styles from "./RoadmapCanvas.module.css";
 interface Node {
   id: string;
@@ -405,7 +406,9 @@ function Player({ roadmap }: { roadmap: Roadmap }) {
             >
               유튜브에서 보기 <ExternalLink size={14} aria-hidden="true" />
             </a>
-            <Link href="/qna">질문 남기기</Link>
+            <a href={OPEN_CHAT_URL} target="_blank" rel="noopener noreferrer">
+              오픈채팅방에서 질문하기 <ExternalLink size={14} aria-hidden="true" />
+            </a>
           </div>
           <details>
             <summary>원래 영상 제목과 시청 안내</summary>

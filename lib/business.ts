@@ -26,5 +26,8 @@ export const BUSINESS = {
 /** 공정거래위원회 사업자정보 공개 페이지 (하단 '사업자정보 확인' 링크) */
 export const BUSINESS_LOOKUP_URL = `https://www.ftc.go.kr/bizCommPop.do?wrkr_no=${BUSINESS.registrationNo.replace(/-/g, '')}`;
 
+/** 독자 질문용 카카오톡 오픈채팅방 (하단, 강의실·로드맵의 "막히는 부분 질문하기") */
+export const OPEN_CHAT_URL = 'https://open.kakao.com/o/ggK7EAJh';
+
 /** 약관·방침 시행일 (내용을 바꾸면 새 날짜로 바꾸고, 중요한 변경은 7일 전에 공지한다) */
 export const POLICY_EFFECTIVE_DATE = '2026-10-01';

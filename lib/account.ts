@@ -7,6 +7,7 @@ import { deleteMemoryCommentsByAuthor } from './book-comments';
  *  - userActivity/{email}(작성 횟수 기록): 삭제
  *  - 문단 댓글(bookComments/…/comments): 삭제
  *  - 질문 게시판 글(questions)과 댓글(questions/…/comments): 작성자를 '탈퇴한 회원'으로 바꿔 익명화
+ *    (게시판은 닫았지만 옛 글은 Firestore에 남아 있다)
  * 로그인은 구글 계정 JWT라 따로 지울 회원 문서는 없다.
  * Firestore 모드의 댓글 검색은 collectionGroup('comments').authorEmail 단일 필드 색인(컬렉션 그룹 범위)이 필요하다.
  */

@@ -30,7 +30,7 @@ import { normalizeCodeIndent } from '@/lib/code-indent';
 
 /**
  * 도서 절 본문 전용 리치 텍스트 에디터.
- * 게시판용 RichTextEditor와 달리 h4·이미지·표까지 지원한다
+ * h4·이미지·표까지 지원한다
  * (지원하지 않는 노드는 Tiptap이 로드 시 버리기 때문에 본문 보존을 위해 필수).
  */
 
