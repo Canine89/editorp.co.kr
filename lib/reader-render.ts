@@ -12,7 +12,7 @@ import { removeEmptyStudyLabels } from './reader-presentation';
  *
  * 관리자 편집기는 renderSectionHtml()의 단순 HTML을 받아 편집·역변환하므로 그대로 두고,
  * 독자 화면만 이 렌더러로 꾸민다.
- *  - 코드 블록: Shiki 서버 구문 강조(바로바로 팔레트 전용 테마)
+ *  - 코드 블록: Shiki 서버 구문 강조(바로바로 팔레트 전용 테마). 원고의 <span class="mark">는 형광펜 장식으로 바꾼다
  *  - "01 ..." 로 시작하는 실습 단계 문단과 뒤따르는 이미지를 번호 절차로 묶음 (책의 번호를 그대로 표시)
  *  - 코너 박스: 인용문 첫 줄이 **NOTE**·**프롬프트**·**AI 답변**·**잠깐 퀴즈**·**1:1 코칭 · …**·**바로 핵심 요약** 등이면 종류별 스타일
  *  - 이미지만 있는 문단: 크기(images.json)를 넣은 figure
@@ -35,6 +35,8 @@ export interface ReaderSection {
   readMinutes: number;
   /** 문단 댓글 키(data-pk) 목록 — 원문이 바뀐 문단의 댓글을 가려낼 때 쓴다 */
   paragraphKeys: string[];
+  /** 문단 댓글 키 → 문단 첫머리(관리자 댓글 수신함에서 어느 문단인지 보여줄 때) */
+  excerpts: Record<string, string>;
 }
 
 const BOOKS_DIR = path.join(process.cwd(), 'content', 'books');
@@ -91,6 +93,27 @@ const CORNERS: [RegExp, string][] = [
   [/^바로 핵심 요약$/, 'summary'],
   [/^(미리 알아두세요|기억하고 있나요)/, 'side'],
 ];
+const CODE_MARK = /<span class="mark">([\s\S]*?)<\/span>/g;
+/** 코드 원고의 형광펜 표시를 떼어 내고, 그 자리를 Shiki 장식(줄마다 나눈 글자 범위)으로 돌려준다 */
+function codeMarks(src: string) {
+  let code = '';
+  let last = 0;
+  const ranges: { start: number; end: number }[] = [];
+  for (const m of src.matchAll(CODE_MARK)) {
+    code += src.slice(last, m.index);
+    let start = code.length;
+    code += m[1];
+    // 장식은 한 줄 안에서만 쓴다
+    for (const part of m[1].split('\n')) {
+      if (part.trim()) ranges.push({ start: start + (part.length - part.trimStart().length), end: start + part.trimEnd().length });
+      start += part.length + 1;
+    }
+    last = m.index + m[0].length;
+  }
+  code += src.slice(last);
+  return { code, decorations: ranges.map((r) => ({ ...r, properties: { class: 'mark' } })) };
+}
+
 /** 인용문 첫 줄의 굵은 라벨로 코너 종류를 정해 class를 붙인다 (정화가 끝난 HTML에만 적용) */
 function corner(quoteHtml: string): string {
   const m = quoteHtml.match(/^<blockquote>\s*<p><strong>([^<]+)<\/strong><\/p>/);
@@ -127,15 +150,18 @@ export async function renderReaderSection(
 
   // 문단 댓글 키: 글 내용 해시 10자, 같은 글이 또 나오면 -2, -3 …
   const pkSeen = new Map<string, number>();
-  const pkOf = (basis: string) => {
+  const excerpts: Record<string, string> = {};
+  const pkOf = (basis: string, label = basis) => {
     const hash = createHash('sha1').update(basis.replace(/\s+/g, ' ').trim()).digest('hex').slice(0, 10);
     const n = (pkSeen.get(hash) ?? 0) + 1;
     pkSeen.set(hash, n);
-    return n === 1 ? hash : `${hash}-${n}`;
+    const key = n === 1 ? hash : `${hash}-${n}`;
+    excerpts[key] = label.replace(/\s+/g, ' ').trim().slice(0, 90);
+    return key;
   };
   /** 블록 HTML의 첫 태그에 data-pk를 붙인다 (정화가 끝난 HTML에만) */
-  const withPk = (blockHtml: string, basis = stripTags(blockHtml)) =>
-    basis ? blockHtml.replace(/^\s*<(p|ul|ol|blockquote|figure|div)(?=[\s>])/, `<$1 data-pk="${pkOf(basis)}"`) : blockHtml;
+  const withPk = (blockHtml: string, basis = stripTags(blockHtml), label?: string) =>
+    basis ? blockHtml.replace(/^\s*<(p|ul|ol|blockquote|figure|div)(?=[\s>])/, `<$1 data-pk="${pkOf(basis, label)}"`) : blockHtml;
 
   let imageNo = 0;
   const figure = (img: Tokens.Image) => {
@@ -177,16 +203,18 @@ export async function renderReaderSection(
     closeSteps();
 
     if (isImageOnly(t)) {
-      html += withSrc(withPk(figure(t.tokens[0] as Tokens.Image), `img:${(t.tokens[0] as Tokens.Image).href}`), i);
+      html += withSrc(withPk(figure(t.tokens[0] as Tokens.Image), `img:${(t.tokens[0] as Tokens.Image).href}`, '그림'), i);
       continue;
     }
     if (t.type === 'code') {
       const code = t as Tokens.Code;
       const lang = LANGS.includes(code.lang ?? '') ? code.lang! : 'text';
-      const lines = code.text.split('\n').length;
+      const { code: text, decorations } = lang === 'html' ? { code: code.text, decorations: [] } : codeMarks(code.text);
+      const lines = text.split('\n').length;
       codeCount++;
-      const body = hl.codeToHtml(code.text, { lang, theme: 'barobaro-light' });
-      html += `<div class="code"${aligned ? ` data-src="${i}"` : ''} data-pk="${pkOf(`code:${code.text}`)}"><div class="code-head"><span>${LANG_LABEL[lang] ?? '코드'} · ${lines}줄</span><button type="button" data-copy>복사</button></div>${body}</div>`;
+      const body = hl.codeToHtml(text, { lang, theme: 'barobaro-light', decorations });
+      const firstLine = text.split('\n').find((l) => l.trim()) ?? '';
+      html += `<div class="code"${aligned ? ` data-src="${i}"` : ''} data-pk="${pkOf(`code:${code.text}`, `코드 · ${firstLine}`)}"><div class="code-head"><span>${LANG_LABEL[lang] ?? '코드'} · ${lines}줄</span><button type="button" data-copy>복사</button></div>${body}</div>`;
       continue;
     }
     if (t.type === 'heading' && (t as Tokens.Heading).depth === 2) {
@@ -215,5 +243,5 @@ export async function renderReaderSection(
   html = removeEmptyStudyLabels(html);
   const readMinutes = Math.max(1, Math.round(stripTags(html).length / 500));
   const paragraphKeys = [...html.matchAll(/ data-pk="([^"]+)"/g)].map((m) => m[1]);
-  return { html, headings, codeCount, readMinutes, paragraphKeys };
+  return { html, headings, codeCount, readMinutes, paragraphKeys, excerpts };
 }

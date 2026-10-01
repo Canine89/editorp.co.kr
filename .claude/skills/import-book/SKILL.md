@@ -37,6 +37,9 @@ description: 구글 독스/워드(.docx) 원고와 이미지를 무료 도서(co
    - 모든 절: book.json의 절 id 순회하며 `curl -s -o /dev/null -w "%{http_code}" localhost:3000/books/<id>/<절id>` 전부 200
    - 모든 이미지: `public/books/<id>/*` 각각 200
    - 코드 블록: 코드 많은 절 HTML에서 `language-python` 존재 확인
+   - 파이썬 코드 문법: `python scripts/check-code-blocks.py <id>` — **들여쓰기 오류 0곳**이어야 한다.
+     .docx 변환은 들여쓰기를 지우고, `# 주석`이 붙은 줄이나 `]`·`'''`처럼 홀로 선 줄을 본문으로 빼내 코드 블록을 가르기 쉽다.
+     구글 독스 마크다운 덤프가 있으면 코드는 그쪽이 온전하다(《바로바로 파이썬》은 첫 임포트 c4cc4a0에서 코드를 되살렸다).
    - 목차: book.json의 장/절 제목에 이미지 참조나 깨진 제목이 없는지
 6. **눈 검수 요청**: 코드 오분류(산문이 코드로/코드가 산문으로), 이미지 위치, [실행 결과] 출력부는 평문임을 안내.
 7. **공유 미리보기 이미지**: 표지가 있는 책이면 `python scripts/make-og-images.py`로 `public/og/<id>.jpg`(1200×630)를
