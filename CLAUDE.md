@@ -68,8 +68,8 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
   리더가 블록에 원고 marked 토큰 번호(`data-src`)를 붙이고, `/api/admin/books/block`이 그 블록의 원고만
   바꿔 `saveSectionMarkdown()`으로 저장한다(편집 시작 때 원고와 다르면 409). 즉 운영에서는 오버레이가 생긴다.
 - **질문 게시판(닫음)**: 2026-10-01에 내렸다. 독자 질문은 서재 문단 댓글로, 강의 질문은 오픈채팅방(`OPEN_CHAT_URL`)으로 받는다.
-  `/qna/*`는 `next.config.ts`에서 `/books`로 보낸다. 옛 글 `questions/{id}`(+ 하위 `comments/`)는 Firestore에 남아 있어
-  회원 탈퇴 때 익명화만 한다(`lib/account.ts`). 도배 방지 문서 `userActivity/{email}`은 문단 댓글이 계속 쓴다.
+  `/qna/*`는 `next.config.ts`에서 `/books`로 보낸다. 옛 글 `questions/{id}`(+ 하위 `comments/`)와 `userActivity`의 게시판
+  기록 필드는 같은 날 Firestore에서 지웠다. 도배 방지 문서 `userActivity/{email}`은 문단 댓글이 계속 쓴다.
 - **문단 댓글** (`lib/book-comments.ts`): Firestore `bookComments/{bookId}/sections/{sectionId}/comments/`.
   Firebase 없는 개발 서버에서는 프로세스 메모리(재시작하면 사라짐), 운영에서 Firebase가 없으면 기능을 끈다.
   문단은 리더가 붙이는 `data-pk`(문단 글 내용의 sha1 앞 10자, 같은 글이 또 나오면 `-2`)로 가리키므로,
@@ -82,7 +82,7 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
   (전체 색인 없이, 책 문서의 `count`가 0인 책은 건너뜀). 어느 문단인지 보이려고 댓글 있는 절만 렌더링해 발췌를 붙인다.
 - **판매자 정보·약관** (`lib/business.ts`): 상호·대표·사업자번호·통신판매업 번호·주소·연락처의 단일 출처.
   하단(`app/layout.tsx`)과 `/terms`·`/privacy`·`/refund`가 여기서 읽는다(PG 카드사 심사·전자상거래법 제10조).
-  회원 탈퇴는 `/account` → `lib/account.ts`(문단 댓글 삭제, 옛 질문 게시판 글·댓글 익명화, `userActivity` 삭제).
+  회원 탈퇴는 `/account` → `lib/account.ts`(문단 댓글 삭제, `userActivity` 삭제).
   Firestore에 `comments` 컬렉션 그룹의 `authorEmail` 단일 필드 색인이 있어야 한다.
 - **편집 도서 목록** (`lib/edited-books.ts`): `data/edited-books.json` 정적 읽기만.
 
