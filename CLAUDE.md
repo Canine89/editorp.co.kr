@@ -85,6 +85,10 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
   회원 탈퇴는 `/account` → `lib/account.ts`(문단 댓글 삭제, `userActivity` 삭제).
   Firestore에 `comments` 컬렉션 그룹의 `authorEmail` 단일 필드 색인이 있어야 한다.
 - **편집 도서 목록** (`lib/edited-books.ts`): `data/edited-books.json` 정적 읽기만.
+- **아티클** (`lib/articles.ts`): `content/articles/<id>/article.json` + `article.md`, 그림은 `public/articles/<id>/`.
+  파일만 읽는다(Firestore·오버레이 없음). 강의 준비 도구(`../app-live-presentation`)의 발행본을
+  `npm run publish:editorp -- <덱>`(그쪽 저장소에서 실행)으로 옮겨 온다. 본문은 `renderReaderMarkdown()`
+  (리더와 같은 렌더러, `> **정리**` 코너 추가)으로 그리고, 화면 동작은 `components/ArticleClient.tsx`. 형식은 `content/articles/README.md`.
 
 Firestore는 서버(서버 컴포넌트 / 라우트 핸들러)에서만 접근한다. 클라이언트에 Firebase SDK를
 싣지 않으며 권한은 NextAuth 세션으로 검사한다 (`lib/firebase-admin.ts`).

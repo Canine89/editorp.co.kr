@@ -1,0 +1,21 @@
+/* 아티클 목록: 서재 머리와 같은 한 줄 머리 + 가는 선 목록 */
+.page { padding-top: 28px; padding-bottom: 32px; }
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; border-bottom: 1px solid var(--colors-hairline); }
+.head > div { padding-bottom: 16px; }
+.head h1 { font-size: 30px; line-height: 1.25; }
+.head p { font-size: 15px; color: var(--colors-muted); margin-top: 6px; max-width: 40em; line-height: 1.6; }
+
+.list { list-style: none; }
+.list li { border-bottom: 1px solid var(--colors-hairline); }
+.list a { display: grid; gap: 6px; padding: 20px 0; max-width: 48em; }
+.list b { font-size: 20px; line-height: 1.4; font-weight: 700; color: var(--colors-ink); transition: color var(--transition-fast); }
+.list a:hover b { color: var(--colors-primary); }
+.desc { font-size: 16px; line-height: 1.7; color: var(--colors-body); }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; color: var(--colors-muted); }
+.empty { font-size: 15px; color: var(--colors-muted); padding: 24px 0; }
+
+@media (max-width: 640px) {
+  .list a { padding: 16px 0; }
+  .list b { font-size: 17px; }
+  .desc { font-size: 15px; }
+}

@@ -1,0 +1,20 @@
+/* 아티클 한 편. 본문은 리더(app/books/reader.css의 rd-*)와 같은 판면을 쓰고, 왼쪽 책 목차 자리만 없다 */
+.reader { max-width: 1120px; display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 40px; padding-top: 24px; padding-bottom: 40px; }
+
+/* 표지 그림: 투명 배경 클레이 장면이라 판도 테두리도 두지 않는다 */
+.cover { margin: 0 0 28px; }
+.cover img { display: block; width: 100%; max-height: 420px; height: auto; object-fit: contain; }
+
+/* 출처: 본문보다 한 단계 작게 (lib/articles.ts가 붙이는 refs) */
+.prose :global(.refs) { font-size: 14px; line-height: 1.7; color: var(--colors-muted); }
+.prose :global(ul.refs), .prose :global(ol.refs) { margin-top: .3em; }
+.prose :global(.refs a) { color: var(--colors-muted); text-decoration-color: var(--colors-hairline); }
+.prose :global(.refs a:hover) { color: var(--colors-primary); text-decoration-color: currentColor; }
+
+@media (max-width: 1279px) {
+  .reader { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 960px) {
+  .reader { padding-top: 12px; }
+  .cover { margin-bottom: 20px; }
+}

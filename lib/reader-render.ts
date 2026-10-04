@@ -115,9 +115,9 @@ function codeMarks(src: string) {
 }
 
 /** 인용문 첫 줄의 굵은 라벨로 코너 종류를 정해 class를 붙인다 (정화가 끝난 HTML에만 적용) */
-function corner(quoteHtml: string): string {
+function corner(quoteHtml: string, corners: [RegExp, string][] = CORNERS): string {
   const m = quoteHtml.match(/^<blockquote>\s*<p><strong>([^<]+)<\/strong><\/p>/);
-  const kind = m && CORNERS.find(([re]) => re.test(m[1].trim()))?.[1];
+  const kind = m && corners.find(([re]) => re.test(m[1].trim()))?.[1];
   if (!m || !kind) return quoteHtml;
   return quoteHtml.replace(m[0], `<blockquote class="corner corner-${kind}"><p class="corner-label">${m[1]}</p>`);
 }
@@ -128,6 +128,19 @@ export async function renderReaderSection(
 ): Promise<ReaderSection | null> {
   const raw = await getSectionMarkdown(bookId, section);
   if (raw === null) return null;
+  return renderReaderMarkdown(raw, { sizes: imageSizes(bookId) });
+}
+
+export interface ReaderMarkdownOptions {
+  /** 이미지 경로 → 크기 (figure에 width/height를 넣어 자리를 미리 잡는다) */
+  sizes?: Record<string, { width: number; height: number }>;
+  /** 이 원고에서만 더 알아볼 코너 라벨 (기본 코너보다 먼저 본다) */
+  corners?: [RegExp, string][];
+}
+
+/** 원고 마크다운 한 편을 리더 HTML로. 도서의 절과 아티클이 같이 쓴다 */
+export async function renderReaderMarkdown(raw: string, options: ReaderMarkdownOptions = {}): Promise<ReaderSection> {
+  const corners = [...(options.corners ?? []), ...CORNERS];
   const markdown = raw
     // "print( )" 처럼 괄호 사이 공백에서 줄이 끊기지 않게
     .replace(/\( \)/g, '( )')
@@ -141,7 +154,7 @@ export async function renderReaderSection(
   const withSrc = (blockHtml: string, i: number) =>
     aligned ? blockHtml.replace(/^\s*<([a-z][a-z0-9]*)(?=[\s>])/, `<$1 data-src="${i}"`) : blockHtml;
   const hl = await getHighlighter();
-  const sizes = imageSizes(bookId);
+  const sizes = options.sizes ?? {};
 
   const parse = (list: Token[]) =>
     sanitizeBookHtml(marked.parser(Object.assign(list, { links: (tokens as TokensList).links }) as TokensList));
@@ -229,7 +242,7 @@ export async function renderReaderSection(
       continue;
     }
     if (t.type === 'blockquote') {
-      html += withSrc(withPk(corner(parse([t]))), i);
+      html += withSrc(withPk(corner(parse([t]), corners)), i);
       continue;
     }
     if (t.type === 'hr' || t.type === 'html' || t.type === 'def') {
