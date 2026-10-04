@@ -136,7 +136,16 @@ result = router.predict(state, questions)
 > "Confidence calibration -- the problem of predicting probability estimates representative of the true correctness likelihood"
 
 - 쉽게 말하면 "90%라고 한 답 100개를 모아 보면 실제로 90개가 맞아야 한다"는 거예요. 90%라고 해 놓고 70개만 맞으면 <strong>과신(over-confident)</strong>한 겁니다.
+
+예를 들어서 두 모델한테 고객 문의 10건을 똑같이 보여 줬다고 해 볼게요. 두 모델 다 10건 모두에 "결제팀, 90% 확신"이라고 답했어요. 말만 들으면 둘이 똑같죠. 그런데 실제로 결제팀 문의가 맞았던 건 이렇습니다.
+
+- <strong>정직한 모델</strong>: 10건 중 9건. 90%라고 했고 실제로도 90% 맞았어요. 말한 확신과 실제 정답률이 같으니까, 이 모델이 "90%"라고 하면 그 말을 그대로 믿어도 됩니다.
+- <strong>과신한 모델</strong>: 10건 중 6건. 말은 90%인데 실제로는 60%예요. 아는 것보다 더 자신 있게 말한, 확신을 부풀린 모델이에요.
+
+이게 왜 문제냐면요. "확신 80%가 넘으면 자동으로 배정"이라고 정해 뒀다고 해 볼게요. 둘 다 90%라고 했으니 10건이 전부 자동으로 넘어갑니다. 정직한 모델은 1건만 엉뚱한 팀으로 가지만, 과신한 모델은 4건이 엉뚱한 팀으로 가요. 확신 숫자는 같은데 결과가 완전히 다르죠. 일기예보로 치면 "비 올 확률 90%"라던 날 열 번 중 여섯 번만 비가 오는 예보예요. 그런 예보로는 우산을 챙길지 말지 정할 수가 없습니다. 그래서 확신 숫자를 믿고 쓰려면 먼저 정직하게 맞춰 놔야 해요.
+
 - 요즘 신경망은 과신하는 경향이 있다는 게 2017년 논문으로 알려졌고, 이걸 고치는 간단하고 잘 듣는 방법이 <strong>온도 스케일링(temperature scaling)</strong>이에요. 숫자 하나(온도)로 확률 전체를 덜 뾰족하게, 혹은 더 뾰족하게 조절하는 손잡이라고 보시면 됩니다.
+  - 예를 들어 과신한 모델이 어떤 문의에 "결제 97%, 기술 2%, 기타 1%"라고 했다고 해 볼게요. 온도를 2로 맞추면 "결제 80%, 기술 12%, 기타 8%"로 덜 뾰족해집니다. 1등은 그대로 결제예요. 온도는 순위는 안 바꾸고 확신의 크기만 실제에 맞게 낮춰 줍니다. (온도 2는 계산을 보여 주려고 고른 값이고, 실제 온도는 검증 데이터로 재서 정해요.)
 - Laya도 받은 그대로는 과신합니다. 모델 카드에 대놓고 "Ships over-confident"라고 적혀 있어요. 질문 종류와 보기 개수마다 온도를 다시 맞추면 영어 모델의 평균 ECE(보정 오차)가 <strong>0.466 → 0.081</strong>, 다국어 모델은 <strong>0.314 → 0.106</strong>으로 줄어듭니다.
 
 그다음이 <strong>임계값(threshold)</strong>이에요.
@@ -155,7 +164,7 @@ else:
 
 > <strong>정리</strong>
 >
-> AI가 말하는 확신을 실제 정답률에 맞춰 놓는 게 보정이고, 그 확신이 몇 이상일 때 자동으로 맡길지 정하는 게 임계값이에요. 임계값은 AI가 아니라 우리가 정합니다.
+> "90% 확신"이라고 했으면 실제로 열에 아홉은 맞아야 정직한 모델이에요. 말만 크게 하고 덜 맞으면 과신이고, 그 확신을 믿고 자동으로 넘기면 엉뚱한 팀으로 가는 문의가 늘어납니다. 그래서 확신을 실제 정답률에 맞춰 놓는 보정을 먼저 하고, 그 확신이 몇 이상일 때 자동으로 맡길지 정하는 임계값은 AI가 아니라 우리가 정합니다.
 
 출처
 - Guo, Pleiss, Sun 외, *On Calibration of Modern Neural Networks* (arXiv 1706.04599, 2017), [arxiv.org/abs/1706.04599](https://arxiv.org/abs/1706.04599)
@@ -172,11 +181,19 @@ else:
 4. 점수가 더 잘 나오는 쪽으로 모델 안의 숫자(가중치)를 <strong>조금 고칩니다</strong>.
 5. 이걸 데이터 전체에 대해 여러 바퀴(epoch) 반복해요.
 
-Laya는 여기서 채점 방식이 특별합니다. 이름이 <strong>RLCD</strong>(Reinforcement Learning for Calibrated Decisions)예요.
+Laya는 여기서 채점 방식이 특별합니다. 이름이 <strong>RLCD</strong>(Reinforcement Learning for Calibrated Decisions)예요. 이름이 길어서 겁나 보이는데, 한 덩어리씩 떼어 보면 별거 없어요.
+
+- <strong>RL</strong> (Reinforcement Learning, 강화학습): 정답을 그대로 따라 쓰는 게 아니라, 해 보고 받은 점수(보상)를 보고 점수가 오르는 쪽으로 배우는 방식이에요.
+- <strong>C</strong> (Calibrated, 보정된): 앞에서 본 그 보정이요. 말한 확신과 실제 정답률이 맞는 상태.
+- <strong>D</strong> (Decisions, 판단): Laya가 하는 choice·score·noul 판단이요.
+
+그러니까 RLCD는 "확신이 정직한 판단을 하도록, 점수를 보면서 배우는 학습"이라는 뜻입니다.
+
 
 > "The policy reports a distribution; exploration adds zero-mean Gaussian noise to the logits; the reward is a strictly proper scoring rule (log + spherical, plus ranked probability score for ordinal questions)."
 
 - '엄격하게 적절한 채점 규칙(strictly proper scoring rule)'이라는 건, <strong>정직하게 확률을 말할 때 점수가 제일 높게</strong> 설계된 채점법이에요. 일기예보로 치면 "비 올 확률 70%"라고 했으면 그런 날 10번 중 7번 비가 와야 점수를 제일 많이 받는 겁니다. 그래서 일부러 부풀려 말하면 손해예요.
+  - 숫자로 보면 이래요. 실제로 열 번 중 일곱 번 비가 오는 날씨에, 한 예보는 "70%"라고 하고 다른 예보는 "99%"라고 부풀렸다고 해 볼게요. Laya 보상에 들어가는 채점 규칙 중 하나인 로그 점수로 매기면 평균 점수가 70% 예보는 약 −0.61, 99% 예보는 약 −1.39예요. 마이너스라 헷갈리니 부호를 뒤집어 벌점으로 보면 0.61 대 1.39, 적을수록 좋은 거죠. 반대로 "50%"라고 소심하게 말해도 벌점이 약 0.69로 늘어납니다. 더 말해도, 덜 말해도 손해고 실제 그대로 말해야 벌점이 제일 적어요.
 - 업데이트는 "REINFORCE with a group-mean baseline (GRPO-style)" 방식이에요. 예측에 잡음을 조금 섞어서 여러 번 답해 보게 하고, 평균보다 점수가 높았던 쪽으로 움직입니다.
 - 공식 미세조정 노트북은 Kaggle T4 GPU 2장으로 4~6분 걸리고, 4바퀴(epoch) 돌아요. 그리고 노트북 코드를 보면 강화학습 손실에 정답 분포를 따라가는 교차 엔트로피 손실도 같이 씁니다. 모델 카드는 교차 엔트로피 없이 학습한다고 소개하니, 정확히는 "기본 학습은 RLCD이고, 공개 노트북은 거기에 교차 엔트로피를 같이 쓴다"고 보시면 됩니다.
 
@@ -184,7 +201,7 @@ Laya는 여기서 채점 방식이 특별합니다. 이름이 <strong>RLCD</stro
 
 > <strong>정리</strong>
 >
-> 학습은 "풀어 보고, 채점받고, 고치기"의 반복이에요. Laya는 확률을 정직하게 말해야 점수가 제일 높게 채점해서, 확신까지 같이 가르칩니다.
+> 학습은 "풀어 보고, 채점받고, 고치기"의 반복이에요. Laya의 학습법 RLCD는 "점수를 보며 배우는데(RL), 확신이 정직한(C) 판단(D)을 하도록" 채점해요. 확률을 실제 그대로 말해야 점수가 제일 높으니까, 답뿐 아니라 확신까지 같이 배웁니다.
 
 출처
 - convaiinnovations/laya (Hugging Face 모델 카드), [huggingface.co/convaiinnovations/laya](https://huggingface.co/convaiinnovations/laya)
@@ -207,7 +224,7 @@ Laya는 여기서 채점 방식이 특별합니다. 이름이 <strong>RLCD</stro
 
 - 예를 들어 정답 달린 문의가 1,000건이면 80/10/10으로 학습 800건, 검증 100건, 시험 100건이 됩니다.
 - <strong>80/10/10</strong>은 흔히 쓰는 비율 중 하나예요. 정답이 있는 건 아니고, 구글 머신러닝 단기 집중 과정(Machine Learning Crash Course)의 그림은 70/15/15 정도로 나눠요. 데이터가 적으면 검증·시험 몫을 조금 더 주기도 합니다.
-- 왜 나누냐면요. 교과서 문제를 그대로 시험에 내면 외워서 다 맞히잖아요. 그게 실력인지 암기인지 알 수가 없어요. 검증 데이터도 너무 여러 번 들여다보면 거기에 맞춰져 버립니다.
+- 왜 나누냐면요. 교과서 문제를 그대로 시험에 내면 외워서 다 맞히잖아요. 그러면 점수가 높아도 실력으로 푼 건지 문제를 외워서 맞힌 건지 알 수가 없어요. 검증 데이터도 너무 여러 번 들여다보면 거기에 맞춰져 버립니다.
 
 > "The more you use the same data to make decisions about hyperparameter settings or other model improvements, the less confidence that the model will make good predictions on new data."
 
@@ -220,12 +237,14 @@ Laya는 여기서 채점 방식이 특별합니다. 이름이 <strong>RLCD</stro
 
 > "Temperatures fitted on items the run has already trained on measure the fit rather than the calibration"
 
+이미 학습에 쓴 문제로 온도를 맞추면, 확신이 정직한지가 아니라 그 문제에 얼마나 익숙해졌는지만 보게 된다는 뜻이에요.
+
 - 마지막으로 별도의 `test` 400건(판단 2,000개)으로 성적을 냅니다.
 - 그러니까 비율로는 80/10/10이 아니지만, <strong>학습 / 보정·검증 / 시험을 서로 섞지 않는다</strong>는 원리는 똑같아요. 80/10/10은 원리를 보여 주는 대표 비율이고, 실제로는 데이터 양과 용도에 맞춰 이렇게 조정한다고 보시면 됩니다.
 
 > <strong>정리</strong>
 >
-> 데이터는 공부용(80), 모의고사용(10), 수능용(10)으로 나눠요. 모의고사로 확신을 맞추고 문턱을 정하고, 수능은 마지막에 딱 한 번. 섞이면 실력이 아니라 암기를 재게 됩니다.
+> 데이터는 공부용(80), 모의고사용(10), 수능용(10)으로 나눠요. 모의고사로 확신을 맞추고 문턱을 정하고, 수능은 마지막에 딱 한 번. 섞이면 점수가 높아도 실력인지 외운 덕인지 알 수 없어요.
 
 출처
 - Google, *Datasets: Dividing the original dataset* (Machine Learning Crash Course), [developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets](https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets)

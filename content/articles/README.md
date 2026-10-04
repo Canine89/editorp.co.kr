@@ -10,7 +10,7 @@ content/articles/
 public/articles/<글-id>/  # 표지·본문 그림
 ```
 
-지금은 강의 준비 도구(`app-live-presentation`)의 발행본을 `npm run publish:editorp -- <덱 이름>`으로 옮겨 옵니다. 그 도구가 이 형식으로 만들어 주므로 손으로 쓸 일은 드뭅니다. 도서와 달리 Firestore 오버레이가 없습니다. 고칠 때는 파일을 고쳐 다시 배포합니다.
+지금은 강의 준비 도구(`oh-my-slide`)의 발행본을 `npm run publish:editorp -- <덱 이름>`으로 옮겨 옵니다. 그 도구가 이 형식으로 만들어 주므로 손으로 쓸 일은 드뭅니다. 도서와 달리 Firestore 오버레이가 없습니다. 고칠 때는 파일을 고쳐 다시 배포합니다.
 
 ## article.json
 

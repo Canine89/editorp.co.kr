@@ -3,7 +3,7 @@ import path from 'path';
 import { renderReaderMarkdown, type ReaderSection } from './reader-render';
 
 /**
- * 아티클: 한 편으로 끝나는 글. 강의 준비 도구(lecture-slides)의 발행본을 옮겨 온다.
+ * 아티클: 한 편으로 끝나는 글. 강의 준비 도구(oh-my-slide)의 발행본을 옮겨 온다.
  * 원본은 `content/articles/<id>/article.json`(메타) + `article.md`(본문). 그림은 `public/articles/<id>/`.
  * 도서와 달리 Firestore 오버레이가 없다. 고칠 때는 파일을 고쳐 다시 배포한다.
  * 본문은 리더와 같은 렌더러(lib/reader-render.ts)로 그린다. 형식은 content/articles/README.md
