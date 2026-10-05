@@ -1,0 +1,14 @@
+{
+  "title": "Claude Code mods 입문: 내 입맛대로 개조하고, 파일 탐색기까지 말로 만들기",
+  "description": "Claude Code에 mods라는 게 새로 들어왔어요. 한마디로 Claude Code를 내 입맛대로 개조하는 기능입니다.",
+  "audience": "Claude Code를 써 봤고, 화면이나 동작을 내 입맛대로 바꿔 보고 싶은 분",
+  "publishedAt": "2026-10-05",
+  "updatedAt": "2026-10-05",
+  "cover": {
+    "src": "/articles/claude-code-mods-basics/cover.png",
+    "alt": "에디터P가 노트북 앞에 앉아 있고, 옆으로 튀어나온 파일 탐색기 창을 주황색 Claude 캐릭터가 함께 보는 클레이 장면",
+    "width": 1384,
+    "height": 796
+  },
+  "source": "lecture-slides/claude-code-mods-basics"
+}
