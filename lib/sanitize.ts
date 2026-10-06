@@ -2,7 +2,7 @@ import sanitizeHtml from 'sanitize-html';
 
 /**
  * 도서 본문 HTML 정화 정책.
- * 저장소 안의 마크다운(저자 직접 작성)을 marked로 변환한 결과와 관리자 편집기(Tiptap) HTML에 적용한다.
+ * 원고 마크다운(저장소 파일·관리자가 리더에서 고친 오버레이)을 marked로 변환한 결과에 적용한다.
  * 허용 범위: 제목(h2~h4), 이미지, 표까지.
  */
 const BOOK_OPTIONS: sanitizeHtml.IOptions = {
@@ -24,7 +24,7 @@ const BOOK_OPTIONS: sanitizeHtml.IOptions = {
     td: ['align'],
     ol: ['start'],
   },
-  // 에디터의 이미지 크기 조정이 style="width: NN%"로 저장되므로 width(%)만 허용
+  // 원고의 이미지 크기가 <img style="width: NN%">로 들어 있으므로 width(%)만 허용
   allowedStyles: {
     img: {
       width: [/^\d{1,3}(\.\d+)?%$/],

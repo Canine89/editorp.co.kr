@@ -2,11 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, BookOpen, Eye, EyeOff, Settings2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, BookOpen, Eye, EyeOff, ExternalLink, RotateCcw } from 'lucide-react';
 import type { Book } from '@/lib/books';
 
-/** 도서 관리 첫 화면: 책 목록. 공개 토글과 책별 관리 화면 진입을 제공한다. */
-export function BookAdminList({ initialBooks }: { initialBooks: (Book & { sectionCount: number })[] }) {
+type AdminBook = Book & { sectionCount: number; overridden: string[] };
+
+/**
+ * 도서 관리: 책 목록, 공개 토글, 사이트에서 고친 절 되돌리기.
+ * 본문 수정은 리더에서 관리자로 로그인해 블록마다 한다(InlineBookEditor).
+ */
+export function BookAdminList({ initialBooks }: { initialBooks: AdminBook[] }) {
   const [books, setBooks] = useState(initialBooks);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ text: string; isError: boolean } | null>(null);
@@ -31,6 +36,27 @@ export function BookAdminList({ initialBooks }: { initialBooks: (Book & { sectio
       notify(`'${book.title}' ${next ? '공개' : '비공개'} 처리. ${data.message}`);
     } catch (error) {
       notify(error instanceof Error ? error.message : '공개 설정 변경 실패', true);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const revertBook = async (book: AdminBook) => {
+    const list = book.overridden.map((title) => `· ${title}`).join('\n');
+    if (!window.confirm(`'${book.title}'에서 사이트에서 고친 절을 모두 버리고 파일 원본으로 되돌릴까요?\n\n${list}`)) return;
+    setBusy(true);
+    try {
+      const res = await fetch('/api/admin/books/revert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookId: book.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setBooks((prev) => prev.map((b) => (b.id === book.id ? { ...b, overridden: [] } : b)));
+      notify(`'${book.title}' ${data.message}`);
+    } catch (error) {
+      notify(error instanceof Error ? error.message : '되돌리기에 실패했습니다.', true);
     } finally {
       setBusy(false);
     }
@@ -129,6 +155,11 @@ export function BookAdminList({ initialBooks }: { initialBooks: (Book & { sectio
                     </div>
                     <span style={{ fontSize: '12.5px', color: 'var(--colors-muted)' }}>
                       {book.author} · 총 {book.sectionCount}개 절
+                      {book.overridden.length > 0 && (
+                        <span title={book.overridden.join('\n')} style={{ color: 'var(--colors-warning)' }}>
+                          {' '}· 사이트에서 고친 절 {book.overridden.length}개
+                        </span>
+                      )}
                     </span>
                   </div>
 
@@ -151,13 +182,17 @@ export function BookAdminList({ initialBooks }: { initialBooks: (Book & { sectio
                       {published ? <EyeOff size={13} /> : <Eye size={13} />}
                       {published ? '비공개로 전환' : '공개로 전환'}
                     </button>
-                    <Link
-                      href={`/admin/books/${book.id}`}
-                      className="btn btn-primary"
-                      style={{ height: '34px', padding: '0 14px', fontSize: '12.5px', gap: '5px' }}
-                    >
-                      <Settings2 size={13} /> 내용 관리
-                    </Link>
+                    {book.overridden.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => revertBook(book)}
+                        disabled={busy}
+                        className="btn btn-secondary"
+                        style={{ height: '34px', padding: '0 12px', fontSize: '12.5px', gap: '5px' }}
+                      >
+                        <RotateCcw size={13} /> 원본으로 되돌리기
+                      </button>
+                    )}
                   </div>
                 </div>
               );

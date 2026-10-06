@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { marked } from 'marked';
-import { sanitizeBookHtml } from './sanitize';
 import { getDb, isFirebaseConfigured } from './firebase-admin';
 
 /**
@@ -11,7 +10,7 @@ import { getDb, isFirebaseConfigured } from './firebase-admin';
  *  - book.json  : 메타데이터 + 마당 > 장 > 절 목차
  *  - sections/  : 절 단위 마크다운 원고
  *
- * 관리자 패널의 수정사항은 로드맵과 같은 패턴으로 저장한다:
+ * 관리자 수정사항(공개 여부, 리더에서 바로 고친 절)은 로드맵과 같은 패턴으로 저장한다:
  *  - 운영(Firestore 설정 시): bookOverrides/{bookId} 문서(공개 여부) +
  *    bookOverrides/{bookId}/sections/{sectionId} 문서(절 마크다운) 오버레이.
  *    파일 원본 위에 덮어씌워 재배포 없이 즉시 반영된다.
@@ -213,17 +212,6 @@ export async function getSectionMarkdown(
   return fs.readFileSync(filePath, 'utf-8');
 }
 
-/** 절 마크다운을 정화된 HTML로 변환. 없으면 null */
-export async function renderSectionHtml(
-  bookId: string,
-  section: BookSectionMeta
-): Promise<string | null> {
-  const markdown = await getSectionMarkdown(bookId, section);
-  if (markdown === null) return null;
-  const html = marked.parse(markdown, { async: false, gfm: true, breaks: false });
-  return sanitizeBookHtml(html);
-}
-
 // ── 관리자 저장 API (운영: Firestore 오버레이 / 개발: 파일 직접 수정) ──
 
 export async function setBookPublished(bookId: string, isPublished: boolean): Promise<string> {
@@ -269,16 +257,35 @@ export async function saveSectionMarkdown(
   throw new Error('Firebase 환경 변수가 설정되지 않아 저장할 수 없습니다.');
 }
 
-/** 절 오버레이 삭제 → 파일 원본으로 복원 (Firestore 모드에서만 의미 있음) */
-export async function revertSectionMarkdown(bookId: string, sectionId: string): Promise<string> {
-  if (!SAFE_ID.test(bookId) || !/^[\w-]+$/.test(sectionId)) {
-    throw new Error('잘못된 식별자입니다.');
+/** 오버레이(사이트에서 고친 원고)가 있는 절 id 목록. Firestore 모드에서만 생긴다 */
+export async function listOverriddenSections(bookId: string): Promise<string[]> {
+  if (!SAFE_ID.test(bookId) || !isFirebaseConfigured()) return [];
+  try {
+    const snap = await getDb().collection(`bookOverrides/${bookId}/sections`).select().get();
+    return snap.docs.map((d) => d.id);
+  } catch (error) {
+    console.error(`절 오버라이드 목록 읽기 실패 (${bookId}):`, error);
+    return [];
+  }
+}
+
+/**
+ * 책의 절 오버레이를 모두 지워 파일 원본으로 되돌린다 (Firestore 모드에서만 의미 있음).
+ * 원고를 재임포트하면 옛 오버레이가 새 원고를 가리므로 이걸로 비운다.
+ */
+export async function revertBookSections(bookId: string): Promise<string> {
+  if (!SAFE_ID.test(bookId) || !readLocalBook(bookId)) {
+    throw new Error(`존재하지 않는 책입니다: ${bookId}`);
   }
   if (!isFirebaseConfigured()) {
     throw new Error('개발 모드에서는 파일이 곧 원본이라 되돌릴 수 없습니다. git을 사용하세요.');
   }
-  await getDb().doc(`bookOverrides/${bookId}/sections/${sectionId}`).delete();
-  return '수정사항을 버리고 파일 원본으로 되돌렸습니다.';
+  const db = getDb();
+  const snap = await db.collection(`bookOverrides/${bookId}/sections`).select().get();
+  const batch = db.batch();
+  snap.docs.forEach((d) => batch.delete(d.ref));
+  await batch.commit();
+  return `고친 절 ${snap.size}개를 파일 원본으로 되돌렸습니다.`;
 }
 
 // ── 리더에서 블록 하나 바로 고치기 (관리자) ──────────────────────

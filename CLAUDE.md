@@ -58,15 +58,15 @@ Next.js 16 App Router + React 19, TypeScript. 스타일은 `app/globals.css`의 
 - **무료 도서** (`lib/books.ts`): 원본은 `content/books/<id>/book.json`(마당>장>절) +
   `sections/*.md` 파일. 그 **위에** Firestore `bookOverrides/{bookId}`(공개 여부)와
   `bookOverrides/{bookId}/sections/{sectionId}`(절 마크다운) 오버레이가 덮인다.
-  → 원고를 재임포트해도 옛 오버레이가 남아 있으면 새 원고가 보이지 않는다. 관리자 패널의
-  "원본으로 되돌리기"로 오버레이를 비워야 한다.
-  독자 화면은 `lib/reader-render.ts`(Shiki 구문 강조, 실습 단계 묶기, 이미지 크기)로 그리고,
-  관리자 편집기는 단순 HTML인 `renderSectionHtml()`을 그대로 쓴다. 두 경로를 섞지 말 것.
+  → 원고를 재임포트해도 옛 오버레이가 남아 있으면 새 원고가 보이지 않는다. `/admin/books`의
+  "원본으로 되돌리기"(책 단위, 고친 절이 있을 때만 보임)로 오버레이를 비워야 한다.
+  독자 화면은 `lib/reader-render.ts`(Shiki 구문 강조, 실습 단계 묶기, 이미지 크기)로 그린다.
   독서 진도(읽은 절, 마지막 절, 그 절 안에서 읽던 위치 비율)는 브라우저 `localStorage`(`lib/reading-progress.ts`)에만
   저장한다. 다 읽지 않은 절에 다시 오면 `ReaderClient`가 읽던 곳으로 데려간다(Next의 맨 위 스크롤이 멈춘 뒤).
   **관리자 바로 고치기**: 관리자로 로그인하면 리더의 블록마다 수정 버튼이 생긴다(`components/InlineBookEditor.tsx`).
   리더가 블록에 원고 marked 토큰 번호(`data-src`)를 붙이고, `/api/admin/books/block`이 그 블록의 원고만
   바꿔 `saveSectionMarkdown()`으로 저장한다(편집 시작 때 원고와 다르면 409). 즉 운영에서는 오버레이가 생긴다.
+  본문 수정은 이것 하나뿐이다(옛 관리자 리치 텍스트 편집기 `/admin/books/[bookId]`는 없앴다).
 - **질문 게시판(닫음)**: 2026-10-01에 내렸다. 독자 질문은 서재 문단 댓글로, 강의 질문은 오픈채팅방(`OPEN_CHAT_URL`)으로 받는다.
   `/qna/*`는 `next.config.ts`에서 `/books`로 보낸다. 옛 글 `questions/{id}`(+ 하위 `comments/`)와 `userActivity`의 게시판
   기록 필드는 같은 날 Firestore에서 지웠다. 도배 방지 문서 `userActivity/{email}`은 문단 댓글이 계속 쓴다.
@@ -111,9 +111,8 @@ middleware도 `authOptions`와 같은 서명 키 규칙(운영 `AUTH_SECRET` 필
 
 ### 사용자 입력 HTML
 
-HTML은 저장·렌더 전에 `lib/sanitize.ts`의 `sanitizeBookHtml()`(이미지·표·`style="width:%"`까지 허용)을
-반드시 거친다(원고 마크다운 변환 결과, 관리자 편집기 Tiptap HTML). 독자 댓글은 HTML 없이 평문으로만 받는다. 관리자 도서 편집은
-`lib/html-to-md.ts`(turndown)로 HTML→마크다운 역변환해 저장한다.
+원고 마크다운을 HTML로 바꾼 결과는 렌더 전에 `lib/sanitize.ts`의 `sanitizeBookHtml()`(이미지·표·`style="width:%"`까지 허용)을
+반드시 거친다. 관리자 바로 고치기도 마크다운 원고를 그대로 저장하고, 독자 댓글은 HTML 없이 평문으로만 받는다.
 
 ### 경로 안전
 

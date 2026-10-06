@@ -159,7 +159,7 @@ python3 scripts/make-og-images.py                                       # public
 - 커밋 대상: `scripts/pdf-book/books/<id>.json`, `content/books/<id>/`, `public/books/<id>/`,
   `public/covers/<id>.jpg`, `public/og/<id>.jpg`, 고친 파이프라인·리더 파일.
 - 커밋 메시지는 한글, 푸시는 사용자 확인 후 `git pull --rebase origin main` → `git push origin main`.
-- 운영에 이미 올라간 책을 재생성했다면: 관리자 패널에서 절을 고친 적이 있으면 Firestore 오버레이가
+- 운영에 이미 올라간 책을 재생성했다면: 리더에서 절을 고친 적이 있으면 Firestore 오버레이가
   새 원고를 가린다 → `/admin/books`의 "원본으로 되돌리기"를 안내한다.
 
 ## 한계 (사용자에게 보고)
