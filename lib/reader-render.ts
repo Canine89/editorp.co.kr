@@ -6,6 +6,7 @@ import { createHighlighter, type Highlighter, type ThemeRegistration } from 'shi
 import { getSectionMarkdown, type BookSectionMeta } from './books';
 import { sanitizeBookHtml } from './sanitize';
 import { removeEmptyStudyLabels } from './reader-presentation';
+import { COPY_BUTTON_HTML } from './reader-copy';
 
 /**
  * 리더 전용 절 렌더러.
@@ -229,9 +230,10 @@ export async function renderReaderMarkdown(raw: string, options: ReaderMarkdownO
       const name = filename ? (filename[1] ?? filename[2] ?? filename[3]) : '';
       const { code: text, decorations } = lang === 'html' ? { code: code.text, decorations: [] } : codeMarks(code.text);
       codeCount++;
-      const body = hl.codeToHtml(text, { lang, theme: 'barobaro-light', decorations });
+      const body = hl.codeToHtml(text, { lang, theme: 'barobaro-light', decorations })
+        .replace(/color:#1F4292/gi, 'color:var(--colors-primary)');
       const firstLine = text.split('\n').find((l) => l.trim()) ?? '';
-      const block = `<div class="code"${aligned ? ` data-src="${i}"` : ''} data-pk="${pkOf(`code:${code.text}`, `코드 · ${firstLine}`)}"><div class="code-head"><span class="code-meta">${LANG_LABEL[lang] ?? '코드'}</span><button type="button" data-copy>복사</button>${name ? `<span class="code-filename">${escapeHtml(name)}</span>` : ''}</div>${body}</div>`;
+      const block = `<div class="code"${aligned ? ` data-src="${i}"` : ''} data-pk="${pkOf(`code:${code.text}`, `코드 · ${firstLine}`)}"><div class="code-head"><span class="code-meta">${LANG_LABEL[lang] ?? '코드'}</span>${COPY_BUTTON_HTML}${name ? `<span class="code-filename">${escapeHtml(name)}</span>` : ''}</div>${body}</div>`;
       // 원고 토큰은 그대로 두고 표시만 묶는다. 코드와 결과는 각각 편집·댓글·복사할 수 있다.
       let labelIndex = i + 1;
       while (tokens[labelIndex]?.type === 'space') labelIndex++;
@@ -247,7 +249,7 @@ export async function renderReaderMarkdown(raw: string, options: ReaderMarkdownO
           const resultCode = result as Tokens.Code;
           const outputText = codeMarks(resultCode.text).code;
           codeCount++;
-          output = `<div class="code code-output"${aligned ? ` data-src="${resultIndex}"` : ''} data-pk="${pkOf(`code:${resultCode.text}`, `코드 · ${outputText.split('\n')[0]}`)}"><div class="code-head">${heading}<button type="button" data-copy>복사</button></div>${hl.codeToHtml(outputText, { lang: 'text', theme: 'barobaro-light' })}</div>`;
+          output = `<div class="code code-output"${aligned ? ` data-src="${resultIndex}"` : ''} data-pk="${pkOf(`code:${resultCode.text}`, `코드 · ${outputText.split('\n')[0]}`)}"><div class="code-head">${heading}${COPY_BUTTON_HTML}</div>${hl.codeToHtml(outputText, { lang: 'text', theme: 'barobaro-light' })}</div>`;
         } else {
           const img = (result as Tokens.Paragraph).tokens[0] as Tokens.Image;
           output = `<div class="code-output"><div class="code-head">${heading}</div>${withSrc(withPk(figure(img), `img:${img.href}`, '실행 결과'), resultIndex)}</div>`;

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import { copyReaderCode } from "@/lib/reader-copy";
 
 /**
  * 아티클 화면의 브라우저 동작. 서버가 그린 리더 마크업(rd-*)에 붙는다.
@@ -39,14 +40,7 @@ export function ArticleClient() {
       const target = event.target as HTMLElement;
       const copy = target.closest<HTMLButtonElement>("[data-copy]");
       if (copy) {
-        const code = copy.closest(".code")?.querySelector("pre")?.innerText ?? "";
-        try {
-          await navigator.clipboard.writeText(code);
-          copy.textContent = "복사됨";
-        } catch {
-          copy.textContent = "복사 실패";
-        }
-        setTimeout(() => (copy.textContent = "복사"), 1500);
+        await copyReaderCode(copy);
         return;
       }
       const img = target.closest<HTMLImageElement>(".rd-prose figure img");

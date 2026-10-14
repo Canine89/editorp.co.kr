@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { parseBookProgress, readingSnapshot, updateBookProgress } from "@/lib/reading-progress";
+import { copyReaderCode } from "@/lib/reader-copy";
 
 interface Props {
   bookId: string;
@@ -79,7 +80,7 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
         scrollTo({ top: 0, behavior: "instant" });
         toast?.remove();
       });
-      document.body.append(toast);
+      (document.querySelector('.rd-book-theme') ?? document.body).append(toast);
       toastTimer = window.setTimeout(() => toast?.remove(), 5000);
     };
     resumeFrame = requestAnimationFrame(settle);
@@ -156,14 +157,7 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
       const target = event.target as HTMLElement;
       const copy = target.closest<HTMLButtonElement>("[data-copy]");
       if (copy) {
-        const code = copy.closest(".code")?.querySelector("pre")?.innerText ?? "";
-        try {
-          await navigator.clipboard.writeText(code);
-          copy.textContent = "복사됨";
-        } catch {
-          copy.textContent = "복사 실패";
-        }
-        setTimeout(() => (copy.textContent = "복사"), 1500);
+        await copyReaderCode(copy);
         return;
       }
       const img = target.closest<HTMLImageElement>(".rd-prose figure img");

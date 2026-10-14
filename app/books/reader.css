@@ -1,5 +1,30 @@
 /* 무료 도서: 책 소개(목차)와 리더. 본문 HTML(렌더러 출력)에 붙는 클래스가 있어 전역 파일로 두고 rd- 접두어를 쓴다 */
 
+/* 책 안에서는 표지 팔레트를 공유한다. 사이트 헤더·서재 목록은 공통 테마를 유지한다. */
+.rd-book-theme {
+  --book-primary: #1f4292;
+  --book-accent: #eea93b;
+  --colors-primary: var(--book-primary);
+  --colors-primary-active: color-mix(in srgb, var(--book-primary) 82%, #000);
+  --colors-yellow: var(--book-accent);
+  --colors-mark: color-mix(in srgb, var(--book-accent) 35%, transparent);
+  --colors-surface-soft: color-mix(in srgb, var(--book-primary) 5%, #fff);
+  --colors-surface-cream-strong: color-mix(in srgb, var(--book-primary) 9%, #fff);
+  --colors-hairline: color-mix(in srgb, var(--book-primary) 16%, #fff);
+  --colors-hairline-soft: color-mix(in srgb, var(--book-primary) 7%, #fff);
+  --book-result-surface: color-mix(in srgb, var(--book-accent) 10%, #fff);
+}
+.rd-book-theme[data-book='python-intro'] { --book-primary: #124da2; --book-accent: #ffb20f; }
+.rd-book-theme[data-book='barobaro-chatgpt-codex'] { --book-primary: #5a489c; --book-accent: #76b82a; }
+.rd-book-theme[data-book='barobaro-vibe-cursor'] { --book-primary: #c60079; --book-accent: #008dbb; }
+.rd-book-theme .rd-intro-side h1,
+.rd-book-theme .rd-main h1,
+.rd-book-theme .rd-contents h2,
+.rd-book-theme .rd-chapter h3,
+.rd-book-theme .rd-prose h2,
+.rd-book-theme .rd-prose h3,
+.rd-book-theme .rd-prose .code-filename { color: var(--colors-primary); }
+
 /* ── 책 소개 ─────────────────────────────── */
 .rd-intro { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 48px; padding-top: 32px; padding-bottom: 32px; align-items: start; }
 .rd-intro-side { position: sticky; top: 96px; }
@@ -113,11 +138,22 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-prose .code-head > button:last-child { margin-left: auto; }
 .rd-prose .code-example { margin-top: 1.4em; border: 1px solid var(--colors-hairline); border-radius: 6px; overflow: hidden; background: var(--colors-surface-soft); }
 .rd-prose .code-example > .code { margin: 0; border: 0; border-radius: 0; background: transparent; }
-.rd-prose .code-example > .code-output { border-top: 1px solid var(--colors-hairline); background: var(--colors-surface-cream-strong); }
+.rd-prose .code-example > .code-output { border-top: 1px solid var(--colors-hairline); background: var(--book-result-surface, var(--colors-surface-cream-strong)); }
 .rd-prose .code-output .code-head { border-bottom: 0; padding-bottom: 0; }
 .rd-prose .code-output figure { margin: 0; padding: 14px 16px; }
 .rd-prose .code-head button { min-height: 0; font-size: 13px; padding: 4px 8px; border-radius: 4px; color: var(--colors-muted); background: none; border: 0; cursor: pointer; }
 .rd-prose .code-head button:hover { color: var(--colors-ink); background: var(--colors-surface-cream-strong); }
+.rd-prose .code-head [data-copy] { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; min-width: 36px; padding: 0; border: 1px solid var(--colors-hairline); border-radius: 6px; background: var(--colors-canvas); color: var(--colors-primary); transition: background-color var(--transition-fast), border-color var(--transition-fast); }
+.rd-prose .code-head [data-copy]:hover { border-color: var(--colors-primary); color: var(--colors-primary); }
+.rd-prose .code-head [data-copy]:active { background: var(--colors-surface-cream-strong); }
+.rd-prose .code-head [data-copy-state='done'] { background: var(--colors-primary); color: var(--colors-on-primary); border-color: var(--colors-primary); }
+.rd-prose .code-head [data-copy-state='error'] { color: var(--colors-error); border-color: var(--colors-error); }
+.rd-prose .code-head .copy-done { display: none; }
+.rd-prose [data-copy-state='done'] .copy-icon { display: none; }
+.rd-prose [data-copy-state='done'] .copy-done { display: block; }
+@media (pointer: coarse) {
+  .rd-prose .code-head [data-copy] { width: 44px; height: 44px; min-width: 44px; }
+}
 .rd-prose .code pre { margin: 0; padding: 14px 16px; overflow-x: auto; background: transparent !important; font-size: 14.5px; line-height: 1.65; }
 .rd-prose .code pre, .rd-prose .code code { font-family: var(--font-mono); }
 
