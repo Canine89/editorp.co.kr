@@ -108,5 +108,6 @@ node scripts/book-image-sizes.mjs python-intro
 
 사이트 전체의 `next/image`는 `next.config.ts`의 `images.unoptimized: true`로 원본·정적 변형 파일을 직접 제공합니다.
 유튜브 썸네일·외부 표지·캐릭터·아티클도 Vercel 실시간 이미지 변환을 사용하지 않습니다.
-옛 `/_next/image` 주소는 미들웨어가 허용된 원본 주소로만 연결합니다.
+옛 `/_next/image` 주소는 `vercel.json`의 플랫폼 리다이렉트가 허용된 원본 주소로만 연결합니다.
+일치하지 않는 주소는 정적 파일 아이콘으로 보내 변환 서비스를 호출하지 않습니다.
 정적 변형 생성 후 설정을 끄지 않도록 유지하세요. 아티클 표지는 `python scripts/book-image-variants.py --articles`로 생성합니다.
