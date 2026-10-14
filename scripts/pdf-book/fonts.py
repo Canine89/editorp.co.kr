@@ -18,7 +18,7 @@ XML = f'{WORK}/all.xml'
 FIRST, LAST = CFG['pages']
 os.makedirs(WORK, exist_ok=True)
 if not os.path.exists(XML):
-    subprocess.run(['pdftohtml', '-xml', '-f', '1', '-l', str(LAST), '-i', '-nodrm', '-q', os.path.join(ROOT, CFG['pdf']), XML[:-4]], check=True)
+    subprocess.run(['pdftohtml', '-xml', '-f', '1', '-l', str(LAST), '-i', '-nodrm', '-q', os.environ.get('PDF_BOOK_SOURCE') or os.path.join(ROOT, CFG['pdf']), XML[:-4]], check=True)
 
 src = open(XML, encoding='utf-8').read()
 fonts = {m.group(1): f"{m.group(3).split('+')[-1]}/{m.group(2)}/{m.group(4).lower()}"

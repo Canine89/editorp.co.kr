@@ -106,6 +106,16 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 /* 코드 */
 .rd-prose .code { margin-top: 1.4em; border: 1px solid var(--colors-hairline); border-radius: 6px; background: var(--colors-surface-soft); overflow: hidden; }
 .rd-prose .code-head { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px 6px 14px; border-bottom: 1px solid var(--colors-hairline); font-size: 13px; color: var(--colors-muted); }
+.rd-prose .code-head { justify-content: flex-start; gap: 8px; }
+.rd-prose .code-filename { margin-left: auto; min-width: 0; overflow-wrap: anywhere; text-align: right; font-family: var(--font-mono); font-weight: 600; color: var(--colors-ink); }
+.rd-prose .code-meta { white-space: nowrap; }
+.rd-prose .code-head > button { flex-shrink: 0; }
+.rd-prose .code-head > button:last-child { margin-left: auto; }
+.rd-prose .code-example { margin-top: 1.4em; border: 1px solid var(--colors-hairline); border-radius: 6px; overflow: hidden; background: var(--colors-surface-soft); }
+.rd-prose .code-example > .code { margin: 0; border: 0; border-radius: 0; background: transparent; }
+.rd-prose .code-example > .code-output { border-top: 1px solid var(--colors-hairline); background: var(--colors-surface-cream-strong); }
+.rd-prose .code-output .code-head { border-bottom: 0; padding-bottom: 0; }
+.rd-prose .code-output figure { margin: 0; padding: 14px 16px; }
 .rd-prose .code-head button { min-height: 0; font-size: 13px; padding: 4px 8px; border-radius: 4px; color: var(--colors-muted); background: none; border: 0; cursor: pointer; }
 .rd-prose .code-head button:hover { color: var(--colors-ink); background: var(--colors-surface-cream-strong); }
 .rd-prose .code pre { margin: 0; padding: 14px 16px; overflow-x: auto; background: transparent !important; font-size: 14.5px; line-height: 1.65; }
@@ -179,6 +189,8 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
   .rd-mbar button { min-height: 44px; padding: 0 10px; border-radius: 6px; color: var(--colors-ink); font-size: 14px; background: none; border: 0; cursor: pointer; }
   .rd-main h1 { font-size: 28px; }
   .rd-prose .code { margin-left: -20px; margin-right: -20px; border-radius: 0; border-left: 0; border-right: 0; }
+  .rd-prose .code-example { margin-left: -20px; margin-right: -20px; border-radius: 0; border-left: 0; border-right: 0; }
+  .rd-prose .code-example > .code { margin-left: 0; margin-right: 0; }
   /* 넓은 표는 화면 밖으로 밀어내지 말고 표 안에서 가로로 넘긴다 */
   .rd-prose table { display: block; overflow-x: auto; }
   .rd-prose .steps > li { padding-left: 2.2em; }

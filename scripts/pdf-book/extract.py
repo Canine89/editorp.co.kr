@@ -17,7 +17,7 @@ import numpy as np
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 CFG = json.load(open(sys.argv[1]))
 WORK = f"/tmp/pdf-book/{CFG['id']}"
-PDF = os.path.join(ROOT, CFG['pdf'])
+PDF = os.environ.get('PDF_BOOK_SOURCE') or os.path.join(ROOT, CFG['pdf'])
 FIRST, LAST = CFG['pages']
 XML = f'{WORK}/all.xml'
 HI = WORK + '/hi/p-{:03d}.png'
@@ -25,7 +25,7 @@ OUT = f'{WORK}/pages'; DBG = f'{WORK}/debug'
 for d in (OUT, DBG, f'{WORK}/hi'): os.makedirs(d, exist_ok=True)
 if not os.path.exists(XML):
     subprocess.run(['pdftohtml', '-xml', '-f', '1', '-l', str(LAST), '-i', '-nodrm', '-q', PDF, XML[:-4]], check=True)
-if not os.path.exists(HI.format(LAST)):
+if not CFG.get('external_render') and not os.path.exists(HI.format(LAST)):
     subprocess.run(['pdftoppm', '-f', str(FIRST), '-l', str(LAST), '-r', '216', '-png', PDF, f'{WORK}/hi/p'], check=True)
 S = 2  # 렌더 배율 (XML 좌표 × 2)
 TOP_CUT, BOTTOM_CUT = 105, 1065  # 머리글·바닥글 제외
@@ -105,6 +105,7 @@ FLOW = {'qnum', 'code', 'kbd', 'quiz_label', 'quiz_answer', 'body', 'annot', 'h2
         'coach_title', 'coach_tag', 'tag', 'ex_label', 'summary_label', 'summary', 'sec_title',
         'side_title', 'side_text', 'small'}
 DECOR_IN_BOX = {'quiz_label', 'sec_title', 'ex_label', 'coach_title', 'coach_tag', 'tag', 'note_label', 'summary_label', 'decor', 'box_label', 'side_title'}
+FLOW.update({'code_filename', 'code_output'})
 
 def runs_of(n):
     out = []
@@ -117,6 +118,42 @@ def runs_of(n):
         fam, size, color = fonts[t.group(5)]
         out.append(dict(top=top, left=left, bottom=top + h, right=left + w, text=txt, bold='<b>' in raw,
                         role=role_of(fam, size, color, txt), font=f'{fam}/{size}/{color}'))
+    if CFG.get('numbered_code'):
+        # 파일명 그림자의 흰 글자와 코드 상자 장식은 본문에 중복하지 않는다.
+        headers = [r for r in out if r['role'] == 'code_filename']
+        for r in out:
+            if r['text'].strip() == '실행 결과': r['role'] = 'decor'
+        for r in out:
+            if r['role'] == 'code':
+                m = re.match(r'^\s*\d{2,3}(?:\s+|$)', r['text'])
+                # 줄 번호는 코드 왼쪽 여백(짝수/홀수 쪽의 위치가 다름)에만 있다.
+                gutters = CFG.get('code_gutters', {'153': 191, '159': 191, '160': 191, '196': 234, '202': 234, '203': 234})
+                numbered = m and str(r['left']) in gutters and 'code_line' not in r and not any(
+                    o['role'] == 'code' and abs(o['top'] - r['top']) <= 2 and o['left'] < r['left'] for o in out)
+                if numbered:
+                    origin = gutters[str(r['left'])]
+                    for same in out:
+                        if same['role'] == 'code' and abs(same['top'] - r['top']) <= 2:
+                            same['code_origin'] = origin
+                            same['code_line'] = int(m[0].strip())
+                    r['left'] += round(len(m[0]) * 6.75)
+                    r['text'] = r['text'][len(m[0]):]
+                    r['right'] = max(r['right'], r['left'])
+        # '실행 결과' 라벨과 같은 상자 아래쪽에 있는 코드는 출력으로 분리한다.
+        outputs = [r for r in out if r['text'].strip() == '실행 결과']
+        for label in outputs:
+            start = label['top'] - 3
+            following = [r['top'] for r in out if r['top'] > label['top'] + 3 and r['role'] not in ('code', 'decor', 'fig')]
+            end = min(following, default=BOTTOM_CUT + 1)
+            for r in out:
+                if r['role'] == 'code' and start <= r['top'] < end: r['role'] = 'code_output'
+        # 파일명은 표기 문자열만 남긴다.
+        for r in headers: r['text'] = r['text'].strip()
+        out = [r for r in out if r['text'].strip() or 'code_line' in r]
+        # 요약의 강조색은 검정 문장 위에 같은 낱말을 겹쳐 인쇄한다.
+        out = [r for r in out if not (r['role'] == 'summary' and is_accent(r['font'].split('/')[-1])
+               and any(o is not r and o['role'] == 'summary' and not is_accent(o['font'].split('/')[-1])
+                       and abs(o['top'] - r['top']) <= 2 and r['text'].strip() in o['text'] for o in out))]
     return out
 
 def figures(n, runs):
@@ -137,6 +174,15 @@ def figures(n, runs):
     small = ink[: H // g * g, : W // g * g].reshape(H // g, g, W // g, g).any(axis=(1, 3))
     dil = np.array(Image.fromarray(small.astype(np.uint8) * 255).filter(ImageFilter.MaxFilter(9))) > 0
     seen = np.zeros_like(dil); comps = []
+    if CFG.get('fast_components'):
+        from scipy import ndimage
+        labels, count = ndimage.label(dil, structure=np.ones((3, 3)))
+        for sl in ndimage.find_objects(labels):
+            if sl is None: continue
+            yy, xx = sl
+            x0, x1, y0, y1 = xx.start, xx.stop - 1, yy.start, yy.stop - 1
+            comps.append([(x0 + 4) * g / S, (y0 + 4) * g / S, (x1 - 3) * g / S, (y1 - 3) * g / S, 0])
+        seen[:] = True
     for y, x in zip(*np.nonzero(dil)):
         if seen[y, x]: continue
         q = deque([(y, x)]); seen[y, x] = True; y0 = y1 = y; x0 = x1 = x; cnt = 0
@@ -151,7 +197,7 @@ def figures(n, runs):
         bx0, by0 = (x0 + 4) * g / S, (y0 + 4) * g / S
         bx1, by1 = (x1 - 3) * g / S, (y1 - 3) * g / S
         comps.append([bx0, by0, bx1, by1, cnt])
-    figs = []
+    figs = [dict(zip(('left', 'top', 'right', 'bottom'), box)) for box in CFG.get('figure_regions', {}).get(str(n), [])]
     for x0, y0, x1, y1, cnt in comps:
         w, h = x1 - x0, y1 - y0
         if w < 70 or h < 45 or w * h < 7000: continue
@@ -159,6 +205,11 @@ def figures(n, runs):
         if y0 < 180 and h < 70 and w > 500: continue          # 앞부분 쪽 머리의 제목 띠
         inside = [r for r in runs if x0 - 4 <= (r['left'] + r['right']) / 2 <= x1 + 4 and y0 - 4 <= (r['top'] + r['bottom']) / 2 <= y1 + 4]
         deco = [r for r in inside if r['role'] in DECOR_IN_BOX]
+        if CFG.get('numbered_code') and any(r['role'] == 'code_filename' or 'code_origin' in r for r in inside):
+            # 코드 위 말풍선은 인용문으로 옮긴다. 코드 글자가 그림에 흡수되면 복사할 때 누락된다.
+            for r in inside:
+                if r['role'] == 'fig': r['role'] = 'note'
+            continue
         flow = [r for r in inside if r['role'] in ('body', 'h2', 'h3', 'box_text', 'summary', 'small', 'side_text')]
         # 장식 띠(절 제목 배너·바로 NN 알약·코칭 머리띠 등): 흰 글씨 장식이 있고 그림 글자가 거의 없으면 버린다
         if deco and len([r for r in inside if r['role'] == 'fig']) < 2 and h < 160: continue
@@ -206,6 +257,7 @@ def main(pages_range):
         for r in runs:
             cx, cy = (r['left'] + r['right']) / 2, (r['top'] + r['bottom']) / 2
             r['in_fig'] = any(f['left'] - 4 <= cx <= f['right'] + 4 and f['top'] - 4 <= cy <= f['bottom'] + 4 for f in figs)
+            if CFG.get('numbered_code') and r['role'] in ('code', 'code_filename', 'code_output'): r['in_fig'] = False
         json.dump(dict(page=n, runs=runs, figs=figs), open(f'{OUT}/p{n:03d}.json', 'w'), ensure_ascii=False)
         im = Image.open(HI.format(n)).convert('RGB'); d = ImageDraw.Draw(im)
         for f in figs: d.rectangle([f['left'] * S, f['top'] * S, f['right'] * S, f['bottom'] * S], outline=(255, 0, 0), width=6)
@@ -217,4 +269,9 @@ def main(pages_range):
         print(n, 'runs', len(runs), 'figs', len(figs), 'unplaced fig-text', sum(1 for r in runs if r['role'] == 'fig' and not r['in_fig']))
 
 if __name__ == '__main__':
-    main(range(FIRST, LAST + 1))
+    if CFG.get('workers', 1) > 1:
+        from multiprocessing import get_context
+        with get_context('fork').Pool(CFG['workers']) as pool:
+            pool.map(main, ([n] for n in range(FIRST, LAST + 1)))
+    else:
+        main(range(FIRST, LAST + 1))

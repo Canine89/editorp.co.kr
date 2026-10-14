@@ -187,6 +187,7 @@ export async function renderReaderMarkdown(raw: string, options: ReaderMarkdownO
   let codeCount = 0;
   let html = '';
   let steps: { no: string; html: string; src: number }[] | null = null;
+  const consumed = new Set<number>();
   const closeSteps = () => {
     if (steps) {
       html += `<ol class="steps">${steps
@@ -197,7 +198,7 @@ export async function renderReaderMarkdown(raw: string, options: ReaderMarkdownO
   };
 
   for (const [i, t] of tokens.entries()) {
-    if (t.type === 'space') continue;
+    if (t.type === 'space' || consumed.has(i)) continue;
 
     // 실습 단계: "01 설명..." 문단 + 뒤따르는 이미지
     const stepNo = t.type === 'paragraph' ? (t as Tokens.Paragraph).text.match(/^(\d{2})\s/) : null;
@@ -219,13 +220,44 @@ export async function renderReaderMarkdown(raw: string, options: ReaderMarkdownO
     }
     if (t.type === 'code') {
       const code = t as Tokens.Code;
-      const lang = LANGS.includes(code.lang ?? '') ? code.lang! : 'text';
+      // 예: ```python filename="03-01-number_add.py"
+      // 파일명은 코드와 분리해 복사·구문 강조·댓글 키에 영향을 주지 않는다.
+      const info = code.lang ?? '';
+      const language = info.split(/\s+/)[0];
+      const lang = LANGS.includes(language) ? language : 'text';
+      const filename = info.match(/(?:^|\s)filename=(?:"([^"\n]+)"|'([^'\n]+)'|([^\s]+))/);
+      const name = filename ? (filename[1] ?? filename[2] ?? filename[3]) : '';
       const { code: text, decorations } = lang === 'html' ? { code: code.text, decorations: [] } : codeMarks(code.text);
-      const lines = text.split('\n').length;
       codeCount++;
       const body = hl.codeToHtml(text, { lang, theme: 'barobaro-light', decorations });
       const firstLine = text.split('\n').find((l) => l.trim()) ?? '';
-      html += `<div class="code"${aligned ? ` data-src="${i}"` : ''} data-pk="${pkOf(`code:${code.text}`, `코드 · ${firstLine}`)}"><div class="code-head"><span>${LANG_LABEL[lang] ?? '코드'} · ${lines}줄</span><button type="button" data-copy>복사</button></div>${body}</div>`;
+      const block = `<div class="code"${aligned ? ` data-src="${i}"` : ''} data-pk="${pkOf(`code:${code.text}`, `코드 · ${firstLine}`)}"><div class="code-head"><span class="code-meta">${LANG_LABEL[lang] ?? '코드'}</span><button type="button" data-copy>복사</button>${name ? `<span class="code-filename">${escapeHtml(name)}</span>` : ''}</div>${body}</div>`;
+      // 원고 토큰은 그대로 두고 표시만 묶는다. 코드와 결과는 각각 편집·댓글·복사할 수 있다.
+      let labelIndex = i + 1;
+      while (tokens[labelIndex]?.type === 'space') labelIndex++;
+      const label = tokens[labelIndex];
+      const resultLabel = label?.type === 'paragraph' && /^(?:\*\*)?실행 결과(?:\*\*)?$/.test((label as Tokens.Paragraph).text.trim());
+      let resultIndex = labelIndex + 1;
+      while (tokens[resultIndex]?.type === 'space') resultIndex++;
+      const result = resultLabel ? tokens[resultIndex] : undefined;
+      if (result?.type === 'code' || (result && isImageOnly(result))) {
+        const heading = withSrc('<span>실행 결과</span>', labelIndex);
+        let output: string;
+        if (result.type === 'code') {
+          const resultCode = result as Tokens.Code;
+          const outputText = codeMarks(resultCode.text).code;
+          codeCount++;
+          output = `<div class="code code-output"${aligned ? ` data-src="${resultIndex}"` : ''} data-pk="${pkOf(`code:${resultCode.text}`, `코드 · ${outputText.split('\n')[0]}`)}"><div class="code-head">${heading}<button type="button" data-copy>복사</button></div>${hl.codeToHtml(outputText, { lang: 'text', theme: 'barobaro-light' })}</div>`;
+        } else {
+          const img = (result as Tokens.Paragraph).tokens[0] as Tokens.Image;
+          output = `<div class="code-output"><div class="code-head">${heading}</div>${withSrc(withPk(figure(img), `img:${img.href}`, '실행 결과'), resultIndex)}</div>`;
+        }
+        consumed.add(labelIndex);
+        consumed.add(resultIndex);
+        html += `<div class="code-example">${block}${output}</div>`;
+      } else {
+        html += block;
+      }
       continue;
     }
     if (t.type === 'heading' && (t as Tokens.Heading).depth === 2) {

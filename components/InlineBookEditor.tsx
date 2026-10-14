@@ -170,7 +170,7 @@ export function InlineBookEditor({ bookId, sectionId }: { bookId: string; sectio
               disabled={saving}
             />
             <div className="rd-edit-foot">
-              <small>마크다운 · 비우고 저장하면 블록 삭제 · ⌘/Ctrl+Enter 저장 · Esc 취소</small>
+              <small>{code ? '첫 줄 예: ```python filename="example.py" · ' : '마크다운 · '}비우고 저장하면 블록 삭제 · ⌘/Ctrl+Enter 저장 · Esc 취소</small>
               <button type="button" className="btn btn-secondary" onClick={close} disabled={saving}>
                 취소
               </button>

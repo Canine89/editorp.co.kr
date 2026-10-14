@@ -32,12 +32,13 @@ for ch in CFG['chapters']:
     PART_OF.append(ch.get('part', ''))
 
 FAM = {'body': 'body', 'annot': 'body', 'step': 'body', 'label': 'body', 'kbd': 'body', 'code': 'code',
+       'code_filename': 'code_filename', 'code_output': 'code_output',
        'quiz_label': 'box', 'quiz_answer': 'box',
        'h2': 'h2', 'ex_label': 'h2', 'tag': 'h2', 'qnum': 'h2', 'h3': 'h3', 'h4': 'h4',
        'note_label': 'note', 'small': 'note', 'box_label': 'box', 'box_text': 'box', 'coach_tag': 'box', 'coach_title': 'box',
        'side_title': 'side', 'side_text': 'side', 'summary_label': 'summary', 'summary': 'summary'}
-PRIO = ['h2', 'h3', 'h4', 'note', 'box', 'side', 'summary', 'code', 'body']
-GAP = {'body': 12, 'note': 14, 'box': 22, 'side': 22, 'summary': 12, 'h2': 8, 'h3': 8, 'h4': 8, 'code': 12}
+PRIO = ['code_filename', 'h2', 'h3', 'h4', 'note', 'box', 'side', 'summary', 'code_output', 'code', 'body']
+GAP = {'body': 12, 'note': 14, 'box': 22, 'side': 22, 'summary': 12, 'h2': 8, 'h3': 8, 'h4': 8, 'code': 12, 'code_filename': 8, 'code_output': 12}
 
 # 원문자 글리프가 ➊·❷처럼 섞여 들어오므로 ❶ 계열로 맞춘다
 CIRCLED = {0x278A + i: 0x2776 + i for i in range(10)}
@@ -59,7 +60,8 @@ def lines_of(runs):
         cur = None
         for r in row:
             side = FAM.get(r['role']) == 'side'
-            if cur and r['left'] - cur['right'] <= 40 and side == cur['side']:
+            same_code = CFG.get('numbered_code') and cur and r['role'] in ('code', 'code_output') and all(x['role'] == r['role'] for x in cur['runs'])
+            if cur and (r['left'] - cur['right'] <= 40 or same_code) and side == cur['side']:
                 cur['runs'].append(r); cur['right'] = max(cur['right'], r['right']); cur['bottom'] = max(cur['bottom'], r['bottom'])
                 cur['top'] = min(cur['top'], r['top'])
             else:
@@ -90,7 +92,7 @@ def blocks_of(lines):
                 b['lines'][0]['runs'] += ln['runs']; b['right'] = max(b['right'], ln['right']); b['left'] = min(b['left'], ln['left']); break
             xo = min(b['right'], ln['right']) - max(b['left'], ln['left'])
             # 박스 안에서는 라벨('잠깐 퀴즈' 등)과 글이 가로로 조금 떨어져 있어도 한 박스
-            near = xo > 0 or (ln['fam'] == 'box' and xo > -40)
+            near = xo > 0 or (ln['fam'] == 'box' and xo > -40) or (CFG.get('numbered_code') and ln['fam'] == 'code')
             # 박스 안의 라벨은 글 줄과 세로로 겹쳐 놓이기도 한다
             low = -24 if ln['fam'] == 'box' else -4
             if near and low <= ln['top'] - b['bottom'] <= GAP[ln['fam']]:
@@ -162,6 +164,9 @@ def body_md(b):
         if t.startswith('•'):
             out.append('- ' + linkify(t.lstrip('• ').strip()))
         else:
+            if CFG.get('numbered_code') and not steprun:
+                # '10 더하기 5' 같은 설명의 숫자가 리더의 실습 단계로 바뀌지 않게 한다.
+                t = re.sub(r'^(\d{2})(?=\s)', r'`\1`', t)
             out.append(t)
     if steprun and out:
         no = re.search(r'\d+', ''.join(r['text'] for r in b['lines'][0]['runs'] if r['role'] == 'step'))
@@ -174,21 +179,42 @@ def body_md(b):
         prev_list = is_list
     return md
 
-def code_md(b):
+def code_md(b, filename='', output=False):
     """코드만 있는 줄 묶음 → 펜스 코드 블록. 들여쓰기는 글자 폭으로 되살린다"""
-    runs = [r for ln in b['lines'] for r in ln['runs'] if r['role'] == 'code' and r['text'].strip()]
+    role = 'code_output' if output else 'code'
+    runs = [r for ln in b['lines'] for r in ln['runs'] if r['role'] == role and r['text'].strip()]
     if not runs: return ''
     cw = min(max(1.0, (r['right'] - r['left']) / max(1, len(r['text']))) for r in runs)
     out = []
+    numbered = any('code_line' in r for r in runs)
     for ln in b['lines']:
-        parts = sorted([r for r in ln['runs'] if r['role'] == 'code'], key=lambda r: r['left'])
+        parts = sorted([r for r in ln['runs'] if r['role'] == role], key=lambda r: r['left'])
         if not parts: continue
-        line = ' ' * max(0, round((parts[0]['left'] - b['left']) / cw))
+        line_numbers = [r['code_line'] for r in parts if 'code_line' in r]
+        nonempty = [r for r in parts if r['text'].strip()]
+        if not nonempty:
+            out.append('')
+            continue
+        parts = nonempty
+        origins = [r['code_origin'] for r in runs if 'code_origin' in r]
+        left = min(origins) if origins and not output else b['left']
+        line = ' ' * max(0, round((parts[0]['left'] - left) / (6.75 if CFG.get('numbered_code') else cw)))
         for i, r in enumerate(parts):
-            if i: line += ' ' if not line.endswith(' ') and not r['text'].startswith(' ') else ''
+            if i:
+                if CFG.get('numbered_code'):
+                    line += ' ' * max(0, round((r['left'] - parts[i - 1]['right']) / cw))
+                else:
+                    line += ' ' if not line.endswith(' ') and not r['text'].startswith(' ') else ''
             line += r['text']
-        out.append(line.rstrip())
-    return '```text\n' + '\n'.join(out) + '\n```'
+        if numbered and not line_numbers and out:
+            # 인쇄 폭을 넘어 줄바꿈된 문자열·주석을 원래 코드 한 줄로 되돌린다.
+            out[-1] += line.lstrip()
+        else:
+            out.append(line)
+    info = ('python' if CFG.get('numbered_code') and not output else 'text') + (f' filename="{filename}"' if filename else '')
+    if filename and out:
+        out[0] = out[0].lstrip()
+    return '```' + info + '\n' + '\n'.join(l.rstrip() for l in out) + '\n```'
 
 def heading_md(b, level):
     runs = [r for ln in b['lines'] for r in ln['runs'] if not r['in_fig']]
@@ -199,7 +225,7 @@ def heading_md(b, level):
     if ex: title = f'{ex} {title}'
     if q: title = f'{q}. {title}'
     if tag: title = f'{title} ({tag})'
-    return '#' * level + ' ' + title, title
+    return ('#' * level + ' ' + title).rstrip(), title
 
 def quote(label, body):
     lines = [f'> **{label}**'] if label else []
@@ -217,6 +243,15 @@ def page_items(n):
     d = json.load(open(f'{PAGES}/p{n:03d}.json'))
     runs = [r for r in d['runs'] if not r['in_fig'] and r['role'] not in ('decor', 'sec_title', 'fig')]
     blocks = blocks_of(lines_of(runs))
+    if CFG.get('numbered_code'):
+        # '용어 01'·'연습 01' 알약은 옆의 소제목과 한 제목이다.
+        for b in list(blocks):
+            if b['fam'] != 'h2' or not any(r['role'] == 'ex_label' for ln in b['lines'] for r in ln['runs']): continue
+            neighbor = next((o for o in blocks if o is not b and o['fam'] == 'h3' and abs(o['top'] - b['top']) <= 12), None)
+            if neighbor:
+                b['lines'] += neighbor['lines']
+                b['top'] = min(b['top'], neighbor['top'])
+                blocks.remove(neighbor)
     items = [dict(kind='block', page=n, **b) for b in blocks]
     items += [dict(kind='fig', page=n, top=f['top'], left=f['left'], bottom=f['bottom'], right=f['right'], fam='fig') for f in d['figs']]
     return sorted(items, key=lambda it: (it['top'], it['left']))
@@ -251,6 +286,9 @@ def render(items):
     ai_next = False
     last_body = None; last_space = False
     pending_summary = []
+    filename = ''
+    last_code = None
+    last_code_md = None
     def flush_summary():
         if pending_summary:
             md.append(quote('바로 핵심 요약', '\n'.join('- ' + s for s in pending_summary)))
@@ -260,11 +298,19 @@ def render(items):
         if it['kind'] == 'fig':
             src = save_fig(it)
             alt = '챗GPT 답변 화면' if ai_next else ''
-            md.append(f'![{alt}]({src})'); ai_next = False
+            result_image = CFG.get('numbered_code') and last_code and last_code['page'] == it['page'] and 0 <= it['top'] - last_code['bottom'] < 70 and it['right'] - it['left'] > 300
+            if result_image and last_code_md in md:
+                md.insert(md.index(last_code_md) + 1, f'**실행 결과**\n\n![실행 결과]({src})')
+                last_code = None
+            else:
+                md.append(f'![{alt}]({src})')
+            ai_next = False
             continue
         fam = it['fam']
+        if fam not in ('code', 'code_output', 'note', 'code_filename'): last_code = None
         runs = [r for ln in it['lines'] for r in ln['runs']]
-        if fam == 'h2': md.append(heading_md(it, 2)[0])
+        if fam == 'code_filename': filename = ''.join(r['text'] for r in runs).strip()
+        elif fam == 'h2': md.append(heading_md(it, 2)[0])
         elif fam == 'h3': md.append(heading_md(it, 3)[0])
         elif fam == 'h4': md.append(heading_md(it, 4)[0])
         elif fam == 'body':
@@ -277,8 +323,18 @@ def render(items):
                 tail = sorted((r for r in it['lines'][-1]['runs'] if not r['in_fig']), key=lambda r: r['left'])
                 last_space = bool(tail) and tail[-1]['text'].endswith(' ')
         elif fam == 'code':
-            t = code_md(it)
-            if t: md.append(t)
+            t = code_md(it, filename)
+            continuation = not filename and md and re.match(r'^```python(?: filename="[^"]+")?\n', md[-1]) and md[-1].endswith('\n```')
+            filename = ''
+            if t:
+                if continuation: md[-1] = md[-1][:-4] + '\n' + t.split('\n', 1)[1]
+                else: md.append(t)
+                last_code = it
+                last_code_md = md[-1]
+        elif fam == 'code_output':
+            t = code_md(it, output=True)
+            if t: md.append('**실행 결과**\n\n' + t)
+            last_code = None
         elif fam == 'note':
             t = text_of(it['lines'])
             if t: md.append(quote('NOTE', t))
@@ -364,9 +420,10 @@ def main():
             _, a, b, titles = ch
             items = [it for n in range(a, b + 1) for it in page_items(n)]
             sections = split_sections(items, titles)
-        chap = dict(id=f'c{ci}', title=title, sections=[])
+        chapter_num = ci + CFG.get('chapter_start', 0)
+        chap = dict(id=f'ch-{chapter_num}' if 'chapter_start' in CFG else f'c{ci}', title=title, sections=[])
         for si, (st, items) in enumerate(sections, 1):
-            sid = f'{ci}-{si}'
+            sid = f'{chapter_num}-{si}'
             md = render(items)
             open(f'{OUT}/sections/{sid}.md', 'w').write(md + '\n')
             chap['sections'].append(dict(id=sid, title=st, file=f'{sid}.md'))
