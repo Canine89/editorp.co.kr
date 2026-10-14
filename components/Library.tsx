@@ -5,6 +5,7 @@ import { getAuthoredBooks, getJoinedBooks, getSelectedBooks } from "@/lib/editor
 import { BookProgress } from "./BookProgress";
 import { Character } from "./Character";
 import { TocMarks } from "./TocMarks";
+import { ManuscriptNotice } from "./ManuscriptNotice";
 import styles from "./Library.module.css";
 
 const role = (r: string) => r.replaceAll("/", "·");
@@ -17,6 +18,7 @@ export function FreeBooks({ books }: { books: Book[] }) {
   if (books.length === 0) return <p className={styles.empty}>공개한 책을 준비하고 있습니다.</p>;
   return (
     <>
+      <ManuscriptNotice />
       {books.map((book) => {
         const flat = flattenSections(book);
         const sections = flat.map((f) => ({ id: f.section.id, title: sectionLabel(f) }));
@@ -87,7 +89,7 @@ export function AuthoredBooks() {
         {books.map((book) => (
           <li key={book.url}>
             <a href={book.url} target="_blank" rel="noopener noreferrer">
-              <Image className={styles.cover} src={book.image} alt="" width={300} height={420} sizes="(max-width:960px) 45vw, 170px" />
+              <Image className={styles.cover} src={book.image} alt="" width={300} height={420} sizes="(max-width:960px) 45vw, 170px" referrerPolicy="no-referrer" />
               <b>{book.title}</b>
             </a>
             <span>
@@ -120,7 +122,7 @@ export function JoinedBooks({ limit }: { limit?: number }) {
       <div className={`${styles.shelf} reveal`}>
         {shown.map((book) => (
           <a key={book.url} href={book.url} target="_blank" rel="noopener noreferrer" title={book.title}>
-            <Image className={styles.cover} src={book.image} alt={book.title} width={180} height={252} sizes="(max-width:520px) 30vw, (max-width:960px) 22vw, 110px" />
+            <Image className={styles.cover} src={book.image} alt={book.title} width={180} height={252} sizes="(max-width:520px) 30vw, (max-width:960px) 22vw, 110px" referrerPolicy="no-referrer" />
             <small>{role(book.role)}</small>
           </a>
         ))}

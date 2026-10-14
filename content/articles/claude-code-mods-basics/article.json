@@ -5,10 +5,27 @@
   "publishedAt": "2026-10-05",
   "updatedAt": "2026-10-05",
   "cover": {
-    "src": "/articles/claude-code-mods-basics/cover.png",
+    "src": "/articles/claude-code-mods-basics/cover.webp",
     "alt": "에디터P가 노트북 앞에 앉아 있고, 옆으로 튀어나온 파일 탐색기 창을 주황색 Claude 캐릭터가 함께 보는 클레이 장면",
     "width": 1384,
-    "height": 796
+    "height": 796,
+    "variants": [
+      {
+        "src": "/articles/claude-code-mods-basics/responsive/cover-8c90f3867e88-480.webp",
+        "width": 480,
+        "height": 276
+      },
+      {
+        "src": "/articles/claude-code-mods-basics/responsive/cover-8c90f3867e88-640.webp",
+        "width": 640,
+        "height": 368
+      },
+      {
+        "src": "/articles/claude-code-mods-basics/responsive/cover-8c90f3867e88-960.webp",
+        "width": 960,
+        "height": 552
+      }
+    ]
   },
   "source": "lecture-slides/claude-code-mods-basics"
 }

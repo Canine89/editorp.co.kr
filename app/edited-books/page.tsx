@@ -118,6 +118,7 @@ export default async function EditedBooksPage({
             <div className={styles.cover}>
               <Image
                 src={book.image}
+                referrerPolicy="no-referrer"
                 alt={`${book.title} 표지`}
                 width={170}
                 height={240}

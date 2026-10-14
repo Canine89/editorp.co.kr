@@ -18,14 +18,14 @@ ROOT = Path(__file__).resolve().parents[1]
 WIDTHS = (480, 640, 768)
 
 
-def variants_for(source):
+def variants_for(source, widths=WIDTHS):
     raw = source.read_bytes()
     fingerprint = hashlib.sha256(raw).hexdigest()[:12]
     output = source.parent / 'responsive'
     result = []
     with Image.open(source) as image:
         image = ImageOps.exif_transpose(image)
-        for width in WIDTHS:
+        for width in widths:
             if width >= image.width:
                 continue
             height = round(image.height * width / image.width)
@@ -46,6 +46,18 @@ def variants_for(source):
 
 
 def main():
+    if '--articles' in sys.argv:
+        for meta in sorted((ROOT / 'content/articles').glob('*/article.json')):
+            article = json.loads(meta.read_text())
+            cover = article.get('cover')
+            if not cover: continue
+            source = ROOT / 'public' / cover['src'].lstrip('/')
+            (source.parent / 'responsive').mkdir(exist_ok=True)
+            _, variants, _ = variants_for(source, (480, 640, 960))
+            if variants: cover['variants'] = variants
+            meta.write_text(json.dumps(article, ensure_ascii=False, indent=2) + '\n')
+            print(f'[{meta.parent.name}] 아티클 표지 무손실 변형 {len(variants)}개', flush=True)
+        return
     ids = sys.argv[1:] or [p.name for p in (ROOT / 'content/books').iterdir() if (p / 'book.json').exists()]
     for book_id in ids:
         source_dir = ROOT / 'public/books' / book_id

@@ -6,7 +6,7 @@ import styles from "./books.module.css";
 
 export const metadata = pageShareMetadata({
   title: "서재 | 편집자P의 AI 서재",
-  description: "편집자P가 무료로 공개한 책을 브라우저에서 바로 읽을 수 있습니다.",
+  description: "저자가 공개한 온라인 원고를 브라우저에서 읽을 수 있습니다. 정식 전자책 상품이 아닌 공개 원고입니다.",
   path: "/books",
 });
 // 관리자 패널의 공개 설정이 재배포 없이 반영되도록 동적 렌더링
@@ -20,7 +20,7 @@ export default async function BooksPage() {
       <header className={styles.head}>
         <div>
           <h1>서재</h1>
-          <p>무료로 공개한 책입니다. 목차에서 원하는 장부터 읽을 수 있고, 읽은 곳은 이 브라우저에 기억됩니다.</p>
+          <p>저자가 공개한 온라인 원고를 읽는 곳입니다. 목차에서 원하는 장부터 읽을 수 있고, 읽은 곳은 이 브라우저에 기억됩니다.</p>
         </div>
         <Character id="library-books" height={96} />
       </header>

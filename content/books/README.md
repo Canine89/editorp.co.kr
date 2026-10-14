@@ -53,6 +53,11 @@ content/books/
 
 자세한 안내는 샘플 책(`free-book-guide`) 본문 자체에 들어 있습니다.
 
+## 공개 원고 공지
+
+`components/ManuscriptNotice.tsx`의 공지를 홈 서재·도서 목록·책 목차·모든 본문 첫머리에 공통으로 표시합니다.
+정식 전자책 상품이 아닌 저자가 공개한 온라인 원고이며, 판매용 도서보다 편집·교정·레이아웃 완성도가 낮다는 점을 명시합니다.
+
 ## 코드 파일명
 
 저장할 파일명이 있는 예제는 코드 펜스의 언어 뒤에 `filename="파일명"`을 적습니다.
@@ -100,3 +105,8 @@ node scripts/book-image-sizes.mjs python-intro
 `book-image-sizes.mjs`가 이를 `images.json`에 합쳐 리더가 화면 배율에 맞는 파일을 고르게 합니다.
 작은 화면용 파일을 불러오지 못하면 원본으로 한 번 복구합니다.
 작은 파일은 `/responsive/` 아래에 원본 해시를 포함한 이름으로 저장합니다.
+
+사이트 전체의 `next/image`는 `next.config.ts`의 `images.unoptimized: true`로 원본·정적 변형 파일을 직접 제공합니다.
+유튜브 썸네일·외부 표지·캐릭터·아티클도 Vercel 실시간 이미지 변환을 사용하지 않습니다.
+옛 `/_next/image` 주소는 미들웨어가 허용된 원본 주소로만 연결합니다.
+정적 변형 생성 후 설정을 끄지 않도록 유지하세요. 아티클 표지는 `python scripts/book-image-variants.py --articles`로 생성합니다.

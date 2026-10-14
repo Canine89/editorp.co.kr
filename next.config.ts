@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // 배포 전에 만든 정적 이미지를 직접 제공한다. Vercel 변환 횟수를 소모하지 않는다.
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" },
       { protocol: "https", hostname: "image.yes24.com", pathname: "/goods/**" },

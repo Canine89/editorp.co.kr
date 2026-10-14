@@ -2,7 +2,7 @@
 .reader { max-width: 1120px; display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 40px; padding-top: 24px; padding-bottom: 40px; }
 
 /* 표지 그림: 투명 배경 클레이 장면이라 판도 테두리도 두지 않는다 */
-.cover { margin: 0 0 28px; }
+.cover { margin: 0 0 28px; max-width: 640px; }
 .cover img { display: block; width: 100%; max-height: 420px; height: auto; object-fit: contain; }
 
 /* 출처: 본문보다 한 단계 작게 (lib/articles.ts가 붙이는 refs) */

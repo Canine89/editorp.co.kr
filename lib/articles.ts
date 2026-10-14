@@ -12,6 +12,7 @@ import { renderReaderMarkdown, type ReaderSection } from './reader-render';
 export interface ArticleImageSize {
   width: number;
   height: number;
+  variants?: { src: string; width: number; height: number }[];
 }
 
 export interface Article {

@@ -250,7 +250,7 @@ export default async function HomePage() {
           <header className={styles.secHead}>
             <div>
               <h2>서재</h2>
-              <p>무료로 공개한 책입니다. 브라우저에서 바로 읽고, 읽은 곳은 이 브라우저에 기억됩니다.</p>
+              <p>저자가 공개한 온라인 원고입니다. 브라우저에서 바로 읽고, 읽은 곳은 이 브라우저에 기억됩니다.</p>
             </div>
             <Character id="library-books" height={88} />
           </header>

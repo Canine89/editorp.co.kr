@@ -5,10 +5,27 @@
   "publishedAt": "2026-10-04",
   "updatedAt": "2026-10-05",
   "cover": {
-    "src": "/articles/laya-classification/cover.png",
+    "src": "/articles/laya-classification/cover.webp",
     "alt": "초록색 Laya가 고객 문의 봉투를 색깔별 상자에 나눠 담고, 옆에서 사람이 클립보드로 확인하는 장면",
     "width": 1334,
-    "height": 870
+    "height": 870,
+    "variants": [
+      {
+        "src": "/articles/laya-classification/responsive/cover-8d33305ed2e2-480.webp",
+        "width": 480,
+        "height": 313
+      },
+      {
+        "src": "/articles/laya-classification/responsive/cover-8d33305ed2e2-640.webp",
+        "width": 640,
+        "height": 417
+      },
+      {
+        "src": "/articles/laya-classification/responsive/cover-8d33305ed2e2-960.webp",
+        "width": 960,
+        "height": 626
+      }
+    ]
   },
   "source": "lecture-slides/laya-classification"
 }

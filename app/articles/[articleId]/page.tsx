@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { pageShareMetadata } from "@/lib/share";
 import { formatArticleDate, getArticle, listArticles, renderArticle } from "@/lib/articles";
@@ -55,13 +54,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ articl
 
           {article.cover && (
             <figure className={styles.cover}>
-              <Image
+              {/* 미리 생성한 파일을 직접 제공해 Vercel 이미지 변환을 사용하지 않는다. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={article.cover.src}
+                srcSet={article.cover.variants?.length ? [...article.cover.variants.map((v) => `${v.src} ${v.width}w`), `${article.cover.src} ${article.cover.width}w`].join(", ") : undefined}
                 alt={article.cover.alt}
                 width={article.cover.width}
                 height={article.cover.height}
-                sizes="(max-width: 960px) 100vw, 748px"
-                priority
+                sizes="(max-width: 680px) calc(100vw - 40px), 640px"
+                fetchPriority="high"
+                decoding="async"
               />
             </figure>
           )}
