@@ -233,7 +233,8 @@ export async function renderReaderMarkdown(raw: string, options: ReaderMarkdownO
       const body = hl.codeToHtml(text, { lang, theme: 'barobaro-light', decorations })
         .replace(/color:#1F4292/gi, 'color:var(--colors-primary)');
       const firstLine = text.split('\n').find((l) => l.trim()) ?? '';
-      const block = `<div class="code"${aligned ? ` data-src="${i}"` : ''} data-pk="${pkOf(`code:${code.text}`, `코드 · ${firstLine}`)}"><div class="code-head"><span class="code-meta">${LANG_LABEL[lang] ?? '코드'}</span>${COPY_BUTTON_HTML}${name ? `<span class="code-filename">${escapeHtml(name)}</span>` : ''}</div>${body}</div>`;
+      const languageIcon = lang !== 'text' ? `<img class="code-language-icon" src="/icons/languages/${lang}.svg" width="18" height="18" alt="" aria-hidden="true">` : '';
+      const block = `<div class="code"${aligned ? ` data-src="${i}"` : ''} data-pk="${pkOf(`code:${code.text}`, `코드 · ${firstLine}`)}"><div class="code-head"><span class="code-meta">${languageIcon}${LANG_LABEL[lang] ?? '코드'}</span>${COPY_BUTTON_HTML}${name ? `<span class="code-filename">${escapeHtml(name)}</span>` : ''}</div>${body}</div>`;
       // 원고 토큰은 그대로 두고 표시만 묶는다. 코드와 결과는 각각 편집·댓글·복사할 수 있다.
       let labelIndex = i + 1;
       while (tokens[labelIndex]?.type === 'space') labelIndex++;

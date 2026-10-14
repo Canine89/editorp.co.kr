@@ -133,7 +133,8 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-prose .code-head { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px 6px 14px; border-bottom: 1px solid var(--colors-hairline); font-size: 13px; color: var(--colors-muted); }
 .rd-prose .code-head { justify-content: flex-start; gap: 8px; }
 .rd-prose .code-filename { margin-left: auto; min-width: 0; overflow-wrap: anywhere; text-align: right; font-family: var(--font-mono); font-weight: 600; color: var(--colors-ink); }
-.rd-prose .code-meta { white-space: nowrap; }
+.rd-prose .code-meta { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.rd-prose .code-language-icon { display: block; width: 18px; height: 18px; flex-shrink: 0; object-fit: contain; }
 .rd-prose .code-head > button { flex-shrink: 0; }
 .rd-prose .code-head > button:last-child { margin-left: auto; }
 .rd-prose .code-example { margin-top: 1.4em; border: 1px solid var(--colors-hairline); border-radius: 6px; overflow: hidden; background: var(--colors-surface-soft); }
