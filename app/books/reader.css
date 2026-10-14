@@ -179,7 +179,8 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
 .rd-kbd { font-size: 13px; border: 1px solid var(--colors-hairline); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; color: var(--colors-muted); }
 
 /* 이 절에서 + 읽기 설정 */
-.rd-aside { position: sticky; top: 80px; align-self: start; font-size: 14px; transition: top var(--transition-normal); }
+.rd-aside { position: sticky; top: 80px; align-self: start; max-height: calc(100dvh - 104px); overflow-y: auto; font-size: 14px; transition: top var(--transition-normal); }
+html.header-hidden .rd-aside { max-height: calc(100dvh - 48px); }
 .rd-aside h2 { font-size: 14px; color: var(--colors-muted); font-weight: 600; letter-spacing: 0; margin-bottom: 10px; }
 .rd-aside ol { list-style: none; border-left: 1px solid var(--colors-hairline); }
 .rd-aside ol a { display: block; padding: 6px 0 6px 14px; margin-left: -1px; border-left: 2px solid transparent; color: var(--colors-muted); line-height: 1.45; transition: color var(--transition-fast), border-color var(--transition-fast); }
@@ -208,6 +209,15 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
   .rd-reader { grid-template-columns: 220px minmax(0, 1fr); }
   .rd-aside { display: none; }
 }
+@media (max-width: 1279px) {
+  .rd-mbar {
+    display: flex; position: sticky; top: 64px; z-index: 40; background: var(--colors-canvas); border-bottom: 1px solid var(--colors-hairline);
+    margin: 0 -20px 24px; padding: 4px 8px 4px 20px; align-items: center; gap: 2px; font-size: 14px; transition: top var(--transition-normal);
+  }
+  html.header-hidden .rd-mbar { top: 0; }
+  .rd-mbar span { margin-right: auto; color: var(--colors-muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .rd-mbar button { min-height: 44px; padding: 0 10px; border-radius: 6px; color: var(--colors-ink); font-size: 14px; background: none; border: 0; cursor: pointer; }
+}
 @media (max-width: 960px) {
   .rd-intro { grid-template-columns: 1fr; gap: 24px; padding-top: 20px; }
   .rd-chapter ol { columns: 1; }
@@ -217,13 +227,6 @@ html.header-hidden .rd-toc, html.header-hidden .rd-aside { top: 24px; }
   .rd-intro-side > :nth-child(n + 4) { grid-column: 1 / -1; }
   .rd-reader { grid-template-columns: minmax(0, 1fr); padding-top: 0; }
   .rd-toc:not(.rd-sheet-body) { display: none; }
-  .rd-mbar {
-    display: flex; position: sticky; top: 64px; z-index: 40; background: var(--colors-canvas); border-bottom: 1px solid var(--colors-hairline);
-    margin: 0 -20px 24px; padding: 4px 8px 4px 20px; align-items: center; gap: 2px; font-size: 14px; transition: top var(--transition-normal);
-  }
-  html.header-hidden .rd-mbar { top: 0; }
-  .rd-mbar span { margin-right: auto; color: var(--colors-muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  .rd-mbar button { min-height: 44px; padding: 0 10px; border-radius: 6px; color: var(--colors-ink); font-size: 14px; background: none; border: 0; cursor: pointer; }
   .rd-main h1 { font-size: 28px; }
   .rd-prose .code { margin-left: -20px; margin-right: -20px; border-radius: 0; border-left: 0; border-right: 0; }
   .rd-prose .code-example { margin-left: -20px; margin-right: -20px; border-radius: 0; border-left: 0; border-right: 0; }

@@ -5,6 +5,7 @@ import { getBook, flattenSections, sectionLabel, bookShareMetadata } from "@/lib
 import { BookProgress } from "@/components/BookProgress";
 import { TocMarks } from "@/components/TocMarks";
 import { PreviewRest } from "@/components/BookPurchase";
+import { ManuscriptNotice } from "@/components/ManuscriptNotice";
 import "../reader.css";
 
 // 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
@@ -33,6 +34,8 @@ export default async function BookTocPage({ params }: { params: Promise<{ bookId
     : null;
 
   return (
+    <>
+    <div className="container"><ManuscriptNotice /></div>
     <div className="container rd-intro">
       <div className="rd-intro-side">
         {book.cover && <Image className="rd-cover" src={book.cover} alt={`${book.title} 표지`} width={280} height={382} priority unoptimized />}
@@ -83,5 +86,6 @@ export default async function BookTocPage({ params }: { params: Promise<{ bookId
       </section>
       <TocMarks bookId={book.id} sectionIds={sections.map((s) => s.id)} />
     </div>
+    </>
   );
 }

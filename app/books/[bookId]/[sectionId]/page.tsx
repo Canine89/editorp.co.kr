@@ -10,6 +10,7 @@ import { TocMarks } from "@/components/TocMarks";
 import { PreviewEnd } from "@/components/BookPurchase";
 import { ParagraphComments } from "@/components/ParagraphComments";
 import { InlineBookEditor } from "@/components/InlineBookEditor";
+import { ManuscriptNotice } from "@/components/ManuscriptNotice";
 import "../../reader.css";
 
 // 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
@@ -192,6 +193,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
               </button>
             </div>
           </div>
+          <ManuscriptNotice variant="reader" />
         </aside>
       </div>
 
@@ -225,6 +227,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
               크게
             </button>
           </div>
+          <ManuscriptNotice />
         </div>
       </dialog>
       {/* 확대 이미지는 누를 때 ReaderClient가 넣는다 */}

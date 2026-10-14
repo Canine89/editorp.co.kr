@@ -18,7 +18,7 @@ export function FreeBooks({ books }: { books: Book[] }) {
   if (books.length === 0) return <p className={styles.empty}>공개한 책을 준비하고 있습니다.</p>;
   return (
     <>
-      <ManuscriptNotice />
+      <ManuscriptNotice variant="prominent" />
       {books.map((book) => {
         const flat = flattenSections(book);
         const sections = flat.map((f) => ({ id: f.section.id, title: sectionLabel(f) }));
