@@ -404,6 +404,13 @@ def split_sections(items, titles):
         parts.append((heading_md(head, 2)[1], [x for j, x in enumerate(items[start:end], start) if j != i]))
     return parts
 
+def correct_filenames(markdown):
+    """원고의 파일명 정오표를 한 번에 적용한다. 연쇄 치환으로 번호가 다시 바뀌지 않게 한다."""
+    overrides = CFG.get('filename_overrides', {})
+    if not overrides: return markdown
+    pattern = r'(?<![A-Za-z0-9_-])(?:' + '|'.join(re.escape(name) for name in sorted(overrides, key=len, reverse=True)) + r')(?![A-Za-z0-9_.-])'
+    return re.sub(pattern, lambda match: overrides[match.group()], markdown)
+
 def main():
     shutil.rmtree(OUT, ignore_errors=True); shutil.rmtree(IMG, ignore_errors=True)
     os.makedirs(f'{OUT}/sections'); os.makedirs(IMG)
@@ -424,7 +431,7 @@ def main():
         chap = dict(id=f'ch-{chapter_num}' if 'chapter_start' in CFG else f'c{ci}', title=title, sections=[])
         for si, (st, items) in enumerate(sections, 1):
             sid = f'{chapter_num}-{si}'
-            md = render(items)
+            md = correct_filenames(render(items))
             open(f'{OUT}/sections/{sid}.md', 'w').write(md + '\n')
             chap['sections'].append(dict(id=sid, title=st, file=f'{sid}.md'))
             report.append((sid, st, len(md), md.count('![')))

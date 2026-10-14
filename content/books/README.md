@@ -67,6 +67,8 @@ print(a + b)
 ## 파이썬 인쇄용 PDF 재변환
 
 `scripts/pdf-book/books/python-intro.json`에 새 판의 절별 쪽 범위와 글꼴 역할을 기록합니다.
+원고의 파일명·번호 정정은 같은 설정의 `filename_overrides`에 원본 이름과 수정 이름으로 기록합니다.
+변환기는 코드 상단과 본문의 파일명 참조를 함께 바꾸므로 재변환해도 정정 사항이 유지됩니다.
 원본 PDF는 저장소에 올리지 않습니다. PDF를 프로젝트 루트에 두거나
 `PDF_BOOK_SOURCE` 환경 변수로 실제 파일 경로를 지정한 뒤 다음 순서로 실행합니다.
 파이썬 패키지는 `pymupdf`, `pillow`, `numpy`, `scipy`, 시스템 도구는 Poppler가 필요합니다.

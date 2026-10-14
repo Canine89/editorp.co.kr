@@ -49,8 +49,101 @@
   "sourceNotes": [
     {
       "page": 126,
-      "filename": "03-35-파일명",
-      "note": "PDF에 .py 파일명 대신 남아 있는 표기를 원문대로 보존했습니다."
+      "originalFilename": "03-35-파일명",
+      "filename": "03-31-string_endswith.py",
+      "note": "코드 내용에 맞는 파일명으로 수정하고 장별 연속 번호를 적용했습니다.",
+      "resolved": true
     }
-  ]
+  ],
+  "filenameNumbering": {
+    "rule": "장별 번호가 있는 고유 파일의 첫 등장 순서. 동일 파일 재등장·모듈 경로는 유지.",
+    "correctedUniqueFiles": 104,
+    "chapters": [
+      {
+        "chapter": 1,
+        "numberedFiles": 0
+      },
+      {
+        "chapter": 2,
+        "numberedFiles": 4
+      },
+      {
+        "chapter": 3,
+        "numberedFiles": 60
+      },
+      {
+        "chapter": 4,
+        "numberedFiles": 53
+      },
+      {
+        "chapter": 5,
+        "numberedFiles": 18
+      },
+      {
+        "chapter": 6,
+        "numberedFiles": 32
+      },
+      {
+        "chapter": 7,
+        "numberedFiles": 37
+      },
+      {
+        "chapter": 8,
+        "numberedFiles": 37
+      },
+      {
+        "chapter": 9,
+        "numberedFiles": 19
+      },
+      {
+        "chapter": 10,
+        "numberedFiles": 19
+      },
+      {
+        "chapter": 11,
+        "numberedFiles": 22
+      },
+      {
+        "chapter": 12,
+        "numberedFiles": 27
+      },
+      {
+        "chapter": 13,
+        "numberedFiles": 0
+      }
+    ],
+    "repeatedFilesPreserved": [
+      {
+        "chapter": 9,
+        "filename": "09-18-memo_app.py",
+        "appearances": 4
+      },
+      {
+        "chapter": 10,
+        "filename": "10-06-fix_syntax_error.py",
+        "appearances": 2
+      },
+      {
+        "chapter": 10,
+        "filename": "10-19-memo_app.py",
+        "appearances": 4
+      },
+      {
+        "chapter": 11,
+        "filename": "message_tools.py",
+        "appearances": 2
+      },
+      {
+        "chapter": 11,
+        "filename": "11-08-greeting_app.py",
+        "appearances": 2
+      },
+      {
+        "chapter": 11,
+        "filename": "11-12-memo_app.py",
+        "appearances": 2
+      }
+    ],
+    "validation": "passed"
+  }
 }
