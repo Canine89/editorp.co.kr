@@ -14,6 +14,8 @@ interface Props {
 }
 
 const SIZE_KEY = "reader-size";
+const FOCUS_KEY = "reader-focus";
+const WIDTH_KEY = "reader-width";
 
 /** 스크롤 상자 안에서 현재 절 링크가 안 보이면 가운데로 */
 function revealCurrent(box: HTMLElement | null) {
@@ -42,6 +44,23 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
     const html = document.documentElement;
     const bar = document.querySelector<HTMLElement>(".rd-progress");
     const prose = document.querySelector<HTMLElement>(".rd-prose");
+    const applyFocus = (enabled: boolean, preservePosition = true) => {
+      const anchor = preservePosition
+        ? [...(prose?.children || [])].find((el) => el.getBoundingClientRect().bottom > 100)
+        : undefined;
+      const oldTop = anchor?.getBoundingClientRect().top;
+      html.classList.toggle("reader-focus", enabled);
+      document.querySelectorAll<HTMLElement>("[data-toggle-focus]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(enabled));
+        const label = button.querySelector("[data-focus-label]");
+        if (label) label.textContent = enabled ? "집중 모드 끄기" : "읽기 집중 모드";
+      });
+      if (anchor && oldTop !== undefined) {
+        scrollBy({ top: anchor.getBoundingClientRect().top - oldTop, behavior: "instant" });
+      }
+      try { sessionStorage.setItem(FOCUS_KEY, String(enabled)); } catch {}
+    };
+    try { applyFocus(sessionStorage.getItem(FOCUS_KEY) === "true", false); } catch { applyFocus(false, false); }
     revealCurrent(document.querySelector<HTMLElement>(".rd-toc:not(.rd-sheet-body)"));
 
     // 읽던 위치: 본문 맨 위를 0, 맨 아래를 1로 둔 비율
@@ -150,6 +169,14 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
         b.setAttribute("aria-pressed", String(b.dataset.setSize === (size === "s" || size === "l" ? size : "m"))),
       );
     };
+    const applyWidth = (width: string) => {
+      const value = width === "s" || width === "l" ? width : "m";
+      html.dataset.readerWidth = value;
+      document.querySelectorAll<HTMLElement>("[data-set-width]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.setWidth === value));
+      });
+    };
+    try { applyWidth(localStorage.getItem(WIDTH_KEY) || "m"); } catch { applyWidth("m"); }
     try {
       applySize(localStorage.getItem(SIZE_KEY) || "m");
     } catch {
@@ -157,6 +184,16 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
     }
     const onClick = async (event: MouseEvent) => {
       const target = event.target as HTMLElement;
+      if (target.closest("[data-toggle-focus]")) {
+        applyFocus(!html.classList.contains("reader-focus"));
+        return;
+      }
+      const width = target.closest<HTMLElement>("[data-set-width]");
+      if (width) {
+        applyWidth(width.dataset.setWidth!);
+        try { localStorage.setItem(WIDTH_KEY, width.dataset.setWidth!); } catch {}
+        return;
+      }
       const copy = target.closest<HTMLButtonElement>("[data-copy]");
       if (copy) {
         await copyReaderCode(copy);
@@ -208,12 +245,17 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
       if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
       const el = event.target as HTMLElement;
       if (el.closest("input, textarea, select, [contenteditable='true']") || document.querySelector("dialog[open]")) return;
+      if (event.key === "Escape" && html.classList.contains("reader-focus")) {
+        applyFocus(false);
+        return;
+      }
       if (event.key === "ArrowLeft" && prevHref) router.push(prevHref);
       if (event.key === "ArrowRight" && nextHref) router.push(nextHref);
     };
     addEventListener("keydown", onKey);
 
     return () => {
+      html.classList.remove("reader-focus");
       removeImageFallback();
       removeEventListener("scroll", onScroll);
       removeEventListener("resize", onScroll);

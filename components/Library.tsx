@@ -3,31 +3,28 @@ import Link from "next/link";
 import { flattenSections, sectionLabel, type Book } from "@/lib/books";
 import { getAuthoredBooks, getJoinedBooks, getSelectedBooks } from "@/lib/editorial-content";
 import { BookProgress } from "./BookProgress";
-import { Character } from "./Character";
-import { TocMarks } from "./TocMarks";
 import { ManuscriptNotice } from "./ManuscriptNotice";
 import styles from "./Library.module.css";
 
 const role = (r: string) => r.replaceAll("/", "·");
 
 /**
- * 서재: 무료로 공개한 책. 표지·소개·진도(이어 읽기)와 장별 목차로 바로 들어간다.
- * 장마다 읽은 절 수는 TocMarks가 브라우저 기록으로 채운다.
+ * 서재: 표지와 소개 중심의 두 열 카드. 자세한 목차는 책 안에서 확인한다.
  */
 export function FreeBooks({ books }: { books: Book[] }) {
   if (books.length === 0) return <p className={styles.empty}>공개한 책을 준비하고 있습니다.</p>;
   return (
     <>
       <ManuscriptNotice variant="prominent" />
+      <div className={styles.freeGrid}>
       {books.map((book) => {
         const flat = flattenSections(book);
         const sections = flat.map((f) => ({ id: f.section.id, title: sectionLabel(f) }));
-        const chapters = book.parts.flatMap((p) => p.chapters);
         const published = book.publishedAt
           ? new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long" }).format(new Date(book.publishedAt))
           : null;
         return (
-          <article key={book.id} className={`${styles.free} reveal`} data-toc-book={book.id}>
+          <article key={book.id} className={`${styles.free} reveal`}>
             <div className={styles.feature}>
               <Link href={`/books/${book.id}`} aria-label={`${book.title} 목차`}>
                 {book.cover ? (
@@ -40,7 +37,7 @@ export function FreeBooks({ books }: { books: Book[] }) {
                 <h3>{book.title}</h3>
                 {book.subtitle && <p className={styles.sub}>{book.subtitle}</p>}
                 <p className={styles.meta}>
-                  {book.author} · {sections.length}절{published && ` · ${published} 공개`}
+                  {book.author}{published && ` · ${published} 공개`}
                 </p>
                 <p className={styles.desc}>{book.description}</p>
                 {book.purchase?.length ? (
@@ -53,27 +50,13 @@ export function FreeBooks({ books }: { books: Book[] }) {
                     ))}
                   </p>
                 ) : null}
-                <BookProgress bookId={book.id} sections={sections}>
-                  <Character id="reader-bookmark" height={84} />
-                </BookProgress>
+                <BookProgress bookId={book.id} sections={sections} compact />
               </div>
             </div>
-            <ol className={styles.chapters} aria-label={`${book.title} 장 목차`}>
-              {chapters.map((chapter) => (
-                <li key={chapter.id}>
-                  <Link href={`/books/${book.id}/${chapter.sections[0]?.id}`}>
-                    <b>{chapter.title}</b>
-                    <small data-chapter-count={chapter.sections.map((s) => s.id).join(",")}>
-                      {chapter.sections.length}절
-                    </small>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-            <TocMarks bookId={book.id} sectionIds={sections.map((s) => s.id)} scope={`[data-toc-book="${book.id}"]`} />
           </article>
         );
       })}
+      </div>
     </>
   );
 }

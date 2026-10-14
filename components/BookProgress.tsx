@@ -11,16 +11,19 @@ interface Props {
   children?: React.ReactNode;
   /** 목차 버튼. 책 소개(목차) 화면에서는 끈다 */
   toc?: boolean;
+  /** 서재 카드는 절 수와 절 제목 대신 읽은 비율만 표시한다. */
+  compact?: boolean;
 }
 
 /** 책 진도 막대와 이어 읽기 버튼. 기록이 없으면 처음부터 읽기만 보인다 */
-export function BookProgress({ bookId, sections, children, toc = true }: Props) {
+export function BookProgress({ bookId, sections, children, toc = true, compact = false }: Props) {
   const snapshot = useSyncExternalStore(subscribeReading, readingSnapshot, () => "");
   const ids = sections.map((s) => s.id);
   const progress = parseBookProgress(snapshot, bookId, ids);
   const readCount = progress.read.length;
   const next = nextToRead(sections, progress);
   const started = readCount > 0 || progress.last !== null;
+  const percent = sections.length ? Math.round((readCount / sections.length) * 100) : 0;
 
   return (
     <>
@@ -28,10 +31,10 @@ export function BookProgress({ bookId, sections, children, toc = true }: Props) 
         <div className={styles.progress}>
           {children}
           <div className={styles.progressBar}>
-            <i style={{ width: `${Math.round((readCount / sections.length) * 100)}%` }} />
+            <i style={{ width: `${percent}%` }} />
           </div>
           <small>
-            {readCount}/{sections.length}절 읽음{next ? ` · 다음: ${next.title}` : " · 다 읽었습니다"}
+            {compact ? (next ? `${percent}% 읽음` : "다 읽었습니다") : `${readCount}/${sections.length}절 읽음${next ? ` · 다음: ${next.title}` : " · 다 읽었습니다"}`}
           </small>
         </div>
       )}

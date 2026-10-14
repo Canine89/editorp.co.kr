@@ -2,204 +2,162 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, BookOpen, Eye, EyeOff, ExternalLink, RotateCcw } from 'lucide-react';
-import type { Book } from '@/lib/books';
+import Image from 'next/image';
+import { ArrowUp, ArrowDown, BookOpen, Eye, EyeOff, ExternalLink, Pencil, RotateCcw } from 'lucide-react';
+import type { Book, BookDetails } from '@/lib/books';
+import styles from './BookAdminList.module.css';
 
 type AdminBook = Book & { sectionCount: number; overridden: string[] };
 
-/**
- * 도서 관리: 책 목록, 공개 토글, 사이트에서 고친 절 되돌리기.
- * 본문 수정은 리더에서 관리자로 로그인해 블록마다 한다(InlineBookEditor).
- */
 export function BookAdminList({ initialBooks }: { initialBooks: AdminBook[] }) {
   const [books, setBooks] = useState(initialBooks);
+  const [savedOrder, setSavedOrder] = useState(initialBooks.map((book) => book.id));
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ text: string; isError: boolean } | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [draft, setDraft] = useState<BookDetails>({ title: '', subtitle: '', author: '', description: '' });
+  const orderChanged = books.some((book, index) => book.id !== savedOrder[index]);
+  const notify = (text: string, isError = false) => setMessage({ text, isError });
 
-  const notify = (text: string, isError = false) => {
-    setMessage({ text, isError });
-    setTimeout(() => setMessage(null), 4000);
+  const request = async (url: string, body: unknown, method = 'PUT') => {
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || '저장에 실패했습니다.');
+    return data;
+  };
+
+  const move = (index: number, offset: number) => {
+    setBooks((current) => {
+      const next = [...current];
+      [next[index], next[index + offset]] = [next[index + offset], next[index]];
+      return next;
+    });
+    setMessage(null);
+  };
+
+  const saveOrder = async () => {
+    setBusy(true);
+    try {
+      const ids = books.map((book) => book.id);
+      const data = await request('/api/admin/books/order', { bookIds: ids });
+      setSavedOrder(ids);
+      notify(data.message);
+    } catch (error) {
+      notify(error instanceof Error ? error.message : '순서 저장에 실패했습니다.', true);
+    } finally { setBusy(false); }
   };
 
   const togglePublish = async (book: Book) => {
     const next = book.isPublished === false;
     setBusy(true);
     try {
-      const res = await fetch('/api/admin/books/publish', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bookId: book.id, isPublished: next }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setBooks((prev) => prev.map((b) => (b.id === book.id ? { ...b, isPublished: next } : b)));
-      notify(`'${book.title}' ${next ? '공개' : '비공개'} 처리. ${data.message}`);
+      const data = await request('/api/admin/books/publish', { bookId: book.id, isPublished: next });
+      setBooks((prev) => prev.map((b) => b.id === book.id ? { ...b, isPublished: next } : b));
+      notify(`‘${book.title}’ ${next ? '공개' : '비공개'} 처리. ${data.message}`);
     } catch (error) {
       notify(error instanceof Error ? error.message : '공개 설정 변경 실패', true);
-    } finally {
-      setBusy(false);
-    }
+    } finally { setBusy(false); }
+  };
+
+  const saveDetails = async (bookId: string) => {
+    setBusy(true);
+    try {
+      const data = await request('/api/admin/books/details', { bookId, details: draft });
+      setBooks((prev) => prev.map((book) => book.id === bookId ? { ...book, ...data.details } : book));
+      setEditId(null);
+      notify(data.message);
+    } catch (error) {
+      notify(error instanceof Error ? error.message : '소개 저장에 실패했습니다.', true);
+    } finally { setBusy(false); }
   };
 
   const revertBook = async (book: AdminBook) => {
-    const list = book.overridden.map((title) => `· ${title}`).join('\n');
-    if (!window.confirm(`'${book.title}'에서 사이트에서 고친 절을 모두 버리고 파일 원본으로 되돌릴까요?\n\n${list}`)) return;
+    if (!window.confirm(`‘${book.title}’에서 사이트에서 고친 절을 모두 버리고 파일 원본으로 되돌릴까요?\n\n${book.overridden.map((title) => `· ${title}`).join('\n')}`)) return;
     setBusy(true);
     try {
-      const res = await fetch('/api/admin/books/revert', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bookId: book.id }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setBooks((prev) => prev.map((b) => (b.id === book.id ? { ...b, overridden: [] } : b)));
-      notify(`'${book.title}' ${data.message}`);
+      const data = await request('/api/admin/books/revert', { bookId: book.id }, 'POST');
+      setBooks((prev) => prev.map((b) => b.id === book.id ? { ...b, overridden: [] } : b));
+      notify(`‘${book.title}’ ${data.message}`);
     } catch (error) {
       notify(error instanceof Error ? error.message : '되돌리기에 실패했습니다.', true);
-    } finally {
-      setBusy(false);
-    }
+    } finally { setBusy(false); }
   };
 
   return (
-    <div style={{ backgroundColor: 'var(--colors-canvas)', minHeight: '100vh', paddingBottom: '60px' }}>
-      <div className="container" style={{ paddingTop: '28px', maxWidth: '860px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Link href="/admin" className="btn btn-secondary" style={{ height: '34px', padding: '0 12px', fontSize: '13px', gap: '5px' }}>
-              <ArrowLeft size={14} /> 로드맵 관리
-            </Link>
-            <h1 style={{ fontSize: '22px', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-              <BookOpen size={20} /> 도서 관리
-            </h1>
-            <Link href="/admin/comments" className="btn btn-secondary" style={{ height: '34px', padding: '0 12px', fontSize: '13px' }}>
-              독자 댓글
-            </Link>
-          </div>
-          {message && (
-            <span
-              style={{
-                fontSize: '13px',
-                fontWeight: 500,
-                padding: '6px 14px',
-                borderRadius: 'var(--rounded-pill)',
-                backgroundColor: message.isError
-                  ? 'color-mix(in srgb, var(--colors-error) 12%, transparent)'
-                  : 'color-mix(in srgb, var(--colors-success) 14%, transparent)',
-                color: message.isError ? 'var(--colors-error)' : 'var(--colors-success)',
-              }}
-            >
-              {message.text}
-            </span>
-          )}
-        </div>
-
-        {books.length === 0 ? (
-          <p style={{ color: 'var(--colors-muted)', fontSize: '14px' }}>
-            등록된 책이 없습니다. 원고는 임포터(scripts/import-book.mjs)로 추가합니다.
-          </p>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {books.map((book) => {
-              const published = book.isPublished !== false;
-              return (
-                <div
-                  key={book.id}
-                  className="card-cream"
-                  style={{ padding: '18px 20px', display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}
-                >
-                  {book.cover ? (
-                    <img
-                      src={book.cover}
-                      alt=""
-                      style={{ height: '72px', width: 'auto', borderRadius: 'var(--rounded-xs)', border: '1px solid var(--colors-hairline)', flexShrink: 0 }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        height: '72px',
-                        width: '52px',
-                        borderRadius: 'var(--rounded-xs)',
-                        border: '1px solid var(--colors-hairline)',
-                        backgroundColor: 'var(--colors-surface-soft)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--colors-muted-soft)',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <BookOpen size={20} />
-                    </div>
-                  )}
-
-                  <div style={{ flex: 1, minWidth: '200px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                      <strong style={{ fontSize: '15.5px', color: 'var(--colors-ink)', wordBreak: 'keep-all' }}>
-                        {book.title}
-                      </strong>
-                      <span
-                        className="badge"
-                        style={{
-                          fontSize: '11px',
-                          padding: '2px 9px',
-                          backgroundColor: published
-                            ? 'color-mix(in srgb, var(--colors-success) 15%, transparent)'
-                            : 'var(--colors-surface-cream-strong)',
-                          color: published ? 'var(--colors-success)' : 'var(--colors-muted)',
-                        }}
-                      >
-                        {published ? '공개' : '비공개'}
-                      </span>
-                    </div>
-                    <span style={{ fontSize: '12.5px', color: 'var(--colors-muted)' }}>
-                      {book.author} · 총 {book.sectionCount}개 절
-                      {book.overridden.length > 0 && (
-                        <span title={book.overridden.join('\n')} style={{ color: 'var(--colors-warning)' }}>
-                          {' '}· 사이트에서 고친 절 {book.overridden.length}개
-                        </span>
-                      )}
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <Link
-                      href={`/books/${book.id}`}
-                      target="_blank"
-                      className="btn btn-secondary"
-                      style={{ height: '34px', padding: '0 12px', fontSize: '12.5px', gap: '5px' }}
-                    >
-                      <ExternalLink size={13} /> 사이트에서 보기
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => togglePublish(book)}
-                      disabled={busy}
-                      className="btn btn-secondary"
-                      style={{ height: '34px', padding: '0 12px', fontSize: '12.5px', gap: '5px' }}
-                    >
-                      {published ? <EyeOff size={13} /> : <Eye size={13} />}
-                      {published ? '비공개로 전환' : '공개로 전환'}
-                    </button>
-                    {book.overridden.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => revertBook(book)}
-                        disabled={busy}
-                        className="btn btn-secondary"
-                        style={{ height: '34px', padding: '0 12px', fontSize: '12.5px', gap: '5px' }}
-                      >
-                        <RotateCcw size={13} /> 원본으로 되돌리기
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+    <div className={`container ${styles.page}`}>
+      <header className={styles.header}>
+        <div><h1><BookOpen size={24} aria-hidden="true" /> 도서 관리</h1><p>서재의 도서 순서와 소개, 공개 상태를 관리합니다.</p></div>
+        <nav aria-label="관리자 메뉴">
+          <Link className="btn btn-secondary" href="/admin">로드맵 관리</Link>
+          <Link className="btn btn-secondary" href="/admin/comments">독자 댓글</Link>
+          <Link className="btn btn-secondary" href="/books" target="_blank">서재 확인 <ExternalLink size={14} aria-hidden="true" /></Link>
+        </nav>
+      </header>
+      <div className={styles.summary}>
+        <span>등록 도서 <b>{books.length}</b></span>
+        <span>공개 <b>{books.filter((b) => b.isPublished !== false).length}</b></span>
+        <span>비공개 <b>{books.filter((b) => b.isPublished === false).length}</b></span>
+        <span>수정된 원고 <b>{books.filter((b) => b.overridden.length > 0).length}권</b></span>
       </div>
+      <div className={styles.orderBar}>
+        <div><b>서재에 표시할 순서</b><p>위·아래 버튼으로 순서를 바꾼 뒤 저장하세요. 비공개 책은 순서를 유지한 채 서재에서 숨겨집니다.</p></div>
+        <div className={styles.actions}>
+          <span className={styles.orderState} role="status">{orderChanged ? '저장하지 않은 순서 변경' : '저장된 순서'}</span>
+          <button className="btn btn-secondary" type="button" disabled={busy || !orderChanged} onClick={() => {
+            setBooks((current) => savedOrder.map((id) => current.find((book) => book.id === id)!));
+            setMessage(null);
+          }}>순서 되돌리기</button>
+          <button className="btn btn-primary" type="button" disabled={busy || !orderChanged} onClick={saveOrder}>{busy ? '처리 중…' : '순서 저장'}</button>
+        </div>
+      </div>
+      {message && <p role={message.isError ? 'alert' : 'status'} className={`${styles.message} ${message.isError ? styles.error : ''}`}>{message.text}</p>}
+      {books.length === 0 && <p>등록된 책이 없습니다.</p>}
+      <ol className={styles.list} aria-label="서재 도서 관리 목록">
+        {books.map((book, index) => {
+          const published = book.isPublished !== false;
+          return (
+            <li key={book.id} className={styles.book}>
+              <div className={styles.row}>
+                <div className={styles.reorder}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <button type="button" disabled={busy || index === 0} aria-label={`${book.title} 위로 이동`} onClick={() => move(index, -1)}><ArrowUp size={18} aria-hidden="true" /></button>
+                  <button type="button" disabled={busy || index === books.length - 1} aria-label={`${book.title} 아래로 이동`} onClick={() => move(index, 1)}><ArrowDown size={18} aria-hidden="true" /></button>
+                </div>
+                {book.cover ? <Image className={styles.cover} src={book.cover} alt="" width={60} height={82} unoptimized /> : <BookOpen size={32} aria-hidden="true" />}
+                <div className={styles.info}>
+                  <div className={styles.title}><h2>{book.title}</h2><span className={published ? styles.published : styles.unpublished}>{published ? '공개' : '비공개'}</span></div>
+                  <p>{book.author} · 총 {book.sectionCount}개 절</p>
+                  {book.id === 'free-book-guide' && <p>집필 예제 · 서재 목록에는 표시되지 않습니다.</p>}
+                  {book.overridden.length > 0 && <p title={book.overridden.join('\n')}>사이트에서 고친 절 {book.overridden.length}개</p>}
+                </div>
+                <div className={styles.actions}>
+                  <button type="button" className="btn btn-secondary" disabled={busy || editId !== null} onClick={() => {
+                    setDraft({ title: book.title, subtitle: book.subtitle || '', author: book.author, description: book.description });
+                    setEditId(book.id); setMessage(null);
+                  }}><Pencil size={14} aria-hidden="true" /> 소개 수정</button>
+                  <button type="button" className="btn btn-secondary" disabled={busy} onClick={() => togglePublish(book)}>
+                    {published ? <EyeOff size={14} aria-hidden="true" /> : <Eye size={14} aria-hidden="true" />}{published ? '비공개로 전환' : '공개로 전환'}
+                  </button>
+                  {published && <Link className="btn btn-secondary" href={`/books/${book.id}`} target="_blank"><ExternalLink size={14} aria-hidden="true" /> 책 확인</Link>}
+                  {book.overridden.length > 0 && <button type="button" className="btn btn-secondary" disabled={busy} onClick={() => revertBook(book)}><RotateCcw size={14} aria-hidden="true" /> 원고 되돌리기</button>}
+                </div>
+              </div>
+              {editId === book.id && (
+                <form className={styles.editor} onSubmit={(event) => { event.preventDefault(); void saveDetails(book.id); }}>
+                  <h3>도서 소개 수정</h3>
+                  <div className={styles.fields}>
+                    <label>제목<input required maxLength={200} value={draft.title} disabled={busy} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></label>
+                    <label>부제<input maxLength={200} value={draft.subtitle} disabled={busy} onChange={(e) => setDraft({ ...draft, subtitle: e.target.value })} /></label>
+                    <label>저자<input required maxLength={200} value={draft.author} disabled={busy} onChange={(e) => setDraft({ ...draft, author: e.target.value })} /></label>
+                    <label className={styles.description}>소개글<textarea required maxLength={3000} rows={5} value={draft.description} disabled={busy} onChange={(e) => setDraft({ ...draft, description: e.target.value })} /></label>
+                  </div>
+                  <div className={styles.actions}><button className="btn btn-primary" disabled={busy}>{busy ? '저장 중…' : '소개 저장'}</button><button className="btn btn-secondary" type="button" disabled={busy} onClick={() => setEditId(null)}>취소</button></div>
+                </form>
+              )}
+            </li>
+          );
+        })}
+      </ol>
     </div>
   );
 }

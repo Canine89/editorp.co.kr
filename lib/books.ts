@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { randomUUID } from 'crypto';
 import { marked } from 'marked';
 import { getDb, isFirebaseConfigured } from './firebase-admin';
 
@@ -11,13 +12,16 @@ import { getDb, isFirebaseConfigured } from './firebase-admin';
  *  - sections/  : 절 단위 마크다운 원고
  *
  * 관리자 수정사항(공개 여부, 리더에서 바로 고친 절)은 로드맵과 같은 패턴으로 저장한다:
- *  - 운영(Firestore 설정 시): bookOverrides/{bookId} 문서(공개 여부) +
+ *  - 운영(Firestore 설정 시): bookOverrides/{bookId} 문서(공개 여부·소개) +
  *    bookOverrides/{bookId}/sections/{sectionId} 문서(절 마크다운) 오버레이.
  *    파일 원본 위에 덮어씌워 재배포 없이 즉시 반영된다.
- *  - 개발(Firestore 미설정): content/books/ 파일을 직접 수정한다.
+ *    librarySettings/books 문서에 서재 도서 순서를 저장한다.
+ *  - 개발(Firestore 미설정): content/books/ 파일을 직접 수정하고,
+ *    도서 순서는 data/book-order.json에 저장한다.
  */
 
 const BOOKS_DIR = path.join(process.cwd(), 'content', 'books');
+const ORDER_FILE = path.join(process.cwd(), 'data', 'book-order.json');
 /** URL 파라미터로 들어오는 id는 소문자/숫자/하이픈만 허용 (경로 탈출 방지) */
 const SAFE_ID = /^[a-z0-9][a-z0-9-]*$/;
 
@@ -91,7 +95,9 @@ function listLocalBooks(): Book[] {
 
 // ── Firestore 오버레이 ───────────────────────────────────────
 
-interface BookOverride {
+export type BookDetails = Pick<Book, 'title' | 'subtitle' | 'author' | 'description'>;
+
+interface BookOverride extends Partial<BookDetails> {
   isPublished?: boolean;
 }
 
@@ -120,7 +126,26 @@ async function getAllOverrides(): Promise<Map<string, BookOverride>> {
 
 function applyOverride(book: Book, override: BookOverride | null | undefined): Book {
   if (!override) return book;
-  return { ...book, isPublished: override.isPublished ?? book.isPublished };
+  return {
+    ...book,
+    isPublished: override.isPublished ?? book.isPublished,
+    title: override.title ?? book.title,
+    subtitle: override.subtitle ?? book.subtitle,
+    author: override.author ?? book.author,
+    description: override.description ?? book.description,
+  };
+}
+
+async function getBookOrder(): Promise<string[]> {
+  try {
+    const ids = isFirebaseConfigured()
+      ? (await getDb().doc('librarySettings/books').get()).data()?.order
+      : fs.existsSync(ORDER_FILE) ? JSON.parse(fs.readFileSync(ORDER_FILE, 'utf-8')) : [];
+    return Array.isArray(ids) ? ids.filter((id): id is string => typeof id === 'string') : [];
+  } catch (error) {
+    console.error('서재 도서 순서 읽기 실패:', error);
+    return [];
+  }
 }
 
 // ── 공개 조회 API ────────────────────────────────────────────
@@ -129,10 +154,12 @@ export function isBookPublished(book: Book): boolean {
   return book.isPublished !== false;
 }
 
-/** 책 목록 (최신 출간순). 기본은 공개된 책만 */
+/** 관리자 지정순. 순서에 없는 새 책은 기존 출간일 순서로 뒤에 붙인다. 기본은 공개된 책만 */
 export async function listBooks(includeUnpublished = false): Promise<Book[]> {
-  const overrides = await getAllOverrides();
-  const books = listLocalBooks().map((b) => applyOverride(b, overrides.get(b.id)));
+  const [overrides, order] = await Promise.all([getAllOverrides(), getBookOrder()]);
+  const positions = new Map(order.map((id, index) => [id, index]));
+  const books = listLocalBooks().map((b) => applyOverride(b, overrides.get(b.id)))
+    .sort((a, b) => (positions.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (positions.get(b.id) ?? Number.MAX_SAFE_INTEGER));
   return includeUnpublished ? books : books.filter(isBookPublished);
 }
 
@@ -218,6 +245,54 @@ export async function getSectionMarkdown(
 }
 
 // ── 관리자 저장 API (운영: Firestore 오버레이 / 개발: 파일 직접 수정) ──
+
+export class BookInputError extends Error {}
+
+export async function saveBookOrder(ids: unknown): Promise<string> {
+  const available = listLocalBooks().map((book) => book.id);
+  if (!Array.isArray(ids) || ids.length !== available.length || new Set(ids).size !== ids.length ||
+      ids.some((id) => typeof id !== 'string' || !available.includes(id))) {
+    throw new BookInputError('현재 등록된 모든 책을 중복 없이 지정해 주세요. 목록이 바뀌었다면 새로고침해 주세요.');
+  }
+  if (isFirebaseConfigured()) {
+    await getDb().doc('librarySettings/books').set({ order: ids, updatedAt: new Date().toISOString() }, { merge: true });
+    return '도서 순서를 저장했습니다. 서재에 바로 반영됩니다.';
+  }
+  if (process.env.NODE_ENV === 'development') {
+    fs.mkdirSync(path.dirname(ORDER_FILE), { recursive: true });
+    const temporary = `${ORDER_FILE}.${randomUUID()}.tmp`;
+    fs.writeFileSync(temporary, JSON.stringify(ids, null, 2) + '\n');
+    fs.renameSync(temporary, ORDER_FILE);
+    return '도서 순서를 로컬에 저장했습니다.';
+  }
+  throw new Error('Firebase 환경 변수가 설정되지 않아 저장할 수 없습니다.');
+}
+
+export async function saveBookDetails(bookId: string, input: unknown): Promise<{ message: string; details: BookDetails }> {
+  if (!SAFE_ID.test(bookId) || !readLocalBook(bookId)) throw new BookInputError('존재하지 않는 책입니다.');
+  if (!input || typeof input !== 'object') throw new BookInputError('도서 정보를 확인해 주세요.');
+  const source = input as Record<string, unknown>;
+  const details: BookDetails = { title: '', subtitle: '', author: '', description: '' };
+  for (const field of ['title', 'subtitle', 'author', 'description'] as const) {
+    const value = source[field];
+    const limit = field === 'description' ? 3000 : 200;
+    if (typeof value !== 'string' || value.trim().length > limit || (field !== 'subtitle' && !value.trim())) {
+      throw new BookInputError('제목·저자·소개글은 필수입니다. 제목·부제·저자는 200자, 소개글은 3,000자 이내로 입력해 주세요.');
+    }
+    details[field] = value.trim();
+  }
+  if (isFirebaseConfigured()) {
+    await getDb().doc(`bookOverrides/${bookId}`).set(details, { merge: true });
+    return { message: '도서 소개를 저장했습니다. 서재에 바로 반영됩니다.', details };
+  }
+  if (process.env.NODE_ENV === 'development') {
+    const file = path.join(BOOKS_DIR, bookId, 'book.json');
+    const book = readLocalBook(bookId)!;
+    fs.writeFileSync(file, JSON.stringify({ ...book, ...details }, null, 2) + '\n');
+    return { message: '도서 소개를 로컬에 저장했습니다.', details };
+  }
+  throw new Error('Firebase 환경 변수가 설정되지 않아 저장할 수 없습니다.');
+}
 
 export async function setBookPublished(bookId: string, isPublished: boolean): Promise<string> {
   if (!SAFE_ID.test(bookId) || !readLocalBook(bookId)) {

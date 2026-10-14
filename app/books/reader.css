@@ -194,7 +194,68 @@ html.header-hidden .rd-aside { max-height: calc(100dvh - 48px); }
 .rd-seg button[aria-pressed='true'] { background: var(--colors-primary); color: var(--colors-on-primary); }
 
 /* 모바일 바 · 시트 · 확대 */
-.rd-mbar { display: none; }
+.rd-mbar {
+  display: flex; position: sticky; top: 64px; z-index: 40; background: var(--colors-canvas);
+  border-bottom: 1px solid var(--colors-hairline); margin-bottom: 24px; padding: 4px 0;
+  align-items: center; gap: 4px; font-size: 14px; transition: top var(--transition-normal);
+}
+html.header-hidden .rd-mbar { top: 0; }
+.rd-mbar > span { min-width: 0; margin-right: auto; color: var(--colors-muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.rd-mbar button { flex-shrink: 0; min-height: 44px; padding: 0 10px; border-radius: 6px; color: var(--colors-ink); font-size: 14px; background: none; border: 0; cursor: pointer; }
+.rd-mbar .rd-focus-toggle, .rd-focus-toggle {
+  position: relative; isolation: isolate; overflow: hidden; border: 1px solid var(--colors-hairline);
+  background: var(--colors-surface-soft); color: var(--colors-primary); font-weight: 600;
+  min-height: 44px; padding: 0 10px; border-radius: 6px; font-size: 14px; cursor: pointer;
+}
+.rd-focus-toggle::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(110deg, transparent 25%, color-mix(in srgb, var(--colors-primary) 14%, transparent) 50%, transparent 75%);
+  transform: translateX(-150%); animation: rd-focus-shimmer 5s ease-in-out infinite;
+}
+.rd-mbar .rd-focus-toggle span { margin: 0; color: inherit; white-space: nowrap; }
+.rd-mbar button:focus-visible, .rd-focus-toggle:focus-visible { outline: 2px solid var(--colors-primary); outline-offset: 2px; }
+.rd-focus-toggle:hover { border-color: var(--colors-primary); }
+.rd-focus-toggle[aria-pressed='true'] { background: var(--colors-primary); color: var(--colors-on-primary); }
+.rd-focus-toggle[aria-pressed='true']::after { animation: none; opacity: 0; }
+@keyframes rd-focus-shimmer {
+  0%, 55% { transform: translateX(-150%); }
+  85%, 100% { transform: translateX(150%); }
+}
+
+/* 집중 모드: 읽는 본문과 필요한 조작만 남긴다. */
+html.reader-focus .main-header,
+html.reader-focus .site-footer,
+html.reader-focus .rd-reader > .rd-toc,
+html.reader-focus .rd-aside > h2,
+html.reader-focus .rd-aside > ol,
+html.reader-focus .rd-crumb,
+html.reader-focus [data-pc-hint],
+html.reader-focus [data-pc-meta],
+html.reader-focus .rd-pc-btn,
+html.reader-focus .rd-edit-btn,
+html.reader-focus .rd-talk,
+html.reader-focus .rd-done .perch,
+html.reader-focus .rd-pc-bar { display: none; }
+html.reader-focus { --reader-width: 38; }
+html.reader-focus[data-reader-width='s'] { --reader-width: 32; }
+html.reader-focus[data-reader-width='l'] { --reader-width: 44; }
+html.reader-focus .rd-reader { grid-template-columns: 176px minmax(0, 1fr) 176px; padding-top: 24px; padding-bottom: 64px; }
+html.reader-focus .rd-main { grid-column: 2; max-width: calc(var(--reader-width) * var(--fs)); }
+html.reader-focus .rd-aside { grid-column: 3; top: 24px; max-height: calc(100dvh - 48px); }
+html.reader-focus .rd-settings { margin-top: 0; padding-top: 0; border-top: 0; }
+html.reader-focus .rd-mbar { top: 0; }
+html.reader-focus .rd-prose { line-height: 1.95; }
+html.reader-focus .rd-prose [data-src]:hover { outline: none; }
+.rd-settings > .rd-focus-toggle { width: 100%; margin-bottom: 16px; }
+.rd-width-settings { display: none; margin-top: 16px; }
+html.reader-focus .rd-width-settings { display: block; }
+@media (min-width: 1280px) {
+  .rd-mbar { display: none; }
+}
+@media (max-width: 1279px) {
+  html.reader-focus .rd-reader { grid-template-columns: minmax(0, 1fr); padding-top: 0; }
+  html.reader-focus .rd-main { grid-column: 1; }
+}
 .rd-sheet { border: 0; padding: 0; width: 100%; max-width: 100%; margin: auto 0 0; background: var(--colors-canvas); color: var(--colors-body); border-radius: 12px 12px 0 0; max-height: 80vh; }
 .rd-sheet::backdrop { background: rgba(14, 23, 51, .35); }
 .rd-sheet-head { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px 8px 20px; border-bottom: 1px solid var(--colors-hairline); position: sticky; top: 0; background: var(--colors-canvas); z-index: 1; }
@@ -237,6 +298,7 @@ html.header-hidden .rd-aside { max-height: calc(100dvh - 48px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .rd-done .perch, .rd-done i { transition: none; }
+  .rd-focus-toggle::after { animation: none; }
 }
 .rd-seg .rd-size-s { font-size: 13px; }
 .rd-seg .rd-size-l { font-size: 17px; }

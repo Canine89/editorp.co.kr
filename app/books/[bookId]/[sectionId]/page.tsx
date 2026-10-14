@@ -58,6 +58,27 @@ function BookToc({ book, currentId }: { book: Book; currentId: string }) {
   ));
 }
 
+function FocusButton() {
+  return (
+    <button type="button" className="rd-focus-toggle" data-toggle-focus aria-pressed="false">
+      <span data-focus-label>읽기 집중 모드</span>
+    </button>
+  );
+}
+
+function WidthSettings() {
+  return (
+    <div className="rd-width-settings">
+      <span className="rd-seg-label">본문 폭</span>
+      <div className="rd-seg" role="group" aria-label="본문 폭">
+        <button type="button" data-set-width="s" aria-pressed="false">좁게</button>
+        <button type="button" data-set-width="m" aria-pressed="true">보통</button>
+        <button type="button" data-set-width="l" aria-pressed="false">넓게</button>
+      </div>
+    </div>
+  );
+}
+
 export default async function BookSectionPage({ params }: { params: Promise<{ bookId: string; sectionId: string }> }) {
   const { bookId, sectionId } = await params;
   const book = await getBook(bookId);
@@ -99,6 +120,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
         <article className="rd-main">
           <div className="rd-mbar">
             <span>{book.title}</span>
+            <FocusButton />
             <button type="button" data-open="rd-sheet-toc">
               목차
             </button>
@@ -180,6 +202,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
             </>
           )}
           <div className="rd-settings">
+            <FocusButton />
             <span className="rd-seg-label">글자 크기</span>
             <div className="rd-seg" role="group" aria-label="글자 크기">
               <button type="button" data-set-size="s" aria-pressed="false" className="rd-size-s">
@@ -192,6 +215,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
                 가
               </button>
             </div>
+            <WidthSettings />
           </div>
           <ManuscriptNotice variant="reader" />
         </aside>
@@ -227,6 +251,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
               크게
             </button>
           </div>
+          <WidthSettings />
           <ManuscriptNotice />
         </div>
       </dialog>
