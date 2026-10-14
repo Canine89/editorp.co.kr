@@ -110,3 +110,13 @@ node scripts/book-image-sizes.mjs python-intro
 유튜브 썸네일·외부 표지·캐릭터·아티클도 Vercel 실시간 이미지 변환을 사용하지 않습니다.
 새 페이지의 이미지 주소에는 `/_next/image`가 생성되지 않아야 합니다. 기존에 생성된 이미지 캐시는 별도로 유지될 수 있습니다.
 정적 변형 생성 후 설정을 끄지 않도록 유지하세요. 아티클 표지는 `python scripts/book-image-variants.py --articles`로 생성합니다.
+
+### 기존 변환 요청 차단
+
+2026-10-14 Vercel 프로젝트 `editorp-co-kr`의 Firewall에 `Block unused image optimizer` 규칙을 운영 반영했습니다.
+Request Path가 `/_next/image`와 정확히 일치하면 Deny합니다. 이 설정은 저장소가 아닌 Vercel 프로젝트에 저장됩니다.
+`unoptimized` 설정만으로는 기존 페이지·봇이 보내는 변환 요청이 중단되지 않아 별도로 차단합니다.
+운영 확인: 기존 변환 URL은 `403` 및 `x-vercel-mitigated: deny`, 직접 이미지 파일은 `200`입니다.
+오래된 페이지를 열어 둔 방문자는 새로고침해야 직접 이미지 주소가 적용됩니다.
+이 규칙을 유지하는 동안 Vercel 실시간 이미지 변환을 다시 사용하는 코드를 배포하지 마세요.
+이미 집계된 사용량은 초기화되지 않으며, 팀 내 다른 프로젝트의 변환 사용량은 별개입니다.
