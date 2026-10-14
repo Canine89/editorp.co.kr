@@ -47,6 +47,8 @@ export interface Book {
   author: string;
   publishedAt?: string; // YYYY-MM-DD
   cover?: string; // public/ 기준 경로 (선택)
+  /** 판 전체를 교체할 때 변경한다. 이전 판의 Firestore 수정본이 새 원고를 덮지 않게 한다. */
+  contentRevision?: string;
   tags?: string[];
   isPublished?: boolean; // false면 사이트에서 숨김 (기본 공개)
   parts: BookPart[];
@@ -201,8 +203,11 @@ export async function getSectionMarkdown(
   if (isFirebaseConfigured()) {
     try {
       const snap = await getDb().doc(`bookOverrides/${bookId}/sections/${section.id}`).get();
-      const markdown = snap.data()?.markdown;
-      if (typeof markdown === 'string') return markdown;
+      const stored = snap.data();
+      const revision = readLocalBook(bookId)?.contentRevision;
+      if (typeof stored?.markdown === 'string' && (!revision || stored.contentRevision === revision)) {
+        return stored.markdown;
+      }
     } catch (error) {
       console.error(`절 오버라이드 읽기 실패 (${bookId}/${section.id}):`, error);
     }
@@ -245,7 +250,7 @@ export async function saveSectionMarkdown(
   if (isFirebaseConfigured()) {
     await getDb()
       .doc(`bookOverrides/${bookId}/sections/${sectionId}`)
-      .set({ markdown, updatedAt: new Date().toISOString() });
+      .set({ markdown, updatedAt: new Date().toISOString(), ...(book.contentRevision ? { contentRevision: book.contentRevision } : {}) });
     return '저장되었습니다. 재배포 없이 바로 반영됩니다.';
   }
   if (process.env.NODE_ENV === 'development') {
@@ -261,8 +266,9 @@ export async function saveSectionMarkdown(
 export async function listOverriddenSections(bookId: string): Promise<string[]> {
   if (!SAFE_ID.test(bookId) || !isFirebaseConfigured()) return [];
   try {
-    const snap = await getDb().collection(`bookOverrides/${bookId}/sections`).select().get();
-    return snap.docs.map((d) => d.id);
+    const revision = readLocalBook(bookId)?.contentRevision;
+    const snap = await getDb().collection(`bookOverrides/${bookId}/sections`).select('contentRevision').get();
+    return snap.docs.filter((d) => !revision || d.get('contentRevision') === revision).map((d) => d.id);
   } catch (error) {
     console.error(`절 오버라이드 목록 읽기 실패 (${bookId}):`, error);
     return [];

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { copyReaderCode } from "@/lib/reader-copy";
+import { installReaderImageFallback } from "@/lib/reader-images";
 
 /**
  * 아티클 화면의 브라우저 동작. 서버가 그린 리더 마크업(rd-*)에 붙는다.
@@ -36,6 +37,7 @@ export function ArticleClient() {
     addEventListener("resize", onScroll);
 
     const zoom = document.querySelector<HTMLDialogElement>("dialog.rd-zoom");
+    const removeImageFallback = installReaderImageFallback();
     const onClick = async (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       const copy = target.closest<HTMLButtonElement>("[data-copy]");
@@ -46,7 +48,7 @@ export function ArticleClient() {
       const img = target.closest<HTMLImageElement>(".rd-prose figure img");
       if (img && zoom) {
         const big = new Image();
-        big.src = img.currentSrc || img.src;
+        big.src = img.dataset.originalSrc || img.currentSrc || img.src;
         big.alt = img.alt;
         zoom.replaceChildren(big);
         zoom.showModal();
@@ -57,6 +59,7 @@ export function ArticleClient() {
     document.addEventListener("click", onClick);
 
     return () => {
+      removeImageFallback();
       removeEventListener("scroll", onScroll);
       removeEventListener("resize", onScroll);
       document.removeEventListener("click", onClick);

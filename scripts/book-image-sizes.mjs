@@ -56,10 +56,19 @@ for (const id of ids) {
     continue;
   }
   const sizes = {};
+  const variantsFile = path.join(BOOKS, id, 'image-variants.json');
+  const variants = fs.existsSync(variantsFile) ? JSON.parse(fs.readFileSync(variantsFile, 'utf-8')) : {};
   for (const name of fs.readdirSync(dir).sort()) {
     if (!/\.(png|jpe?g|webp)$/i.test(name)) continue;
     const size = imageSize(path.join(dir, name));
-    if (size) sizes[`/books/${id}/${name}`] = size;
+    if (size) {
+      const src = `/books/${id}/${name}`;
+      const sources = (variants[src] ?? []).filter((v) =>
+        typeof v.src === 'string' && v.src.startsWith(`${src.slice(0, src.lastIndexOf('/'))}/responsive/`) &&
+        v.width > 0 && v.width < size.width && fs.existsSync(path.join(ROOT, 'public', v.src))
+      );
+      sizes[src] = sources.length ? { ...size, variants: sources } : size;
+    }
   }
   fs.writeFileSync(path.join(BOOKS, id, 'images.json'), JSON.stringify(sizes, null, 2) + '\n');
   console.log(`[${id}] ${Object.keys(sizes).length}개 → content/books/${id}/images.json`);

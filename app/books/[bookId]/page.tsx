@@ -35,7 +35,7 @@ export default async function BookTocPage({ params }: { params: Promise<{ bookId
   return (
     <div className="container rd-intro">
       <div className="rd-intro-side">
-        {book.cover && <Image className="rd-cover" src={book.cover} alt={`${book.title} 표지`} width={280} height={382} priority />}
+        {book.cover && <Image className="rd-cover" src={book.cover} alt={`${book.title} 표지`} width={280} height={382} priority unoptimized />}
         <h1>{book.title}</h1>
         {book.subtitle && <p className="rd-sub">{book.subtitle}</p>}
         <p className="rd-desc">{book.description}</p>

@@ -9,7 +9,14 @@
   },
   "/books/barobaro-vibe-cursor/p005-003.webp": {
     "width": 1192,
-    "height": 1108
+    "height": 1108,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p005-003-fce70f9309fc-480.webp",
+        "width": 480,
+        "height": 446
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p012-004.webp": {
     "width": 924,
@@ -65,7 +72,14 @@
   },
   "/books/barobaro-vibe-cursor/p032-017.webp": {
     "width": 1192,
-    "height": 488
+    "height": 488,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p032-017-457a9cd8e3e6-480.webp",
+        "width": 480,
+        "height": 197
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p034-018.webp": {
     "width": 1192,
@@ -77,7 +91,14 @@
   },
   "/books/barobaro-vibe-cursor/p035-020.webp": {
     "width": 1192,
-    "height": 806
+    "height": 806,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p035-020-0272381e0419-480.webp",
+        "width": 480,
+        "height": 325
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p036-021.webp": {
     "width": 1016,
@@ -89,11 +110,25 @@
   },
   "/books/barobaro-vibe-cursor/p037-023.webp": {
     "width": 1192,
-    "height": 812
+    "height": 812,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p037-023-c2b5e976c2f4-480.webp",
+        "width": 480,
+        "height": 327
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p038-024.webp": {
     "width": 1192,
-    "height": 604
+    "height": 604,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p038-024-548022305ffe-480.webp",
+        "width": 480,
+        "height": 243
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p038-025.webp": {
     "width": 1192,
@@ -101,11 +136,25 @@
   },
   "/books/barobaro-vibe-cursor/p039-026.webp": {
     "width": 1060,
-    "height": 476
+    "height": 476,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p039-026-167d4bdd09ea-480.webp",
+        "width": 480,
+        "height": 216
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p039-027.webp": {
     "width": 1192,
-    "height": 480
+    "height": 480,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p039-027-e8cbcb485a24-480.webp",
+        "width": 480,
+        "height": 193
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p041-028.webp": {
     "width": 1192,
@@ -125,7 +174,14 @@
   },
   "/books/barobaro-vibe-cursor/p043-032.webp": {
     "width": 1192,
-    "height": 700
+    "height": 700,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p043-032-7e48552b0eb3-480.webp",
+        "width": 480,
+        "height": 282
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p044-033.webp": {
     "width": 1192,
@@ -149,7 +205,14 @@
   },
   "/books/barobaro-vibe-cursor/p048-038.webp": {
     "width": 1192,
-    "height": 668
+    "height": 668,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p048-038-ed72dc24cbde-480.webp",
+        "width": 480,
+        "height": 269
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p049-039.webp": {
     "width": 716,
@@ -157,7 +220,14 @@
   },
   "/books/barobaro-vibe-cursor/p049-040.webp": {
     "width": 1192,
-    "height": 368
+    "height": 368,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p049-040-608f403041a3-480.webp",
+        "width": 480,
+        "height": 148
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p050-041.webp": {
     "width": 1192,
@@ -197,7 +267,14 @@
   },
   "/books/barobaro-vibe-cursor/p056-050.webp": {
     "width": 1192,
-    "height": 764
+    "height": 764,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p056-050-245fe085f182-480.webp",
+        "width": 480,
+        "height": 308
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p058-051.webp": {
     "width": 652,
@@ -245,7 +322,14 @@
   },
   "/books/barobaro-vibe-cursor/p063-062.webp": {
     "width": 1192,
-    "height": 448
+    "height": 448,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p063-062-633095358920-480.webp",
+        "width": 480,
+        "height": 180
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p064-063.webp": {
     "width": 764,
@@ -289,7 +373,14 @@
   },
   "/books/barobaro-vibe-cursor/p077-073.webp": {
     "width": 1192,
-    "height": 512
+    "height": 512,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p077-073-472cf3030651-480.webp",
+        "width": 480,
+        "height": 206
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p077-074.webp": {
     "width": 788,
@@ -305,7 +396,14 @@
   },
   "/books/barobaro-vibe-cursor/p078-077.webp": {
     "width": 1192,
-    "height": 264
+    "height": 264,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p078-077-9e4d0b41fe1a-480.webp",
+        "width": 480,
+        "height": 106
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p081-078.webp": {
     "width": 1192,
@@ -361,11 +459,25 @@
   },
   "/books/barobaro-vibe-cursor/p094-091.webp": {
     "width": 1192,
-    "height": 672
+    "height": 672,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p094-091-1855fc213cfd-480.webp",
+        "width": 480,
+        "height": 271
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p094-092.webp": {
     "width": 1192,
-    "height": 372
+    "height": 372,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p094-092-a6a25cb74ff5-480.webp",
+        "width": 480,
+        "height": 150
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p095-093.webp": {
     "width": 840,
@@ -373,7 +485,14 @@
   },
   "/books/barobaro-vibe-cursor/p095-094.webp": {
     "width": 904,
-    "height": 204
+    "height": 204,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p095-094-9f685064834e-480.webp",
+        "width": 480,
+        "height": 108
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p096-095.webp": {
     "width": 960,
@@ -397,7 +516,14 @@
   },
   "/books/barobaro-vibe-cursor/p099-100.webp": {
     "width": 1156,
-    "height": 488
+    "height": 488,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p099-100-b151bccf9cd9-480.webp",
+        "width": 480,
+        "height": 203
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p099-101.webp": {
     "width": 1192,
@@ -417,7 +543,14 @@
   },
   "/books/barobaro-vibe-cursor/p102-105.webp": {
     "width": 1196,
-    "height": 528
+    "height": 528,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p102-105-cf973921ed9d-480.webp",
+        "width": 480,
+        "height": 212
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p104-106.webp": {
     "width": 824,
@@ -453,7 +586,14 @@
   },
   "/books/barobaro-vibe-cursor/p109-114.webp": {
     "width": 1192,
-    "height": 452
+    "height": 452,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p109-114-d8221dd382a8-480.webp",
+        "width": 480,
+        "height": 182
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p110-115.webp": {
     "width": 1192,
@@ -477,7 +617,14 @@
   },
   "/books/barobaro-vibe-cursor/p112-120.webp": {
     "width": 1192,
-    "height": 564
+    "height": 564,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p112-120-d9d476d44896-480.webp",
+        "width": 480,
+        "height": 227
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p118-121.webp": {
     "width": 624,
@@ -497,7 +644,14 @@
   },
   "/books/barobaro-vibe-cursor/p122-125.webp": {
     "width": 964,
-    "height": 584
+    "height": 584,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p122-125-9995b8aef337-480.webp",
+        "width": 480,
+        "height": 291
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p123-126.webp": {
     "width": 700,
@@ -505,11 +659,25 @@
   },
   "/books/barobaro-vibe-cursor/p123-127.webp": {
     "width": 1192,
-    "height": 648
+    "height": 648,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p123-127-5daf87556243-480.webp",
+        "width": 480,
+        "height": 261
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p125-128.webp": {
     "width": 1192,
-    "height": 360
+    "height": 360,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p125-128-86e7962c9516-480.webp",
+        "width": 480,
+        "height": 145
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p125-129.webp": {
     "width": 1192,
@@ -521,7 +689,14 @@
   },
   "/books/barobaro-vibe-cursor/p128-131.webp": {
     "width": 1172,
-    "height": 664
+    "height": 664,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p128-131-d13001873732-480.webp",
+        "width": 480,
+        "height": 272
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p130-132.webp": {
     "width": 816,
@@ -545,7 +720,14 @@
   },
   "/books/barobaro-vibe-cursor/p132-137.webp": {
     "width": 1192,
-    "height": 288
+    "height": 288,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p132-137-36a0e4778fcc-480.webp",
+        "width": 480,
+        "height": 116
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p133-138.webp": {
     "width": 596,
@@ -553,7 +735,14 @@
   },
   "/books/barobaro-vibe-cursor/p133-139.webp": {
     "width": 1192,
-    "height": 432
+    "height": 432,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p133-139-7970dd24b28d-480.webp",
+        "width": 480,
+        "height": 174
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p135-140.webp": {
     "width": 596,
@@ -565,14 +754,35 @@
   },
   "/books/barobaro-vibe-cursor/p136-142.webp": {
     "width": 1036,
-    "height": 516
+    "height": 516,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p136-142-5dd8f642ef1a-480.webp",
+        "width": 480,
+        "height": 239
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p137-143.webp": {
     "width": 1192,
-    "height": 436
+    "height": 436,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p137-143-cf1d00defa90-480.webp",
+        "width": 480,
+        "height": 176
+      }
+    ]
   },
   "/books/barobaro-vibe-cursor/p138-144.webp": {
     "width": 1192,
-    "height": 612
+    "height": 612,
+    "variants": [
+      {
+        "src": "/books/barobaro-vibe-cursor/responsive/p138-144-e88f55eda237-480.webp",
+        "width": 480,
+        "height": 246
+      }
+    ]
   }
 }

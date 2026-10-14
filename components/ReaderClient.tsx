@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { parseBookProgress, readingSnapshot, updateBookProgress } from "@/lib/reading-progress";
 import { copyReaderCode } from "@/lib/reader-copy";
+import { installReaderImageFallback } from "@/lib/reader-images";
 
 interface Props {
   bookId: string;
@@ -141,6 +142,7 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
 
     // 클릭: 코드 복사, 이미지 확대, 시트 열고 닫기, 글자 크기
     const zoom = document.querySelector<HTMLDialogElement>("dialog.rd-zoom");
+    const removeImageFallback = installReaderImageFallback();
     const applySize = (size: string) => {
       if (size === "s" || size === "l") html.dataset.size = size;
       else delete html.dataset.size;
@@ -163,7 +165,7 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
       const img = target.closest<HTMLImageElement>(".rd-prose figure img");
       if (img && zoom) {
         const big = new Image();
-        big.src = img.currentSrc || img.src;
+        big.src = img.dataset.originalSrc || img.currentSrc || img.src;
         big.alt = img.alt;
         zoom.replaceChildren(big);
         zoom.showModal();
@@ -212,6 +214,7 @@ export function ReaderClient({ bookId, sectionId, sectionIds, prevHref, nextHref
     addEventListener("keydown", onKey);
 
     return () => {
+      removeImageFallback();
       removeEventListener("scroll", onScroll);
       removeEventListener("resize", onScroll);
       removeEventListener("keydown", onKey);

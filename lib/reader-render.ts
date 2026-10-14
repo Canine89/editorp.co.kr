@@ -68,7 +68,12 @@ function getHighlighter() {
   return highlighter;
 }
 
-const imageSizeCache = new Map<string, Record<string, { width: number; height: number }>>();
+interface ReaderImageSize {
+  width: number;
+  height: number;
+  variants?: { src: string; width: number; height: number }[];
+}
+const imageSizeCache = new Map<string, Record<string, ReaderImageSize>>();
 function imageSizes(bookId: string) {
   if (!imageSizeCache.has(bookId)) {
     const file = path.join(BOOKS_DIR, bookId, 'images.json');
@@ -132,7 +137,7 @@ export async function renderReaderSection(
 
 export interface ReaderMarkdownOptions {
   /** 이미지 경로 → 크기 (figure에 width/height를 넣어 자리를 미리 잡는다) */
-  sizes?: Record<string, { width: number; height: number }>;
+  sizes?: Record<string, ReaderImageSize>;
   /** 이 원고에서만 더 알아볼 코너 라벨 (기본 코너보다 먼저 본다) */
   corners?: [RegExp, string][];
 }
@@ -181,7 +186,13 @@ export async function renderReaderMarkdown(raw: string, options: ReaderMarkdownO
     imageNo++;
     const size = sizes[img.href];
     const alt = img.text?.trim() || `실습 화면 ${imageNo}`;
-    return `<figure><img src="${escapeHtml(img.href)}" alt="${escapeHtml(alt)}"${size ? ` width="${size.width}" height="${size.height}"` : ''} loading="lazy" decoding="async"></figure>`;
+    const variants = size?.variants?.filter((v) => safeSrc(v.src) && v.width > 0 && v.width < size.width) ?? [];
+    const displayWidth = Math.min(size?.width ?? 640, 640);
+    const sourceSet = variants.length
+      ? ` srcset="${[...variants.map((v) => `${escapeHtml(v.src)} ${v.width}w`), `${escapeHtml(img.href)} ${size!.width}w`].join(', ')}" sizes="(max-width: ${displayWidth + 40}px) calc(100vw - 40px), ${displayWidth}px" data-original-src="${escapeHtml(img.href)}"`
+      : '';
+    const fallback = variants.find((v) => v.width >= displayWidth)?.src ?? img.href;
+    return `<figure><img src="${escapeHtml(fallback)}"${sourceSet} alt="${escapeHtml(alt)}"${size ? ` width="${size.width}" height="${size.height}"` : ''} loading="lazy" decoding="async"></figure>`;
   };
 
   const headings: ReaderHeading[] = [];

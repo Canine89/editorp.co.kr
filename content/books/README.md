@@ -44,6 +44,13 @@ content/books/
 - `cover`는 `public/` 기준 경로이며 생략하면 자동 생성된 표지가 표시됩니다.
 - 본문 마크다운의 제목은 `##`(h2)부터 사용하세요. 절 제목(h1)은 페이지가 자동으로 붙입니다.
 
+## 새 판과 사이트 수정본
+
+책 전체를 새 판으로 교체할 때는 `book.json`과 PDF 변환 설정의 `book.contentRevision`을 함께 바꿉니다.
+이 값이 있는 책은 같은 판 정보가 기록된 Firestore 수정본만 적용합니다.
+이전 판의 수정본은 삭제하지 않고 보존하며, 판 정보가 없는 기존 수정본도 새 판을 덮지 않습니다.
+리더에서 새로 고치면 현재 판 정보가 함께 저장됩니다. 단순 오탈자 수정에는 판 정보를 바꾸지 않습니다.
+
 자세한 안내는 샘플 책(`free-book-guide`) 본문 자체에 들어 있습니다.
 
 ## 코드 파일명
@@ -77,9 +84,19 @@ print(a + b)
 python scripts/pdf-book/render.py scripts/pdf-book/books/python-intro.json
 python scripts/pdf-book/extract.py scripts/pdf-book/books/python-intro.json
 python scripts/pdf-book/assemble.py scripts/pdf-book/books/python-intro.json
+python scripts/book-image-variants.py python-intro
 node scripts/book-image-sizes.mjs python-intro
 ```
 
 재변환 전 기존 콘텐츠와 운영 본문 오버레이를 확인하세요.
 `assemble.py`는 해당 책의 로컬 원고와 이미지 폴더를 새 결과로 교체합니다.
 다른 원본으로 다시 변환할 때는 `/tmp/pdf-book/python-intro`의 중간 파일을 먼저 비워야 합니다.
+
+## 이미지 크기와 전송량
+
+본문 이미지는 최대 640px로 표시하고, 누르면 원본으로 확대합니다.
+`book-image-variants.py`는 원본을 변경하지 않고 480·640·768px 무손실 WebP를 미리 생성합니다.
+원본보다 5% 이상 작은 파일만 `image-variants.json`에 기록합니다.
+`book-image-sizes.mjs`가 이를 `images.json`에 합쳐 리더가 화면 배율에 맞는 파일을 고르게 합니다.
+작은 화면용 파일을 불러오지 못하면 원본으로 한 번 복구합니다.
+작은 파일은 `/responsive/` 아래에 원본 해시를 포함한 이름으로 저장합니다.

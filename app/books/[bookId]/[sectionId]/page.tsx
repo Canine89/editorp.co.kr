@@ -86,7 +86,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
       <div className="container rd-reader">
         <nav className="rd-toc" aria-label="책 목차">
           <Link className="rd-toc-book" href={`/books/${book.id}`}>
-            {book.cover ? <Image src={book.cover} alt="" width={40} height={55} /> : <span />}
+            {book.cover ? <Image src={book.cover} alt="" width={40} height={55} unoptimized /> : <span />}
             <span>
               <b>{book.title}</b>
               <small data-read-count>{flat.length}절</small>

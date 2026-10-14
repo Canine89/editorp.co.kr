@@ -29,7 +29,7 @@ export function FreeBooks({ books }: { books: Book[] }) {
             <div className={styles.feature}>
               <Link href={`/books/${book.id}`} aria-label={`${book.title} 목차`}>
                 {book.cover ? (
-                  <Image className={styles.cover} src={book.cover} alt={`${book.title} 표지`} width={200} height={273} />
+                  <Image className={styles.cover} src={book.cover} alt={`${book.title} 표지`} width={200} height={273} unoptimized />
                 ) : (
                   <span className={styles.noCover}>{book.title}</span>
                 )}
