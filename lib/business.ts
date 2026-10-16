@@ -12,7 +12,7 @@ export const BUSINESS = {
   registrationNo: '890-53-01145',
   /** 통신판매업 신고번호 (예: 제2026-서울송파-0000호) */
   mailOrderNo: null as string | null,
-  address: '서울특별시 송파구 올림픽로 435, 104동 402호(신천동, 파크리오)',
+  address: '서울특별시 송파구 올림픽로 435(신천동, 파크리오)',
   /** 고객센터 전화 */
   phone: null as string | null,
   email: 'hgpark@goldenrabbit.co.kr',
