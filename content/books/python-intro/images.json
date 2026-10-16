@@ -40,8 +40,8 @@
     "height": 320
   },
   "/books/python-intro/p043-011.webp": {
-    "width": 300,
-    "height": 124
+    "width": 424,
+    "height": 164
   },
   "/books/python-intro/p045-012.webp": {
     "width": 532,
@@ -68,7 +68,7 @@
     "height": 452,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p047-017-555200b0ecd1-480.webp",
+        "src": "/books/python-intro/responsive/p047-017-1911797c7570-480.webp",
         "width": 480,
         "height": 182
       }
@@ -79,7 +79,7 @@
     "height": 248
   },
   "/books/python-intro/p048-019.webp": {
-    "width": 856,
+    "width": 920,
     "height": 112
   },
   "/books/python-intro/p048-020.webp": {
@@ -96,7 +96,7 @@
   },
   "/books/python-intro/p049-023.webp": {
     "width": 280,
-    "height": 152
+    "height": 148
   },
   "/books/python-intro/p050-024.webp": {
     "width": 500,
@@ -187,14 +187,14 @@
   },
   "/books/python-intro/p061-044.webp": {
     "width": 1192,
-    "height": 124
+    "height": 140
   },
   "/books/python-intro/p062-045.webp": {
     "width": 1192,
     "height": 456
   },
   "/books/python-intro/p062-046.webp": {
-    "width": 1192,
+    "width": 1196,
     "height": 660
   },
   "/books/python-intro/p063-047.webp": {
@@ -230,14 +230,14 @@
   },
   "/books/python-intro/p066-053.webp": {
     "width": 848,
-    "height": 420
+    "height": 440
   },
   "/books/python-intro/p067-054.webp": {
     "width": 1260,
     "height": 680,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p067-054-81f4cc609222-480.webp",
+        "src": "/books/python-intro/responsive/p067-054-c370ac251b6b-480.webp",
         "width": 480,
         "height": 259
       }
@@ -279,449 +279,425 @@
     ]
   },
   "/books/python-intro/p079-062.webp": {
+    "width": 296,
+    "height": 128
+  },
+  "/books/python-intro/p079-063.webp": {
     "width": 372,
     "height": 176
   },
-  "/books/python-intro/p079-063.webp": {
-    "width": 408,
-    "height": 480
+  "/books/python-intro/p079-064.webp": {
+    "width": 368,
+    "height": 676
   },
-  "/books/python-intro/p081-064.webp": {
+  "/books/python-intro/p081-065.webp": {
     "width": 1192,
     "height": 384,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p081-064-6cae0be91b60-480.webp",
+        "src": "/books/python-intro/responsive/p081-065-6cae0be91b60-480.webp",
         "width": 480,
         "height": 155
       },
       {
-        "src": "/books/python-intro/responsive/p081-064-6cae0be91b60-640.webp",
+        "src": "/books/python-intro/responsive/p081-065-6cae0be91b60-640.webp",
         "width": 640,
         "height": 206
       }
     ]
   },
-  "/books/python-intro/p081-065.webp": {
+  "/books/python-intro/p081-066.webp": {
     "width": 1192,
     "height": 736
   },
-  "/books/python-intro/p082-066.webp": {
+  "/books/python-intro/p082-067.webp": {
     "width": 1192,
     "height": 172,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p082-066-ccd502fb531b-480.webp",
+        "src": "/books/python-intro/responsive/p082-067-ccd502fb531b-480.webp",
         "width": 480,
         "height": 69
       }
     ]
   },
-  "/books/python-intro/p083-067.webp": {
+  "/books/python-intro/p083-068.webp": {
     "width": 1192,
     "height": 256
   },
-  "/books/python-intro/p085-068.webp": {
+  "/books/python-intro/p085-069.webp": {
     "width": 280,
     "height": 160
   },
-  "/books/python-intro/p089-069.webp": {
+  "/books/python-intro/p089-070.webp": {
     "width": 600,
     "height": 412
-  },
-  "/books/python-intro/p090-070.webp": {
-    "width": 444,
-    "height": 112
   },
   "/books/python-intro/p090-071.webp": {
     "width": 428,
     "height": 116
   },
-  "/books/python-intro/p091-072.webp": {
+  "/books/python-intro/p090-072.webp": {
+    "width": 444,
+    "height": 112
+  },
+  "/books/python-intro/p091-073.webp": {
     "width": 1192,
     "height": 540
   },
-  "/books/python-intro/p092-073.webp": {
+  "/books/python-intro/p092-074.webp": {
     "width": 1192,
     "height": 520
   },
-  "/books/python-intro/p092-074.webp": {
+  "/books/python-intro/p092-075.webp": {
     "width": 708,
     "height": 220
   },
-  "/books/python-intro/p092-075.webp": {
+  "/books/python-intro/p092-076.webp": {
     "width": 1044,
     "height": 452
   },
-  "/books/python-intro/p093-076.webp": {
+  "/books/python-intro/p093-077.webp": {
     "width": 1064,
     "height": 588
   },
-  "/books/python-intro/p093-077.webp": {
+  "/books/python-intro/p093-078.webp": {
     "width": 976,
     "height": 656
   },
-  "/books/python-intro/p094-078.webp": {
+  "/books/python-intro/p094-079.webp": {
     "width": 880,
     "height": 304
   },
-  "/books/python-intro/p096-079.webp": {
-    "width": 600,
+  "/books/python-intro/p096-080.webp": {
+    "width": 768,
     "height": 284
   },
-  "/books/python-intro/p096-080.webp": {
+  "/books/python-intro/p096-081.webp": {
     "width": 300,
     "height": 152
   },
-  "/books/python-intro/p097-081.webp": {
+  "/books/python-intro/p097-082.webp": {
     "width": 320,
     "height": 144
   },
-  "/books/python-intro/p101-082.webp": {
+  "/books/python-intro/p101-083.webp": {
     "width": 1012,
     "height": 376,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p101-082-ea98d7926dcb-480.webp",
+        "src": "/books/python-intro/responsive/p101-083-ea98d7926dcb-480.webp",
         "width": 480,
         "height": 178
       }
     ]
   },
-  "/books/python-intro/p102-083.webp": {
+  "/books/python-intro/p102-084.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p104-084.webp": {
+  "/books/python-intro/p104-085.webp": {
     "width": 848,
     "height": 292
   },
-  "/books/python-intro/p104-085.webp": {
+  "/books/python-intro/p104-086.webp": {
     "width": 392,
     "height": 116
   },
-  "/books/python-intro/p105-086.webp": {
+  "/books/python-intro/p105-087.webp": {
     "width": 976,
     "height": 408
   },
-  "/books/python-intro/p105-087.webp": {
+  "/books/python-intro/p105-088.webp": {
     "width": 328,
     "height": 152
   },
-  "/books/python-intro/p107-088.webp": {
+  "/books/python-intro/p107-089.webp": {
     "width": 1192,
     "height": 400,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p107-088-d6c6002e160b-480.webp",
+        "src": "/books/python-intro/responsive/p107-089-d6c6002e160b-480.webp",
         "width": 480,
         "height": 161
       }
     ]
   },
-  "/books/python-intro/p108-089.webp": {
+  "/books/python-intro/p108-090.webp": {
     "width": 580,
     "height": 480
   },
-  "/books/python-intro/p111-090.webp": {
+  "/books/python-intro/p111-091.webp": {
     "width": 616,
     "height": 308
   },
-  "/books/python-intro/p112-091.webp": {
+  "/books/python-intro/p112-092.webp": {
     "width": 380,
     "height": 148
   },
-  "/books/python-intro/p116-092.webp": {
+  "/books/python-intro/p116-093.webp": {
     "width": 1192,
     "height": 724
   },
-  "/books/python-intro/p117-093.webp": {
+  "/books/python-intro/p117-094.webp": {
     "width": 816,
     "height": 184
   },
-  "/books/python-intro/p118-094.webp": {
+  "/books/python-intro/p118-095.webp": {
     "width": 352,
     "height": 184
   },
-  "/books/python-intro/p120-095.webp": {
+  "/books/python-intro/p120-096.webp": {
     "width": 404,
     "height": 128
   },
-  "/books/python-intro/p121-096.webp": {
+  "/books/python-intro/p121-097.webp": {
     "width": 1192,
     "height": 688
   },
-  "/books/python-intro/p124-097.webp": {
+  "/books/python-intro/p124-098.webp": {
     "width": 612,
     "height": 324
   },
-  "/books/python-intro/p124-098.webp": {
+  "/books/python-intro/p124-099.webp": {
     "width": 360,
     "height": 152
   },
-  "/books/python-intro/p130-099.webp": {
+  "/books/python-intro/p130-100.webp": {
     "width": 528,
     "height": 280
   },
-  "/books/python-intro/p131-100.webp": {
+  "/books/python-intro/p131-101.webp": {
     "width": 332,
     "height": 152
   },
-  "/books/python-intro/p133-101.webp": {
+  "/books/python-intro/p133-102.webp": {
     "width": 716,
     "height": 316
   },
-  "/books/python-intro/p134-102.webp": {
+  "/books/python-intro/p134-103.webp": {
     "width": 484,
     "height": 260
   },
-  "/books/python-intro/p134-103.webp": {
+  "/books/python-intro/p134-104.webp": {
     "width": 544,
     "height": 492
   },
-  "/books/python-intro/p135-104.webp": {
+  "/books/python-intro/p135-105.webp": {
     "width": 552,
     "height": 536
   },
-  "/books/python-intro/p136-105.webp": {
+  "/books/python-intro/p136-106.webp": {
     "width": 596,
     "height": 344
   },
-  "/books/python-intro/p136-106.webp": {
+  "/books/python-intro/p136-107.webp": {
     "width": 612,
     "height": 588
   },
-  "/books/python-intro/p139-107.webp": {
+  "/books/python-intro/p139-108.webp": {
     "width": 528,
     "height": 148
-  },
-  "/books/python-intro/p142-108.webp": {
-    "width": 1200,
-    "height": 420
   },
   "/books/python-intro/p143-109.webp": {
     "width": 1192,
     "height": 784,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p143-109-1b656d0f5de3-480.webp",
+        "src": "/books/python-intro/responsive/p143-109-af9f836c9870-480.webp",
         "width": 480,
         "height": 316
       }
     ]
   },
-  "/books/python-intro/p151-110.webp": {
+  "/books/python-intro/p148-110.webp": {
+    "width": 1184,
+    "height": 1704
+  },
+  "/books/python-intro/p151-111.webp": {
     "width": 1056,
-    "height": 448,
+    "height": 488,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p151-110-722afd1b93c9-480.webp",
+        "src": "/books/python-intro/responsive/p151-111-772f62269b05-480.webp",
         "width": 480,
-        "height": 204
+        "height": 222
       }
     ]
   },
-  "/books/python-intro/p152-111.webp": {
+  "/books/python-intro/p152-112.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p154-112.webp": {
+  "/books/python-intro/p154-113.webp": {
     "width": 436,
     "height": 432
   },
-  "/books/python-intro/p158-113.webp": {
+  "/books/python-intro/p158-114.webp": {
     "width": 656,
     "height": 620
   },
-  "/books/python-intro/p159-114.webp": {
+  "/books/python-intro/p159-115.webp": {
     "width": 960,
     "height": 616
   },
-  "/books/python-intro/p159-115.webp": {
-    "width": 320,
-    "height": 116
+  "/books/python-intro/p159-116.webp": {
+    "width": 388,
+    "height": 180
   },
-  "/books/python-intro/p161-116.webp": {
+  "/books/python-intro/p161-117.webp": {
     "width": 552,
     "height": 516
   },
-  "/books/python-intro/p162-117.webp": {
+  "/books/python-intro/p162-118.webp": {
     "width": 268,
     "height": 148
   },
-  "/books/python-intro/p164-118.webp": {
+  "/books/python-intro/p164-119.webp": {
     "width": 1192,
     "height": 532,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p164-118-87fdf6c5c311-480.webp",
+        "src": "/books/python-intro/responsive/p164-119-2b5d57665b30-480.webp",
         "width": 480,
         "height": 214
       }
     ]
   },
-  "/books/python-intro/p166-119.webp": {
+  "/books/python-intro/p166-120.webp": {
     "width": 408,
     "height": 148
   },
-  "/books/python-intro/p167-120.webp": {
+  "/books/python-intro/p167-121.webp": {
     "width": 288,
     "height": 152
   },
-  "/books/python-intro/p170-121.webp": {
+  "/books/python-intro/p169-122.webp": {
+    "width": 300,
+    "height": 124
+  },
+  "/books/python-intro/p170-123.webp": {
     "width": 428,
     "height": 532
   },
-  "/books/python-intro/p170-122.webp": {
+  "/books/python-intro/p170-124.webp": {
     "width": 428,
     "height": 536
   },
-  "/books/python-intro/p170-123.webp": {
+  "/books/python-intro/p170-125.webp": {
     "width": 332,
     "height": 120
   },
-  "/books/python-intro/p172-124.webp": {
+  "/books/python-intro/p172-126.webp": {
     "width": 568,
     "height": 500
   },
-  "/books/python-intro/p177-125.webp": {
+  "/books/python-intro/p177-127.webp": {
     "width": 1192,
     "height": 620
   },
-  "/books/python-intro/p177-126.webp": {
+  "/books/python-intro/p177-128.webp": {
     "width": 252,
     "height": 472
   },
-  "/books/python-intro/p177-127.webp": {
+  "/books/python-intro/p177-129.webp": {
     "width": 236,
     "height": 312
   },
-  "/books/python-intro/p177-128.webp": {
+  "/books/python-intro/p177-130.webp": {
     "width": 300,
     "height": 116
   },
-  "/books/python-intro/p180-129.webp": {
+  "/books/python-intro/p180-131.webp": {
     "width": 584,
     "height": 120
   },
-  "/books/python-intro/p182-130.webp": {
+  "/books/python-intro/p182-132.webp": {
     "width": 848,
     "height": 480
   },
-  "/books/python-intro/p183-131.webp": {
+  "/books/python-intro/p183-133.webp": {
     "width": 476,
     "height": 504
   },
-  "/books/python-intro/p184-132.webp": {
+  "/books/python-intro/p184-134.webp": {
     "width": 248,
     "height": 152
   },
-  "/books/python-intro/p186-133.webp": {
+  "/books/python-intro/p186-135.webp": {
     "width": 740,
     "height": 376
   },
-  "/books/python-intro/p192-134.webp": {
+  "/books/python-intro/p192-136.webp": {
     "width": 312,
     "height": 120
   },
-  "/books/python-intro/p193-135.webp": {
+  "/books/python-intro/p193-137.webp": {
     "width": 632,
     "height": 284
   },
-  "/books/python-intro/p199-136.webp": {
+  "/books/python-intro/p199-138.webp": {
     "width": 420,
     "height": 412
   },
-  "/books/python-intro/p202-137.webp": {
+  "/books/python-intro/p202-139.webp": {
     "width": 608,
     "height": 468
   },
-  "/books/python-intro/p204-138.webp": {
+  "/books/python-intro/p204-140.webp": {
     "width": 660,
     "height": 588
   },
-  "/books/python-intro/p204-139.webp": {
-    "width": 364,
-    "height": 120
+  "/books/python-intro/p204-141.webp": {
+    "width": 468,
+    "height": 136
   },
-  "/books/python-intro/p207-140.webp": {
+  "/books/python-intro/p207-142.webp": {
     "width": 404,
     "height": 164
   },
-  "/books/python-intro/p209-141.webp": {
+  "/books/python-intro/p209-143.webp": {
     "width": 1184,
     "height": 1696
   },
-  "/books/python-intro/p213-142.webp": {
+  "/books/python-intro/p213-144.webp": {
     "width": 1056,
     "height": 500,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p213-142-7df95c0b05d1-480.webp",
+        "src": "/books/python-intro/responsive/p213-144-7df95c0b05d1-480.webp",
         "width": 480,
         "height": 227
       }
     ]
   },
-  "/books/python-intro/p214-143.webp": {
+  "/books/python-intro/p214-145.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p216-144.webp": {
+  "/books/python-intro/p216-146.webp": {
     "width": 732,
     "height": 388
   },
-  "/books/python-intro/p218-145.webp": {
+  "/books/python-intro/p218-147.webp": {
     "width": 572,
     "height": 560
   },
-  "/books/python-intro/p219-146.webp": {
+  "/books/python-intro/p219-148.webp": {
     "width": 1192,
     "height": 264
   },
-  "/books/python-intro/p220-147.webp": {
+  "/books/python-intro/p220-149.webp": {
     "width": 584,
     "height": 388
   },
-  "/books/python-intro/p221-148.webp": {
+  "/books/python-intro/p221-150.webp": {
     "width": 1192,
     "height": 300
   },
-  "/books/python-intro/p221-149.webp": {
+  "/books/python-intro/p221-151.webp": {
     "width": 416,
     "height": 132
-  },
-  "/books/python-intro/p223-150.webp": {
-    "width": 1192,
-    "height": 344,
-    "variants": [
-      {
-        "src": "/books/python-intro/responsive/p223-150-85a0c27fe101-480.webp",
-        "width": 480,
-        "height": 139
-      },
-      {
-        "src": "/books/python-intro/responsive/p223-150-85a0c27fe101-640.webp",
-        "width": 640,
-        "height": 185
-      }
-    ]
-  },
-  "/books/python-intro/p223-151.webp": {
-    "width": 1192,
-    "height": 244,
-    "variants": [
-      {
-        "src": "/books/python-intro/responsive/p223-151-e953a9abb024-480.webp",
-        "width": 480,
-        "height": 98
-      },
-      {
-        "src": "/books/python-intro/responsive/p223-151-e953a9abb024-640.webp",
-        "width": 640,
-        "height": 131
-      }
-    ]
   },
   "/books/python-intro/p224-152.webp": {
     "width": 268,
@@ -767,8 +743,8 @@
     "height": 656
   },
   "/books/python-intro/p244-161.webp": {
-    "width": 324,
-    "height": 116
+    "width": 428,
+    "height": 164
   },
   "/books/python-intro/p245-162.webp": {
     "width": 988,
@@ -779,7 +755,7 @@
     "height": 1016,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p245-163-1d8445987680-480.webp",
+        "src": "/books/python-intro/responsive/p245-163-f7c7d0b36864-480.webp",
         "width": 480,
         "height": 409
       }
@@ -790,1007 +766,1023 @@
     "height": 308,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p246-164-2bb35eeb7756-480.webp",
+        "src": "/books/python-intro/responsive/p246-164-ea9059f7295b-480.webp",
         "width": 480,
         "height": 124
       },
       {
-        "src": "/books/python-intro/responsive/p246-164-2bb35eeb7756-640.webp",
+        "src": "/books/python-intro/responsive/p246-164-ea9059f7295b-640.webp",
         "width": 640,
         "height": 165
       }
     ]
   },
   "/books/python-intro/p247-165.webp": {
-    "width": 1024,
+    "width": 964,
     "height": 1052
   },
   "/books/python-intro/p249-166.webp": {
     "width": 288,
     "height": 152
   },
-  "/books/python-intro/p251-167.webp": {
+  "/books/python-intro/p250-167.webp": {
+    "width": 612,
+    "height": 112
+  },
+  "/books/python-intro/p251-168.webp": {
     "width": 1172,
     "height": 404
   },
-  "/books/python-intro/p253-168.webp": {
+  "/books/python-intro/p251-169.webp": {
+    "width": 296,
+    "height": 124
+  },
+  "/books/python-intro/p253-170.webp": {
     "width": 1192,
     "height": 412,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p253-168-e481382f6fc5-480.webp",
+        "src": "/books/python-intro/responsive/p253-170-e481382f6fc5-480.webp",
         "width": 480,
         "height": 166
       }
     ]
   },
-  "/books/python-intro/p255-169.webp": {
+  "/books/python-intro/p255-171.webp": {
     "width": 1192,
     "height": 368
   },
-  "/books/python-intro/p257-170.webp": {
+  "/books/python-intro/p257-172.webp": {
     "width": 476,
     "height": 504
   },
-  "/books/python-intro/p258-171.webp": {
+  "/books/python-intro/p258-173.webp": {
     "width": 416,
     "height": 148
   },
-  "/books/python-intro/p258-172.webp": {
+  "/books/python-intro/p258-174.webp": {
     "width": 812,
     "height": 276
   },
-  "/books/python-intro/p258-173.webp": {
+  "/books/python-intro/p258-175.webp": {
     "width": 304,
     "height": 148
   },
-  "/books/python-intro/p258-174.webp": {
+  "/books/python-intro/p258-176.webp": {
     "width": 944,
     "height": 380
   },
-  "/books/python-intro/p261-175.webp": {
+  "/books/python-intro/p261-177.webp": {
     "width": 456,
     "height": 160
   },
-  "/books/python-intro/p262-176.webp": {
+  "/books/python-intro/p262-178.webp": {
     "width": 1192,
     "height": 1628
   },
-  "/books/python-intro/p263-177.webp": {
+  "/books/python-intro/p263-179.webp": {
     "width": 1192,
     "height": 660
   },
-  "/books/python-intro/p267-178.webp": {
+  "/books/python-intro/p265-180.webp": {
+    "width": 300,
+    "height": 124
+  },
+  "/books/python-intro/p267-181.webp": {
     "width": 1192,
     "height": 700,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p267-178-3feea3b42bfb-480.webp",
+        "src": "/books/python-intro/responsive/p267-181-f3bf2ee1e117-480.webp",
         "width": 480,
         "height": 282
       }
     ]
   },
-  "/books/python-intro/p271-179.webp": {
+  "/books/python-intro/p271-182.webp": {
     "width": 268,
     "height": 152
   },
-  "/books/python-intro/p271-180.webp": {
+  "/books/python-intro/p271-183.webp": {
     "width": 404,
     "height": 148
   },
-  "/books/python-intro/p273-181.webp": {
+  "/books/python-intro/p273-184.webp": {
     "width": 708,
     "height": 356
   },
-  "/books/python-intro/p274-182.webp": {
-    "width": 272,
-    "height": 152
+  "/books/python-intro/p274-185.webp": {
+    "width": 384,
+    "height": 148
   },
-  "/books/python-intro/p277-183.webp": {
+  "/books/python-intro/p277-186.webp": {
     "width": 968,
     "height": 280
   },
-  "/books/python-intro/p280-184.webp": {
+  "/books/python-intro/p280-187.webp": {
     "width": 1192,
     "height": 260
   },
-  "/books/python-intro/p280-185.webp": {
+  "/books/python-intro/p280-188.webp": {
     "width": 280,
     "height": 152
   },
-  "/books/python-intro/p281-186.webp": {
+  "/books/python-intro/p281-189.webp": {
     "width": 1192,
     "height": 256
   },
-  "/books/python-intro/p289-187.webp": {
+  "/books/python-intro/p289-190.webp": {
     "width": 1056,
     "height": 128,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p289-187-e9463ef7e280-480.webp",
+        "src": "/books/python-intro/responsive/p289-190-e9463ef7e280-480.webp",
         "width": 480,
         "height": 58
       }
     ]
   },
-  "/books/python-intro/p289-188.webp": {
+  "/books/python-intro/p289-191.webp": {
     "width": 1056,
     "height": 388,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p289-188-0d5c0b2a3b9d-480.webp",
+        "src": "/books/python-intro/responsive/p289-191-0d5c0b2a3b9d-480.webp",
         "width": 480,
         "height": 176
       }
     ]
   },
-  "/books/python-intro/p290-189.webp": {
+  "/books/python-intro/p290-192.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p293-190.webp": {
+  "/books/python-intro/p293-193.webp": {
     "width": 644,
     "height": 532
   },
-  "/books/python-intro/p293-191.webp": {
+  "/books/python-intro/p293-194.webp": {
     "width": 312,
-    "height": 120
+    "height": 140
   },
-  "/books/python-intro/p294-192.webp": {
+  "/books/python-intro/p294-195.webp": {
     "width": 704,
     "height": 568
   },
-  "/books/python-intro/p298-193.webp": {
+  "/books/python-intro/p298-196.webp": {
     "width": 636,
     "height": 236
   },
-  "/books/python-intro/p298-194.webp": {
+  "/books/python-intro/p298-197.webp": {
     "width": 1192,
     "height": 516,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p298-194-603d815e53b7-480.webp",
+        "src": "/books/python-intro/responsive/p298-197-26541ada3532-480.webp",
         "width": 480,
         "height": 208
       }
     ]
   },
-  "/books/python-intro/p301-195.webp": {
+  "/books/python-intro/p301-198.webp": {
     "width": 668,
     "height": 520
   },
-  "/books/python-intro/p301-196.webp": {
-    "width": 316,
-    "height": 116
+  "/books/python-intro/p301-199.webp": {
+    "width": 436,
+    "height": 164
   },
-  "/books/python-intro/p303-197.webp": {
-    "width": 344,
-    "height": 120
+  "/books/python-intro/p303-200.webp": {
+    "width": 496,
+    "height": 164
   },
-  "/books/python-intro/p303-198.webp": {
+  "/books/python-intro/p303-201.webp": {
     "width": 764,
     "height": 116
   },
-  "/books/python-intro/p304-199.webp": {
+  "/books/python-intro/p304-202.webp": {
     "width": 768,
     "height": 272
   },
-  "/books/python-intro/p304-200.webp": {
-    "width": 568,
+  "/books/python-intro/p304-203.webp": {
+    "width": 668,
     "height": 344
   },
-  "/books/python-intro/p307-201.webp": {
+  "/books/python-intro/p307-204.webp": {
     "width": 1192,
     "height": 892
   },
-  "/books/python-intro/p308-202.webp": {
+  "/books/python-intro/p308-205.webp": {
     "width": 1192,
     "height": 872,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p308-202-a906a1da821d-480.webp",
+        "src": "/books/python-intro/responsive/p308-205-a906a1da821d-480.webp",
         "width": 480,
         "height": 351
       }
     ]
   },
-  "/books/python-intro/p309-203.webp": {
+  "/books/python-intro/p309-206.webp": {
     "width": 288,
     "height": 152
   },
-  "/books/python-intro/p313-204.webp": {
+  "/books/python-intro/p313-207.webp": {
     "width": 240,
     "height": 508
   },
-  "/books/python-intro/p313-205.webp": {
+  "/books/python-intro/p313-208.webp": {
     "width": 284,
     "height": 148
   },
-  "/books/python-intro/p313-206.webp": {
+  "/books/python-intro/p313-209.webp": {
     "width": 692,
     "height": 272
   },
-  "/books/python-intro/p314-207.webp": {
+  "/books/python-intro/p314-210.webp": {
     "width": 1192,
     "height": 612,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p314-207-c866d6e229ac-480.webp",
+        "src": "/books/python-intro/responsive/p314-210-7368fde15b8f-480.webp",
         "width": 480,
         "height": 246
       }
     ]
   },
-  "/books/python-intro/p318-208.webp": {
+  "/books/python-intro/p318-211.webp": {
     "width": 360,
     "height": 152
   },
-  "/books/python-intro/p321-209.webp": {
-    "width": 300,
-    "height": 116
+  "/books/python-intro/p321-212.webp": {
+    "width": 404,
+    "height": 136
   },
-  "/books/python-intro/p321-210.webp": {
+  "/books/python-intro/p321-213.webp": {
     "width": 476,
     "height": 608
   },
-  "/books/python-intro/p323-211.webp": {
+  "/books/python-intro/p323-214.webp": {
     "width": 1192,
     "height": 1776,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p323-211-dfcc0d03aad6-480.webp",
+        "src": "/books/python-intro/responsive/p323-214-20f62abe4aa1-480.webp",
         "width": 480,
         "height": 715
       }
     ]
   },
-  "/books/python-intro/p324-212.webp": {
+  "/books/python-intro/p324-215.webp": {
     "width": 332,
     "height": 116
   },
-  "/books/python-intro/p326-213.webp": {
+  "/books/python-intro/p326-216.webp": {
     "width": 700,
     "height": 108
   },
-  "/books/python-intro/p327-214.webp": {
-    "width": 304,
-    "height": 116
+  "/books/python-intro/p327-217.webp": {
+    "width": 380,
+    "height": 168
   },
-  "/books/python-intro/p328-215.webp": {
+  "/books/python-intro/p328-218.webp": {
     "width": 624,
     "height": 512
   },
-  "/books/python-intro/p329-216.webp": {
+  "/books/python-intro/p329-219.webp": {
     "width": 420,
     "height": 128
   },
-  "/books/python-intro/p331-217.webp": {
+  "/books/python-intro/p331-220.webp": {
     "width": 704,
     "height": 556
   },
-  "/books/python-intro/p333-218.webp": {
-    "width": 324,
-    "height": 116
+  "/books/python-intro/p333-221.webp": {
+    "width": 440,
+    "height": 164
   },
-  "/books/python-intro/p333-219.webp": {
+  "/books/python-intro/p333-222.webp": {
     "width": 300,
     "height": 116
   },
-  "/books/python-intro/p335-220.webp": {
+  "/books/python-intro/p335-223.webp": {
     "width": 288,
     "height": 152
   },
-  "/books/python-intro/p337-221.webp": {
+  "/books/python-intro/p337-224.webp": {
     "width": 800,
     "height": 688
   },
-  "/books/python-intro/p338-222.webp": {
-    "width": 304,
-    "height": 116
+  "/books/python-intro/p338-225.webp": {
+    "width": 412,
+    "height": 176
   },
-  "/books/python-intro/p342-223.webp": {
+  "/books/python-intro/p342-226.webp": {
     "width": 336,
     "height": 120
   },
-  "/books/python-intro/p353-224.webp": {
+  "/books/python-intro/p353-227.webp": {
     "width": 1056,
     "height": 448,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p353-224-7183915887af-480.webp",
+        "src": "/books/python-intro/responsive/p353-227-7183915887af-480.webp",
         "width": 480,
         "height": 204
       }
     ]
   },
-  "/books/python-intro/p354-225.webp": {
+  "/books/python-intro/p354-228.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p358-226.webp": {
+  "/books/python-intro/p358-229.webp": {
     "width": 292,
     "height": 152
   },
-  "/books/python-intro/p358-227.webp": {
+  "/books/python-intro/p358-230.webp": {
     "width": 768,
     "height": 860
   },
-  "/books/python-intro/p359-228.webp": {
+  "/books/python-intro/p359-231.webp": {
     "width": 344,
     "height": 116
   },
-  "/books/python-intro/p360-229.webp": {
+  "/books/python-intro/p360-232.webp": {
     "width": 268,
     "height": 148
   },
-  "/books/python-intro/p364-230.webp": {
+  "/books/python-intro/p364-233.webp": {
     "width": 424,
     "height": 144
   },
-  "/books/python-intro/p365-231.webp": {
+  "/books/python-intro/p365-234.webp": {
     "width": 776,
     "height": 496
   },
-  "/books/python-intro/p366-232.webp": {
+  "/books/python-intro/p366-235.webp": {
     "width": 304,
     "height": 116
   },
-  "/books/python-intro/p367-233.webp": {
+  "/books/python-intro/p367-236.webp": {
     "width": 784,
     "height": 644
   },
-  "/books/python-intro/p368-234.webp": {
+  "/books/python-intro/p368-237.webp": {
     "width": 432,
     "height": 144
   },
-  "/books/python-intro/p370-235.webp": {
-    "width": 268,
+  "/books/python-intro/p370-238.webp": {
+    "width": 376,
     "height": 152
   },
-  "/books/python-intro/p373-236.webp": {
+  "/books/python-intro/p373-239.webp": {
     "width": 388,
     "height": 160
   },
-  "/books/python-intro/p378-237.webp": {
+  "/books/python-intro/p378-240.webp": {
     "width": 388,
     "height": 472
   },
-  "/books/python-intro/p379-238.webp": {
+  "/books/python-intro/p379-241.webp": {
     "width": 268,
-    "height": 148
+    "height": 152
   },
-  "/books/python-intro/p380-239.webp": {
+  "/books/python-intro/p380-242.webp": {
     "width": 736,
-    "height": 564
+    "height": 560
   },
-  "/books/python-intro/p382-240.webp": {
+  "/books/python-intro/p382-243.webp": {
     "width": 432,
     "height": 160
   },
-  "/books/python-intro/p384-241.webp": {
+  "/books/python-intro/p384-244.webp": {
     "width": 652,
     "height": 344
   },
-  "/books/python-intro/p386-242.webp": {
+  "/books/python-intro/p386-245.webp": {
     "width": 764,
     "height": 388
   },
-  "/books/python-intro/p389-243.webp": {
+  "/books/python-intro/p389-246.webp": {
     "width": 260,
     "height": 160
   },
-  "/books/python-intro/p389-244.webp": {
+  "/books/python-intro/p389-247.webp": {
     "width": 1192,
     "height": 1004,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p389-244-8fca03ab2bb6-480.webp",
+        "src": "/books/python-intro/responsive/p389-247-d3216fc679c1-480.webp",
         "width": 480,
         "height": 404
       }
     ]
   },
-  "/books/python-intro/p390-245.webp": {
+  "/books/python-intro/p390-248.webp": {
     "width": 1192,
     "height": 808,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p390-245-e85d25a23ada-480.webp",
+        "src": "/books/python-intro/responsive/p390-248-6593f509d150-480.webp",
         "width": 480,
         "height": 325
       }
     ]
   },
-  "/books/python-intro/p391-246.webp": {
+  "/books/python-intro/p391-249.webp": {
     "width": 268,
     "height": 152
   },
-  "/books/python-intro/p392-247.webp": {
+  "/books/python-intro/p392-250.webp": {
     "width": 376,
     "height": 152
   },
-  "/books/python-intro/p411-248.webp": {
+  "/books/python-intro/p411-251.webp": {
     "width": 1060,
     "height": 848,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p411-248-495b2804cd72-480.webp",
+        "src": "/books/python-intro/responsive/p411-251-495b2804cd72-480.webp",
         "width": 480,
         "height": 384
       }
     ]
   },
-  "/books/python-intro/p412-249.webp": {
+  "/books/python-intro/p412-252.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p415-250.webp": {
+  "/books/python-intro/p415-253.webp": {
     "width": 380,
     "height": 148
   },
-  "/books/python-intro/p416-251.webp": {
+  "/books/python-intro/p416-254.webp": {
     "width": 544,
     "height": 400
   },
-  "/books/python-intro/p416-252.webp": {
+  "/books/python-intro/p416-255.webp": {
     "width": 404,
     "height": 380
   },
-  "/books/python-intro/p420-253.webp": {
+  "/books/python-intro/p420-256.webp": {
     "width": 872,
     "height": 472
   },
-  "/books/python-intro/p421-254.webp": {
+  "/books/python-intro/p421-257.webp": {
     "width": 1192,
     "height": 396
   },
-  "/books/python-intro/p421-255.webp": {
+  "/books/python-intro/p421-258.webp": {
     "width": 1192,
     "height": 520
   },
-  "/books/python-intro/p423-256.webp": {
+  "/books/python-intro/p423-259.webp": {
     "width": 1192,
     "height": 448
   },
-  "/books/python-intro/p425-257.webp": {
+  "/books/python-intro/p425-260.webp": {
     "width": 296,
     "height": 116
   },
-  "/books/python-intro/p427-258.webp": {
+  "/books/python-intro/p427-261.webp": {
     "width": 468,
     "height": 436
   },
-  "/books/python-intro/p428-259.webp": {
+  "/books/python-intro/p428-262.webp": {
     "width": 304,
     "height": 116
   },
-  "/books/python-intro/p429-260.webp": {
+  "/books/python-intro/p429-263.webp": {
     "width": 324,
     "height": 116
   },
-  "/books/python-intro/p432-261.webp": {
+  "/books/python-intro/p432-264.webp": {
     "width": 296,
     "height": 452
   },
-  "/books/python-intro/p432-262.webp": {
+  "/books/python-intro/p432-265.webp": {
     "width": 296,
     "height": 448
   },
-  "/books/python-intro/p433-263.webp": {
+  "/books/python-intro/p433-266.webp": {
     "width": 284,
     "height": 152
   },
-  "/books/python-intro/p434-264.webp": {
+  "/books/python-intro/p434-267.webp": {
     "width": 376,
     "height": 160
   },
-  "/books/python-intro/p436-265.webp": {
+  "/books/python-intro/p436-268.webp": {
     "width": 652,
     "height": 396
   },
-  "/books/python-intro/p438-266.webp": {
+  "/books/python-intro/p438-269.webp": {
     "width": 280,
     "height": 152
   },
-  "/books/python-intro/p440-267.webp": {
-    "width": 260,
+  "/books/python-intro/p440-270.webp": {
+    "width": 356,
     "height": 152
   },
-  "/books/python-intro/p441-268.webp": {
+  "/books/python-intro/p441-271.webp": {
     "width": 640,
     "height": 420
   },
-  "/books/python-intro/p441-269.webp": {
+  "/books/python-intro/p441-272.webp": {
     "width": 1192,
     "height": 660,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p441-269-a3fb6be5335c-480.webp",
+        "src": "/books/python-intro/responsive/p441-272-0a6ea835b80b-480.webp",
         "width": 480,
         "height": 266
       }
     ]
   },
-  "/books/python-intro/p443-270.webp": {
-    "width": 376,
+  "/books/python-intro/p443-273.webp": {
+    "width": 360,
     "height": 152
   },
-  "/books/python-intro/p446-271.webp": {
+  "/books/python-intro/p446-274.webp": {
     "width": 764,
     "height": 568
   },
-  "/books/python-intro/p447-272.webp": {
+  "/books/python-intro/p447-275.webp": {
     "width": 372,
-    "height": 120
+    "height": 124
   },
-  "/books/python-intro/p449-273.webp": {
-    "width": 300,
-    "height": 120
+  "/books/python-intro/p449-276.webp": {
+    "width": 420,
+    "height": 160
   },
-  "/books/python-intro/p452-274.webp": {
+  "/books/python-intro/p452-277.webp": {
     "width": 284,
     "height": 152
   },
-  "/books/python-intro/p453-275.webp": {
+  "/books/python-intro/p453-278.webp": {
     "width": 1184,
     "height": 1708
   },
-  "/books/python-intro/p457-276.webp": {
+  "/books/python-intro/p457-279.webp": {
     "width": 1056,
     "height": 560,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p457-276-7a7a975b1515-480.webp",
+        "src": "/books/python-intro/responsive/p457-279-639146ada01f-480.webp",
         "width": 480,
         "height": 255
       }
     ]
   },
-  "/books/python-intro/p458-277.webp": {
+  "/books/python-intro/p458-280.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p461-278.webp": {
+  "/books/python-intro/p461-281.webp": {
     "width": 420,
-    "height": 140
+    "height": 136
   },
-  "/books/python-intro/p463-279.webp": {
+  "/books/python-intro/p463-282.webp": {
     "width": 288,
     "height": 148
   },
-  "/books/python-intro/p464-280.webp": {
-    "width": 312,
-    "height": 116
+  "/books/python-intro/p464-283.webp": {
+    "width": 412,
+    "height": 132
   },
-  "/books/python-intro/p465-281.webp": {
+  "/books/python-intro/p465-284.webp": {
     "width": 1192,
     "height": 1120,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p465-281-5ff99476f4c4-480.webp",
+        "src": "/books/python-intro/responsive/p465-284-5ff99476f4c4-480.webp",
         "width": 480,
         "height": 451
       }
     ]
   },
-  "/books/python-intro/p466-282.webp": {
+  "/books/python-intro/p466-285.webp": {
     "width": 1192,
     "height": 308,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p466-282-1c22e0400de8-480.webp",
+        "src": "/books/python-intro/responsive/p466-285-1c22e0400de8-480.webp",
         "width": 480,
         "height": 124
       },
       {
-        "src": "/books/python-intro/responsive/p466-282-1c22e0400de8-640.webp",
+        "src": "/books/python-intro/responsive/p466-285-1c22e0400de8-640.webp",
         "width": 640,
         "height": 165
       }
     ]
   },
-  "/books/python-intro/p466-283.webp": {
+  "/books/python-intro/p466-286.webp": {
     "width": 228,
     "height": 372
   },
-  "/books/python-intro/p468-284.webp": {
+  "/books/python-intro/p468-287.webp": {
     "width": 312,
     "height": 520
   },
-  "/books/python-intro/p468-285.webp": {
+  "/books/python-intro/p468-288.webp": {
     "width": 316,
     "height": 512
   },
-  "/books/python-intro/p469-286.webp": {
+  "/books/python-intro/p469-289.webp": {
     "width": 408,
     "height": 140
   },
-  "/books/python-intro/p469-287.webp": {
+  "/books/python-intro/p469-290.webp": {
     "width": 448,
     "height": 524
   },
-  "/books/python-intro/p471-288.webp": {
+  "/books/python-intro/p471-291.webp": {
     "width": 424,
-    "height": 160
+    "height": 164
   },
-  "/books/python-intro/p472-289.webp": {
+  "/books/python-intro/p472-292.webp": {
     "width": 728,
-    "height": 472
+    "height": 476
   },
-  "/books/python-intro/p474-290.webp": {
+  "/books/python-intro/p474-293.webp": {
     "width": 1192,
-    "height": 516,
+    "height": 468,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p474-290-3014022fa6c8-480.webp",
+        "src": "/books/python-intro/responsive/p474-293-6d13984b0820-480.webp",
         "width": 480,
-        "height": 208
+        "height": 188
       }
     ]
   },
-  "/books/python-intro/p475-291.webp": {
+  "/books/python-intro/p475-294.webp": {
     "width": 656,
     "height": 488
   },
-  "/books/python-intro/p478-292.webp": {
+  "/books/python-intro/p478-295.webp": {
     "width": 324,
     "height": 116
   },
-  "/books/python-intro/p478-293.webp": {
+  "/books/python-intro/p478-296.webp": {
     "width": 448,
     "height": 164
   },
-  "/books/python-intro/p481-294.webp": {
+  "/books/python-intro/p481-297.webp": {
     "width": 288,
     "height": 148
   },
-  "/books/python-intro/p485-295.webp": {
+  "/books/python-intro/p485-298.webp": {
     "width": 388,
     "height": 156
   },
-  "/books/python-intro/p487-296.webp": {
+  "/books/python-intro/p487-299.webp": {
     "width": 700,
     "height": 468
   },
-  "/books/python-intro/p487-297.webp": {
+  "/books/python-intro/p487-300.webp": {
     "width": 296,
     "height": 152
   },
-  "/books/python-intro/p487-298.webp": {
+  "/books/python-intro/p487-301.webp": {
     "width": 1192,
     "height": 404
   },
-  "/books/python-intro/p489-299.webp": {
+  "/books/python-intro/p489-302.webp": {
     "width": 1192,
     "height": 572
   },
-  "/books/python-intro/p493-300.webp": {
+  "/books/python-intro/p493-303.webp": {
     "width": 400,
     "height": 152
   },
-  "/books/python-intro/p493-301.webp": {
+  "/books/python-intro/p493-304.webp": {
     "width": 1184,
     "height": 128,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p493-301-f876cd1734cd-480.webp",
+        "src": "/books/python-intro/responsive/p493-304-f876cd1734cd-480.webp",
         "width": 480,
         "height": 52
       }
     ]
   },
-  "/books/python-intro/p497-302.webp": {
+  "/books/python-intro/p497-305.webp": {
     "width": 1060,
     "height": 656,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p497-302-cbac80b7cd8b-480.webp",
+        "src": "/books/python-intro/responsive/p497-305-cbac80b7cd8b-480.webp",
         "width": 480,
         "height": 297
       }
     ]
   },
-  "/books/python-intro/p498-303.webp": {
+  "/books/python-intro/p498-306.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p500-304.webp": {
+  "/books/python-intro/p500-307.webp": {
     "width": 496,
     "height": 504
   },
-  "/books/python-intro/p501-305.webp": {
+  "/books/python-intro/p501-308.webp": {
     "width": 604,
     "height": 508
   },
-  "/books/python-intro/p502-306.webp": {
+  "/books/python-intro/p502-309.webp": {
     "width": 272,
     "height": 148
   },
-  "/books/python-intro/p503-307.webp": {
+  "/books/python-intro/p502-310.webp": {
+    "width": 296,
+    "height": 120
+  },
+  "/books/python-intro/p503-311.webp": {
     "width": 480,
     "height": 364
   },
-  "/books/python-intro/p504-308.webp": {
+  "/books/python-intro/p504-312.webp": {
     "width": 420,
     "height": 164
   },
-  "/books/python-intro/p505-309.webp": {
+  "/books/python-intro/p505-313.webp": {
     "width": 616,
     "height": 432
   },
-  "/books/python-intro/p506-310.webp": {
+  "/books/python-intro/p506-314.webp": {
     "width": 360,
     "height": 116
   },
-  "/books/python-intro/p508-311.webp": {
+  "/books/python-intro/p508-315.webp": {
     "width": 1040,
     "height": 576
   },
-  "/books/python-intro/p508-312.webp": {
+  "/books/python-intro/p508-316.webp": {
     "width": 1040,
     "height": 668,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p508-312-19ca47754c1e-480.webp",
+        "src": "/books/python-intro/responsive/p508-316-19ca47754c1e-480.webp",
         "width": 480,
         "height": 308
       }
     ]
   },
-  "/books/python-intro/p509-313.webp": {
+  "/books/python-intro/p509-317.webp": {
     "width": 376,
     "height": 128
   },
-  "/books/python-intro/p512-314.webp": {
+  "/books/python-intro/p512-318.webp": {
     "width": 668,
-    "height": 428
+    "height": 432
   },
-  "/books/python-intro/p513-315.webp": {
+  "/books/python-intro/p513-319.webp": {
     "width": 696,
     "height": 484
   },
-  "/books/python-intro/p513-316.webp": {
+  "/books/python-intro/p513-320.webp": {
     "width": 440,
     "height": 116
   },
-  "/books/python-intro/p514-317.webp": {
+  "/books/python-intro/p514-321.webp": {
     "width": 344,
     "height": 116
   },
-  "/books/python-intro/p515-318.webp": {
+  "/books/python-intro/p515-322.webp": {
     "width": 688,
     "height": 460
   },
-  "/books/python-intro/p516-319.webp": {
+  "/books/python-intro/p516-323.webp": {
     "width": 300,
     "height": 116
   },
-  "/books/python-intro/p516-320.webp": {
+  "/books/python-intro/p516-324.webp": {
     "width": 1192,
     "height": 312
   },
-  "/books/python-intro/p516-321.webp": {
+  "/books/python-intro/p516-325.webp": {
     "width": 568,
     "height": 228
   },
-  "/books/python-intro/p516-322.webp": {
+  "/books/python-intro/p516-326.webp": {
     "width": 696,
     "height": 264
   },
-  "/books/python-intro/p519-323.webp": {
+  "/books/python-intro/p519-327.webp": {
     "width": 564,
     "height": 460
   },
-  "/books/python-intro/p520-324.webp": {
+  "/books/python-intro/p520-328.webp": {
     "width": 1072,
     "height": 736
   },
-  "/books/python-intro/p520-325.webp": {
+  "/books/python-intro/p520-329.webp": {
     "width": 1192,
     "height": 380,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p520-325-16ade40aafe3-480.webp",
+        "src": "/books/python-intro/responsive/p520-329-16ade40aafe3-480.webp",
         "width": 480,
         "height": 153
       }
     ]
   },
-  "/books/python-intro/p521-326.webp": {
+  "/books/python-intro/p521-330.webp": {
     "width": 1192,
     "height": 276,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p521-326-0213767f4765-480.webp",
+        "src": "/books/python-intro/responsive/p521-330-0213767f4765-480.webp",
         "width": 480,
         "height": 111
       },
       {
-        "src": "/books/python-intro/responsive/p521-326-0213767f4765-640.webp",
+        "src": "/books/python-intro/responsive/p521-330-0213767f4765-640.webp",
         "width": 640,
         "height": 148
       }
     ]
   },
-  "/books/python-intro/p521-327.webp": {
+  "/books/python-intro/p521-331.webp": {
     "width": 1192,
-    "height": 840
+    "height": 848
   },
-  "/books/python-intro/p523-328.webp": {
+  "/books/python-intro/p523-332.webp": {
     "width": 1192,
     "height": 564,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p523-328-aca8cb93b3a8-480.webp",
+        "src": "/books/python-intro/responsive/p523-332-aca8cb93b3a8-480.webp",
         "width": 480,
         "height": 227
       }
     ]
   },
-  "/books/python-intro/p523-329.webp": {
+  "/books/python-intro/p523-333.webp": {
     "width": 1192,
-    "height": 116
+    "height": 124
   },
-  "/books/python-intro/p524-330.webp": {
-    "width": 668,
-    "height": 324
+  "/books/python-intro/p524-334.webp": {
+    "width": 764,
+    "height": 368
   },
-  "/books/python-intro/p525-331.webp": {
+  "/books/python-intro/p525-335.webp": {
     "width": 1032,
     "height": 344
   },
-  "/books/python-intro/p525-332.webp": {
+  "/books/python-intro/p525-336.webp": {
     "width": 288,
     "height": 148
   },
-  "/books/python-intro/p531-333.webp": {
+  "/books/python-intro/p531-337.webp": {
     "width": 448,
-    "height": 132
+    "height": 136
   },
-  "/books/python-intro/p531-334.webp": {
+  "/books/python-intro/p531-338.webp": {
     "width": 1192,
-    "height": 116
+    "height": 124
   },
-  "/books/python-intro/p532-335.webp": {
+  "/books/python-intro/p532-339.webp": {
     "width": 652,
     "height": 116
   },
-  "/books/python-intro/p543-336.webp": {
+  "/books/python-intro/p543-340.webp": {
     "width": 392,
-    "height": 404
+    "height": 164
   },
-  "/books/python-intro/p547-337.webp": {
-    "width": 420,
-    "height": 112
-  },
-  "/books/python-intro/p547-338.webp": {
+  "/books/python-intro/p547-341.webp": {
     "width": 1056,
     "height": 644,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p547-338-aaab2bbb8ed2-480.webp",
+        "src": "/books/python-intro/responsive/p547-341-aaab2bbb8ed2-480.webp",
         "width": 480,
         "height": 293
       }
     ]
   },
-  "/books/python-intro/p548-339.webp": {
+  "/books/python-intro/p548-342.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p550-340.webp": {
+  "/books/python-intro/p550-343.webp": {
     "width": 304,
     "height": 116
   },
-  "/books/python-intro/p551-341.webp": {
+  "/books/python-intro/p551-344.webp": {
     "width": 780,
     "height": 368
   },
-  "/books/python-intro/p553-342.webp": {
+  "/books/python-intro/p553-345.webp": {
     "width": 440,
     "height": 152
   },
-  "/books/python-intro/p554-343.webp": {
+  "/books/python-intro/p554-346.webp": {
     "width": 268,
     "height": 148
   },
-  "/books/python-intro/p559-344.webp": {
+  "/books/python-intro/p559-347.webp": {
     "width": 324,
     "height": 116
   },
-  "/books/python-intro/p564-345.webp": {
+  "/books/python-intro/p563-348.webp": {
+    "width": 372,
+    "height": 168
+  },
+  "/books/python-intro/p564-349.webp": {
     "width": 1192,
     "height": 452,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p564-345-4aec03c79957-480.webp",
+        "src": "/books/python-intro/responsive/p564-349-da96d7e89e22-480.webp",
         "width": 480,
         "height": 182
       }
     ]
   },
-  "/books/python-intro/p567-346.webp": {
+  "/books/python-intro/p567-350.webp": {
     "width": 604,
     "height": 568
   },
-  "/books/python-intro/p570-347.webp": {
+  "/books/python-intro/p570-351.webp": {
     "width": 972,
     "height": 560
   },
-  "/books/python-intro/p570-348.webp": {
+  "/books/python-intro/p570-352.webp": {
     "width": 624,
     "height": 564
   },
-  "/books/python-intro/p573-349.webp": {
+  "/books/python-intro/p573-353.webp": {
     "width": 280,
     "height": 152
   },
-  "/books/python-intro/p577-350.webp": {
+  "/books/python-intro/p577-354.webp": {
     "width": 1184,
     "height": 1708
   },
-  "/books/python-intro/p578-351.webp": {
+  "/books/python-intro/p578-355.webp": {
     "width": 1184,
     "height": 1764
   },
-  "/books/python-intro/p581-352.webp": {
+  "/books/python-intro/p581-356.webp": {
     "width": 1056,
     "height": 336,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p581-352-da4ed9782ee0-480.webp",
+        "src": "/books/python-intro/responsive/p581-356-69e029144af7-480.webp",
         "width": 480,
         "height": 153
       }
     ]
   },
-  "/books/python-intro/p582-353.webp": {
+  "/books/python-intro/p582-357.webp": {
     "width": 1460,
     "height": 1940
   },
-  "/books/python-intro/p584-354.webp": {
+  "/books/python-intro/p584-358.webp": {
     "width": 1192,
     "height": 576
   },
-  "/books/python-intro/p585-355.webp": {
+  "/books/python-intro/p585-359.webp": {
     "width": 884,
     "height": 344
   },
-  "/books/python-intro/p585-356.webp": {
+  "/books/python-intro/p585-360.webp": {
     "width": 1192,
     "height": 788
   },
-  "/books/python-intro/p586-357.webp": {
+  "/books/python-intro/p586-361.webp": {
     "width": 1192,
     "height": 708
   },
-  "/books/python-intro/p586-358.webp": {
+  "/books/python-intro/p586-362.webp": {
     "width": 928,
     "height": 568,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p586-358-323567b670bf-480.webp",
+        "src": "/books/python-intro/responsive/p586-362-9b2397d9c9fe-480.webp",
         "width": 480,
         "height": 294
       }
     ]
   },
-  "/books/python-intro/p587-359.webp": {
+  "/books/python-intro/p587-363.webp": {
     "width": 1192,
     "height": 740
   },
-  "/books/python-intro/p607-360.webp": {
+  "/books/python-intro/p607-364.webp": {
     "width": 1192,
     "height": 1412,
     "variants": [
       {
-        "src": "/books/python-intro/responsive/p607-360-33c35b709633-480.webp",
+        "src": "/books/python-intro/responsive/p607-364-2df6be351448-480.webp",
         "width": 480,
         "height": 569
       },
       {
-        "src": "/books/python-intro/responsive/p607-360-33c35b709633-640.webp",
+        "src": "/books/python-intro/responsive/p607-364-2df6be351448-640.webp",
         "width": 640,
         "height": 758
       }

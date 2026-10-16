@@ -78,6 +78,10 @@ print(a + b)
 
 ## 파이썬 인쇄용 PDF 재변환
 
+현재 원고는 `바로바로 파이썬_4교_케_1015.pdf` 기준입니다.
+원본 해시·대조 결과·파일명과 이미지 검증 내역은 `python-intro/import-report.json`에 기록합니다.
+4교 PDF에는 이전 판의 파일명 정정이 반영되어 있으므로 예전 `filename_overrides`를 다시 적용하지 않습니다.
+
 `scripts/pdf-book/books/python-intro.json`에 새 판의 절별 쪽 범위와 글꼴 역할을 기록합니다.
 원고의 파일명·번호 정정은 같은 설정의 `filename_overrides`에 원본 이름과 수정 이름으로 기록합니다.
 변환기는 코드 상단과 본문의 파일명 참조를 함께 바꾸므로 재변환해도 정정 사항이 유지됩니다.

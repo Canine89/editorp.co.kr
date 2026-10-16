@@ -1,6 +1,6 @@
 {
   "id": "python-intro",
-  "pdf": "바로바로 파이썬_3교_주석.pdf",
+  "pdf": "바로바로 파이썬_4교_케_1015.pdf",
   "pages": [
     34,
     607
@@ -22,35 +22,35 @@
           ]
         },
         {
-          "title": "01.1 컴퓨터에게 일을 시키는방법, 프로그래밍",
+          "title": "01.1 컴퓨터에게 일을 시키는 방법, 프로그래밍",
           "pages": [
             36,
             39
           ]
         },
         {
-          "title": "01.2 왜 파이썬을공부해야 할까?",
+          "title": "01.2 왜 파이썬을 공부해야 할까?",
           "pages": [
             40,
             44
           ]
         },
         {
-          "title": "01.3 파이썬 실습을 위한도구 준비하기",
+          "title": "01.3 파이썬 실습을 위한 도구 준비하기",
           "pages": [
             45,
             51
           ]
         },
         {
-          "title": "01.4 파이썬을 실행하는다양한 방법 알아보기",
+          "title": "01.4 파이썬을 실행하는 다양한 방법 알아보기",
           "pages": [
             52,
             65
           ]
         },
         {
-          "title": "01.5 파이썬 실행하기 전알아둬야 할 3가지",
+          "title": "01.5 파이썬 실행하기 전 알아둬야 할 3가지",
           "pages": [
             66,
             69
@@ -76,21 +76,21 @@
           ]
         },
         {
-          "title": "02.2 변수 연습하기",
+          "title": "02.2 변수 활용하기",
           "pages": [
             76,
             79
           ]
         },
         {
-          "title": "02.3 꼭 알아두면 좋은프로그래밍 용어 12가지",
+          "title": "02.3 꼭 알아두면 좋은 프로그래밍 용어 12가지",
           "pages": [
             80,
             88
           ]
         },
         {
-          "title": "02.4 변수나 함수의이름 짓는 방법",
+          "title": "02.4 변수·함수·클래스 이름 짓기",
           "pages": [
             89,
             90
@@ -144,7 +144,7 @@
           ]
         },
         {
-          "title": "03.4 문자열 응용 연습하기",
+          "title": "03.4 문자열 응용과 자료형 변환",
           "pages": [
             122,
             129
@@ -285,7 +285,7 @@
           ]
         },
         {
-          "title": "06.1 while 문과반복문의 기초",
+          "title": "06.1 while 문과 반복문의 기초",
           "pages": [
             242,
             255
@@ -346,14 +346,14 @@
           ]
         },
         {
-          "title": "07.3 매개변수 좀 더 깊게알아보기",
+          "title": "07.3 매개변수 좀 더 깊게 알아보기",
           "pages": [
             317,
             325
           ]
         },
         {
-          "title": "07.4 함수를 한 줄로 정의할 수있는 람다",
+          "title": "07.4 함수를 한 줄로 정의할 수 있는 람다",
           "pages": [
             326,
             330
@@ -374,7 +374,7 @@
           ]
         },
         {
-          "title": "07.7 알아두면 좋은 파이썬내장 함수 6가지 연습하기",
+          "title": "07.7 알아두면 좋은 파이썬 내장 함수 6가지 연습하기",
           "pages": [
             343,
             349
@@ -400,21 +400,21 @@
           ]
         },
         {
-          "title": "08.1 클래스란 무엇일까?",
+          "title": "08.1 클래스와 인스턴스",
           "pages": [
             356,
             362
           ]
         },
         {
-          "title": "08.2 클래스의 꽃, 상속",
+          "title": "08.2 상속과 다형성",
           "pages": [
             363,
             377
           ]
         },
         {
-          "title": "08.3 클래스 좀 더 깊게들어가기",
+          "title": "08.3 클래스 변수와 메서드",
           "pages": [
             378,
             396
@@ -475,14 +475,14 @@
           ]
         },
         {
-          "title": "09.5 파일을 한 줄씩 읽어처리하기",
+          "title": "09.5 파일을 한 줄씩 읽어 처리하기",
           "pages": [
             436,
             444
           ]
         },
         {
-          "title": "09.6 메모장 프로그램만들어보기",
+          "title": "09.6 메모장 프로그램 만들어보기",
           "pages": [
             445,
             453
@@ -508,35 +508,35 @@
           ]
         },
         {
-          "title": "10.1 오류는 어떻게 읽고,어떻게 처리해야 할까?",
+          "title": "10.1 오류는 어떻게 읽고, 어떻게 처리해야 할까?",
           "pages": [
             460,
             466
           ]
         },
         {
-          "title": "10.2 필요한 예외만 골라처리하기",
+          "title": "10.2 필요한 예외만 골라 처리하기",
           "pages": [
             467,
             474
           ]
         },
         {
-          "title": "10.3 else와 finally로 실행흐름 나누기",
+          "title": "10.3 else와 finally로 실행 흐름 나누기",
           "pages": [
             475,
             479
           ]
         },
         {
-          "title": "10.4 raise로 직접 예외발생시키기",
+          "title": "10.4 raise로 직접 예외 발생시키기",
           "pages": [
             480,
             485
           ]
         },
         {
-          "title": "10.5 오류에 대비한메모장 프로그램 만들기",
+          "title": "10.5 오류에 대비한 메모장 프로그램 만들기",
           "pages": [
             486,
             493
@@ -583,21 +583,21 @@
           ]
         },
         {
-          "title": "11.4 패키지와 외부 라이브러리알아보기",
+          "title": "11.4 패키지와 외부 라이브러리 알아보기",
           "pages": [
             515,
             525
           ]
         },
         {
-          "title": "11.5 메모장 프로그램을모듈로 나누기",
+          "title": "11.5 메모장 프로그램을 모듈로 나누기",
           "pages": [
             526,
             532
           ]
         },
         {
-          "title": "11.6 모듈과 라이브러리연습하기",
+          "title": "11.6 모듈과 라이브러리 연습하기",
           "pages": [
             533,
             543
@@ -623,7 +623,7 @@
           ]
         },
         {
-          "title": "12.1 값을 복사한다는 것은무엇일까?",
+          "title": "12.1 값을 복사한다는 것은 무엇일까?",
           "pages": [
             550,
             557
@@ -637,7 +637,7 @@
           ]
         },
         {
-          "title": "12.3 반복의 정체, 이터러블과제너레이터",
+          "title": "12.3 반복의 정체, 이터러블과 제너레이터",
           "pages": [
             567,
             578
@@ -694,13 +694,13 @@
     }
   ],
   "book": {
-    "title": "바로바로 파이썬",
-    "subtitle": "바이브 코딩 시대에도 파이썬 기초는 중요하니까",
+    "title": "바로바로 파이썬 입문",
+    "subtitle": "인공지능 시대에 모두를 위한 프로그래밍 기초 체력 자습서",
     "description": "파이썬을 처음 시작하는 분을 위한 입문서입니다. 변수와 자료형부터 제어문, 반복문, 함수, 클래스, 입출력, 예외 처리, 모듈과 라이브러리까지 예제와 퀴즈로 차근차근 익힙니다.",
-    "author": "윤혜민·박현규",
+    "author": "셀레나·박현규",
     "publishedAt": "2026-06-10",
     "cover": "/covers/python-intro.png",
-    "contentRevision": "python-3proof-fbc611e578d0"
+    "contentRevision": "python-4proof-09d3214ecd52"
   },
   "roles": [
     {
@@ -832,111 +832,5 @@
         370
       ]
     ]
-  },
-  "filename_overrides": {
-    "03-26-string_length.py": "03-25-string_length.py",
-    "03-27-string_upper.py": "03-26-string_upper.py",
-    "03-28-string_lower.py": "03-27-string_lower.py",
-    "03-29-string_find.py": "03-28-string_find.py",
-    "03-30-string_find_missing.py": "03-29-string_find_missing.py",
-    "03-31-string_startswith.py": "03-30-string_startswith.py",
-    "03-35-파일명": "03-31-string_endswith.py",
-    "03-36-shopping_receipt.py": "03-32-shopping_receipt.py",
-    "03-37-string_to_number.py": "03-33-string_to_number.py",
-    "03-38-string_replace.py": "03-34-string_replace.py",
-    "03-39-remove_hyphen.py": "03-35-remove_hyphen.py",
-    "03-40-string_index.py": "03-36-string_index.py",
-    "03-41-string_index_negative.py": "03-37-string_index_negative.py",
-    "03-42-string_index_error.py": "03-38-string_index_error.py",
-    "03-43-string_slice_start.py": "03-39-string_slice_start.py",
-    "03-44-string_slice_middle.py": "03-40-string_slice_middle.py",
-    "03-45-string_slice_end.py": "03-41-string_slice_end.py",
-    "03-46-string_slice_negative.py": "03-42-string_slice_negative.py",
-    "03-47-string_slice_step.py": "03-43-string_slice_step.py",
-    "03-48-string_slice_default_step.py": "03-44-string_slice_default_step.py",
-    "03-49-string_reverse.py": "03-45-string_reverse.py",
-    "03-50-format_basic.py": "03-46-format_basic.py",
-    "03-51-format_keyword.py": "03-47-format_keyword.py",
-    "03-52-format_number.py": "03-48-format_number.py",
-    "03-53-format_thousands.py": "03-49-format_thousands.py",
-    "03-54-percent_string.py": "03-50-percent_string.py",
-    "03-55-format_percent.py": "03-51-format_percent.py",
-    "03-56-discount_format.py": "03-52-discount_format.py",
-    "03-57-strip_whitespace.py": "03-53-strip_whitespace.py",
-    "03-32-string_list.py": "03-54-string_list.py",
-    "03-33-string_join_space.py": "03-55-string_join_space.py",
-    "03-34-string_join_hyphen.py": "03-56-string_join_hyphen.py",
-    "03-58-split_keyword.py": "03-57-split_keyword.py",
-    "03-59-split_whitespace.py": "03-58-split_whitespace.py",
-    "03-60-split_join.py": "03-59-split_join.py",
-    "03-61-fstring_format.py": "03-60-fstring_format.py",
-    "04-36-dictionary_key_search.py": "04-35-dictionary_key_search.py",
-    "04-37-dictionary_get.py": "04-36-dictionary_get.py",
-    "04-38-nested_dictionary_access.py": "04-37-nested_dictionary_access.py",
-    "04-39-nested_dictionary_update.py": "04-38-nested_dictionary_update.py",
-    "04-40-dictionary_list_values.py": "04-39-dictionary_list_values.py",
-    "04-41-list_of_dictionaries.py": "04-40-list_of_dictionaries.py",
-    "04-42-dictionary_delete.py": "04-41-dictionary_delete.py",
-    "04-43-set_from_list.py": "04-42-set_from_list.py",
-    "04-44-set_from_tuple.py": "04-43-set_from_tuple.py",
-    "04-45-set_from_dictionary_keys.py": "04-44-set_from_dictionary_keys.py",
-    "04-46-set_from_dictionary_values.py": "04-45-set_from_dictionary_values.py",
-    "04-47-set_remove_duplicates.py": "04-46-set_remove_duplicates.py",
-    "04-48-set_operations.py": "04-47-set_operations.py",
-    "04-49-boolean_values.py": "04-48-boolean_values.py",
-    "04-50-boolean_expressions.py": "04-49-boolean_expressions.py",
-    "04-51-if_minor_true.py": "04-50-if_minor_true.py",
-    "04-52-if_minor_false.py": "04-51-if_minor_false.py",
-    "04-53-falsy_values.py": "04-52-falsy_values.py",
-    "04-54-truthy_values.py": "04-53-truthy_values.py",
-    "06-16-for_vs_while.py": "06-14-for_vs_while.py",
-    "06-17-even_numbers.py": "06-15-even_numbers.py",
-    "06-18-score_average.py": "06-16-score_average.py",
-    "06-19-indexed_fruits.py": "06-17-indexed_fruits.py",
-    "06-20-list_enumerate.py": "06-18-list_enumerate.py",
-    "06-21-list_zip.py": "06-19-list_zip.py",
-    "06-22-list_reversed.py": "06-20-list_reversed.py",
-    "06-23-list_comprehension.py": "06-21-list_comprehension.py",
-    "06-24-comprehension_double.py": "06-22-comprehension_double.py",
-    "06-25-nested_while.py": "06-23-nested_while.py",
-    "06-26-while_multiplication_table.py": "06-24-while_multiplication_table.py",
-    "06-27-nested_for.py": "06-25-nested_for.py",
-    "06-28-for_multiplication_table.py": "06-26-for_multiplication_table.py",
-    "06-29-order_outer_loop.py": "06-27-order_outer_loop.py",
-    "06-30-nested_order_items.py": "06-28-nested_order_items.py",
-    "06-31-fire_triangle.py": "06-29-fire_triangle.py",
-    "06-32-reverse_fire_triangle.py": "06-30-reverse_fire_triangle.py",
-    "06-33-countdown.py": "06-31-countdown.py",
-    "06-34-student_score_average.py": "06-32-student_score_average.py",
-    "07-09-calculate_discount.py": "07-08-calculate_discount.py",
-    "07-10-chain_rice_functions.py": "07-09-chain_rice_functions.py",
-    "07-11-inner_function.py": "07-10-inner_function.py",
-    "07-12-inner_function_value.py": "07-11-inner_function_value.py",
-    "07-13-make_multiplier.py": "07-12-make_multiplier.py",
-    "07-14-greeting_factory.py": "07-13-greeting_factory.py",
-    "07-15-calculator_factory.py": "07-14-calculator_factory.py",
-    "07-16-discount_argument_order.py": "07-15-discount_argument_order.py",
-    "07-17-keyword_arguments.py": "07-16-keyword_arguments.py",
-    "07-18-variadic_add_numbers.py": "07-17-variadic_add_numbers.py",
-    "07-20-default_parameters.py": "07-18-default_parameters.py",
-    "07-21-add_tax_function.py": "07-19-add_tax_function.py",
-    "07-22-add_tax_lambda.py": "07-20-add_tax_lambda.py",
-    "07-23-lambda_map_double.py": "07-21-lambda_map_double.py",
-    "07-24-pass_fail_def.py": "07-22-pass_fail_def.py",
-    "07-25-pass_fail_lambda.py": "07-23-pass_fail_lambda.py",
-    "07-26-map_pass_fail.py": "07-24-map_pass_fail.py",
-    "07-27-local_variable_scope.py": "07-25-local_variable_scope.py",
-    "07-28-read_global_variable.py": "07-26-read_global_variable.py",
-    "07-29-global_variable_error.py": "07-27-global_variable_error.py",
-    "07-30-modify_global_variable.py": "07-28-modify_global_variable.py",
-    "07-31-recursive_countdown.py": "07-29-recursive_countdown.py",
-    "07-32-countdown_without_base_case.py": "07-30-countdown_without_base_case.py",
-    "07-33-recursive_fibonacci.py": "07-31-recursive_fibonacci.py",
-    "07-34-int_conversion.py": "07-32-int_conversion.py",
-    "07-35-len_examples.py": "07-33-len_examples.py",
-    "07-36-max_examples.py": "07-34-max_examples.py",
-    "07-37-sum_examples.py": "07-35-sum_examples.py",
-    "07-38-map_examples.py": "07-36-map_examples.py",
-    "07-39-filter_examples.py": "07-37-filter_examples.py"
   }
 }

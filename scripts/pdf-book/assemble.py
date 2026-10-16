@@ -206,7 +206,11 @@ def code_md(b, filename='', output=False):
                 else:
                     line += ' ' if not line.endswith(' ') and not r['text'].startswith(' ') else ''
             line += r['text']
-        if numbered and not line_numbers and out:
+        # 교정본은 주석을 윗줄로 옮기면서 다음 def/with 줄의 번호를 생략하기도 한다.
+        # 이 줄은 긴 주석의 줄바꿈이 아니라 독립된 실행문이므로 합치지 않는다.
+        statement_after_comment = out and out[-1].lstrip().startswith('#') and re.match(
+            r'\s*(?:async\s+)?(?:def|class|with|if|elif|else|for|while|try|except|finally|return|import|from)\b', line)
+        if numbered and not line_numbers and out and not statement_after_comment:
             # 인쇄 폭을 넘어 줄바꿈된 문자열·주석을 원래 코드 한 줄로 되돌린다.
             out[-1] += line.lstrip()
         else:
@@ -269,6 +273,22 @@ def save_fig(it):
     return f'/books/{BOOK_ID}/{name}'
 
 def render(items):
+    if CFG.get('numbered_code'):
+        # 쪽을 넘긴 코드 사이로 곁의 설명 문장이 끼어들어도 예제는 한 블록으로 유지한다.
+        # 양쪽 줄 번호가 연속일 때만 설명을 코드 다음으로 옮긴다.
+        items = list(items)
+        for i, item in enumerate(items):
+            if item['fam'] != 'code': continue
+            numbers = [r['code_line'] for ln in item['lines'] for r in ln['runs'] if 'code_line' in r]
+            if not numbers: continue
+            for j in range(i + 1, len(items)):
+                following = items[j]
+                if following['fam'] == 'code':
+                    next_numbers = [r['code_line'] for ln in following['lines'] for r in ln['runs'] if 'code_line' in r]
+                    if next_numbers and min(next_numbers) == max(numbers) + 1:
+                        items[i + 1:j + 1] = [following] + items[i + 1:j]
+                    break
+                if following['fam'] != 'body' or following['kind'] != 'block': break
     # 이어지는 곁단 블록(질문과 회색 정답 등)은 하나로
     # 쪽 아래에 따로 놓인 회색 정답 블록은 같은 쪽의 질문 곁단으로 옮긴다
     merged = []
@@ -411,6 +431,18 @@ def correct_filenames(markdown):
     pattern = r'(?<![A-Za-z0-9_-])(?:' + '|'.join(re.escape(name) for name in sorted(overrides, key=len, reverse=True)) + r')(?![A-Za-z0-9_.-])'
     return re.sub(pattern, lambda match: overrides[match.group()], markdown)
 
+def protect_dunder_names(markdown):
+    """본문의 __init__ 같은 이름을 마크다운 강조로 해석해 밑줄이 사라지지 않게 한다."""
+    lines = []
+    in_code = False
+    for line in markdown.splitlines():
+        if line.startswith('```'):
+            in_code = not in_code
+        elif not in_code:
+            line = re.sub(r'(?<![\w`\\])(__[^\W\d]\w*__)(?![\w`])', r'`\1`', line)
+        lines.append(line)
+    return '\n'.join(lines)
+
 def main():
     shutil.rmtree(OUT, ignore_errors=True); shutil.rmtree(IMG, ignore_errors=True)
     os.makedirs(f'{OUT}/sections'); os.makedirs(IMG)
@@ -431,7 +463,7 @@ def main():
         chap = dict(id=f'ch-{chapter_num}' if 'chapter_start' in CFG else f'c{ci}', title=title, sections=[])
         for si, (st, items) in enumerate(sections, 1):
             sid = f'{chapter_num}-{si}'
-            md = correct_filenames(render(items))
+            md = protect_dunder_names(correct_filenames(render(items)))
             open(f'{OUT}/sections/{sid}.md', 'w').write(md + '\n')
             chap['sections'].append(dict(id=sid, title=st, file=f'{sid}.md'))
             report.append((sid, st, len(md), md.count('![')))

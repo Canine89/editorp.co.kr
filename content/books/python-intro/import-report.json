@@ -1,6 +1,6 @@
 {
-  "source": "바로바로 파이썬_3교_주석.pdf",
-  "sourceSha256": "fbc611e578d03509515233c68c3b41a3482e491003e04c9e292a0fc308f911f8",
+  "source": "바로바로 파이썬_4교_케_1015.pdf",
+  "sourceSha256": "09d3214ecd523d5fa7ab0096823c09a7d914586f066ce5d8bf98945a8bce1597",
   "pages": [
     34,
     607
@@ -8,8 +8,242 @@
   "chapters": 12,
   "appendices": 4,
   "sections": 88,
-  "images": 360,
+  "images": 364,
   "filenameLabels": 345,
+  "contentRevision": "python-4proof-09d3214ecd52",
+  "comparison": {
+    "previousRevision": "python-3proof-fbc611e578d0",
+    "changedPdfBodyPages": 384,
+    "changedSections": [
+      "1-2",
+      "1-3",
+      "1-4",
+      "1-5",
+      "1-6",
+      "10-1",
+      "10-2",
+      "10-3",
+      "10-4",
+      "10-5",
+      "10-6",
+      "10-7",
+      "11-1",
+      "11-2",
+      "11-3",
+      "11-4",
+      "11-5",
+      "11-6",
+      "11-7",
+      "11-8",
+      "12-1",
+      "12-2",
+      "12-3",
+      "12-4",
+      "12-5",
+      "13-1",
+      "13-2",
+      "13-3",
+      "13-4",
+      "13-5",
+      "2-2",
+      "2-3",
+      "2-4",
+      "2-5",
+      "2-6",
+      "2-7",
+      "3-1",
+      "3-2",
+      "3-3",
+      "3-4",
+      "3-5",
+      "3-6",
+      "3-7",
+      "3-8",
+      "4-1",
+      "4-2",
+      "4-3",
+      "4-4",
+      "4-5",
+      "4-6",
+      "4-7",
+      "4-8",
+      "5-1",
+      "5-2",
+      "5-3",
+      "5-5",
+      "6-2",
+      "6-3",
+      "6-4",
+      "6-5",
+      "6-6",
+      "7-1",
+      "7-2",
+      "7-3",
+      "7-4",
+      "7-5",
+      "7-6",
+      "7-7",
+      "7-8",
+      "7-9",
+      "8-1",
+      "8-2",
+      "8-3",
+      "8-4",
+      "8-5",
+      "8-6",
+      "9-1",
+      "9-2",
+      "9-3",
+      "9-4",
+      "9-5",
+      "9-6",
+      "9-7",
+      "9-8"
+    ],
+    "renamedSections": [
+      {
+        "id": "1-2",
+        "before": "01.1 컴퓨터에게 일을 시키는방법, 프로그래밍",
+        "after": "01.1 컴퓨터에게 일을 시키는 방법, 프로그래밍"
+      },
+      {
+        "id": "1-3",
+        "before": "01.2 왜 파이썬을공부해야 할까?",
+        "after": "01.2 왜 파이썬을 공부해야 할까?"
+      },
+      {
+        "id": "1-4",
+        "before": "01.3 파이썬 실습을 위한도구 준비하기",
+        "after": "01.3 파이썬 실습을 위한 도구 준비하기"
+      },
+      {
+        "id": "1-5",
+        "before": "01.4 파이썬을 실행하는다양한 방법 알아보기",
+        "after": "01.4 파이썬을 실행하는 다양한 방법 알아보기"
+      },
+      {
+        "id": "1-6",
+        "before": "01.5 파이썬 실행하기 전알아둬야 할 3가지",
+        "after": "01.5 파이썬 실행하기 전 알아둬야 할 3가지"
+      },
+      {
+        "id": "2-3",
+        "before": "02.2 변수 연습하기",
+        "after": "02.2 변수 활용하기"
+      },
+      {
+        "id": "2-4",
+        "before": "02.3 꼭 알아두면 좋은프로그래밍 용어 12가지",
+        "after": "02.3 꼭 알아두면 좋은 프로그래밍 용어 12가지"
+      },
+      {
+        "id": "2-5",
+        "before": "02.4 변수나 함수의이름 짓는 방법",
+        "after": "02.4 변수·함수·클래스 이름 짓기"
+      },
+      {
+        "id": "3-5",
+        "before": "03.4 문자열 응용 연습하기",
+        "after": "03.4 문자열 응용과 자료형 변환"
+      },
+      {
+        "id": "6-2",
+        "before": "06.1 while 문과반복문의 기초",
+        "after": "06.1 while 문과 반복문의 기초"
+      },
+      {
+        "id": "7-4",
+        "before": "07.3 매개변수 좀 더 깊게알아보기",
+        "after": "07.3 매개변수 좀 더 깊게 알아보기"
+      },
+      {
+        "id": "7-5",
+        "before": "07.4 함수를 한 줄로 정의할 수있는 람다",
+        "after": "07.4 함수를 한 줄로 정의할 수 있는 람다"
+      },
+      {
+        "id": "7-8",
+        "before": "07.7 알아두면 좋은 파이썬내장 함수 6가지 연습하기",
+        "after": "07.7 알아두면 좋은 파이썬 내장 함수 6가지 연습하기"
+      },
+      {
+        "id": "8-2",
+        "before": "08.1 클래스란 무엇일까?",
+        "after": "08.1 클래스와 인스턴스"
+      },
+      {
+        "id": "8-3",
+        "before": "08.2 클래스의 꽃, 상속",
+        "after": "08.2 상속과 다형성"
+      },
+      {
+        "id": "8-4",
+        "before": "08.3 클래스 좀 더 깊게들어가기",
+        "after": "08.3 클래스 변수와 메서드"
+      },
+      {
+        "id": "9-6",
+        "before": "09.5 파일을 한 줄씩 읽어처리하기",
+        "after": "09.5 파일을 한 줄씩 읽어 처리하기"
+      },
+      {
+        "id": "9-7",
+        "before": "09.6 메모장 프로그램만들어보기",
+        "after": "09.6 메모장 프로그램 만들어보기"
+      },
+      {
+        "id": "10-2",
+        "before": "10.1 오류는 어떻게 읽고,어떻게 처리해야 할까?",
+        "after": "10.1 오류는 어떻게 읽고, 어떻게 처리해야 할까?"
+      },
+      {
+        "id": "10-3",
+        "before": "10.2 필요한 예외만 골라처리하기",
+        "after": "10.2 필요한 예외만 골라 처리하기"
+      },
+      {
+        "id": "10-4",
+        "before": "10.3 else와 finally로 실행흐름 나누기",
+        "after": "10.3 else와 finally로 실행 흐름 나누기"
+      },
+      {
+        "id": "10-5",
+        "before": "10.4 raise로 직접 예외발생시키기",
+        "after": "10.4 raise로 직접 예외 발생시키기"
+      },
+      {
+        "id": "10-6",
+        "before": "10.5 오류에 대비한메모장 프로그램 만들기",
+        "after": "10.5 오류에 대비한 메모장 프로그램 만들기"
+      },
+      {
+        "id": "11-5",
+        "before": "11.4 패키지와 외부 라이브러리알아보기",
+        "after": "11.4 패키지와 외부 라이브러리 알아보기"
+      },
+      {
+        "id": "11-6",
+        "before": "11.5 메모장 프로그램을모듈로 나누기",
+        "after": "11.5 메모장 프로그램을 모듈로 나누기"
+      },
+      {
+        "id": "11-7",
+        "before": "11.6 모듈과 라이브러리연습하기",
+        "after": "11.6 모듈과 라이브러리 연습하기"
+      },
+      {
+        "id": "12-2",
+        "before": "12.1 값을 복사한다는 것은무엇일까?",
+        "after": "12.1 값을 복사한다는 것은 무엇일까?"
+      },
+      {
+        "id": "12-4",
+        "before": "12.3 반복의 정체, 이터러블과제너레이터",
+        "after": "12.3 반복의 정체, 이터러블과 제너레이터"
+      }
+    ],
+    "sectionUrlsPreserved": true
+  },
   "validation": {
     "missingFilenames": [],
     "missingImages": [],
@@ -44,106 +278,17 @@
         "line": 6,
         "message": "invalid syntax"
       }
-    ]
+    ],
+    "compilableNamedExamples": 340,
+    "responsiveImagesVerified": 49,
+    "dunderNamesPreserved": true
   },
   "sourceNotes": [
     {
-      "page": 126,
-      "originalFilename": "03-35-파일명",
-      "filename": "03-31-string_endswith.py",
-      "note": "코드 내용에 맞는 파일명으로 수정하고 장별 연속 번호를 적용했습니다.",
-      "resolved": true
+      "note": "4교 PDF에 파일명 정정이 반영되어 이전 판의 filename_overrides를 제거했습니다. 원본 파일명을 그대로 사용합니다."
+    },
+    {
+      "note": "공개일은 온라인 원고 최초 공개일을 유지하고, 제목·부제·저자 표기는 새 PDF에 맞췄습니다."
     }
-  ],
-  "filenameNumbering": {
-    "rule": "장별 번호가 있는 고유 파일의 첫 등장 순서. 동일 파일 재등장·모듈 경로는 유지.",
-    "correctedUniqueFiles": 104,
-    "chapters": [
-      {
-        "chapter": 1,
-        "numberedFiles": 0
-      },
-      {
-        "chapter": 2,
-        "numberedFiles": 4
-      },
-      {
-        "chapter": 3,
-        "numberedFiles": 60
-      },
-      {
-        "chapter": 4,
-        "numberedFiles": 53
-      },
-      {
-        "chapter": 5,
-        "numberedFiles": 18
-      },
-      {
-        "chapter": 6,
-        "numberedFiles": 32
-      },
-      {
-        "chapter": 7,
-        "numberedFiles": 37
-      },
-      {
-        "chapter": 8,
-        "numberedFiles": 37
-      },
-      {
-        "chapter": 9,
-        "numberedFiles": 19
-      },
-      {
-        "chapter": 10,
-        "numberedFiles": 19
-      },
-      {
-        "chapter": 11,
-        "numberedFiles": 22
-      },
-      {
-        "chapter": 12,
-        "numberedFiles": 27
-      },
-      {
-        "chapter": 13,
-        "numberedFiles": 0
-      }
-    ],
-    "repeatedFilesPreserved": [
-      {
-        "chapter": 9,
-        "filename": "09-18-memo_app.py",
-        "appearances": 4
-      },
-      {
-        "chapter": 10,
-        "filename": "10-06-fix_syntax_error.py",
-        "appearances": 2
-      },
-      {
-        "chapter": 10,
-        "filename": "10-19-memo_app.py",
-        "appearances": 4
-      },
-      {
-        "chapter": 11,
-        "filename": "message_tools.py",
-        "appearances": 2
-      },
-      {
-        "chapter": 11,
-        "filename": "11-08-greeting_app.py",
-        "appearances": 2
-      },
-      {
-        "chapter": 11,
-        "filename": "11-12-memo_app.py",
-        "appearances": 2
-      }
-    ],
-    "validation": "passed"
-  }
+  ]
 }
