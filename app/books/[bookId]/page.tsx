@@ -56,7 +56,7 @@ export default async function BookTocPage({ params }: { params: Promise<{ bookId
           <dd data-read-count>{flat.length}절</dd>
         </dl>
         <BookProgress bookId={book.id} sections={sections} toc={false} />
-        <BookPreorderNotice book={book} />
+        <BookPreorderNotice book={book} showCover={false} />
       </div>
 
       <section className="rd-contents" aria-label="목차">

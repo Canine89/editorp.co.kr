@@ -1,14 +1,18 @@
-import { ArrowUpRight, BookOpen } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowUpRight } from 'lucide-react';
 import type { Book } from '@/lib/books';
 import styles from './BookPreorder.module.css';
 
-export function BookPreorderNotice({ book, compact = false }: { book: Book; compact?: boolean }) {
+export function BookPreorderNotice({ book, compact = false, showCover = true }: { book: Book; compact?: boolean; showCover?: boolean }) {
   if (book.purchaseStatus !== 'preorder' || !book.purchase?.length) return null;
   return (
-    <section className={`${styles.notice} ${compact ? styles.compact : ''}`} aria-label={`${book.title} 예약 판매 안내`}>
-      <span className={styles.badge}><BookOpen size={14} aria-hidden="true" /> 예약 판매 시작</span>
-      <h3>{compact ? '종이책으로도 만나보세요' : `《${book.title}》 예약 판매를 시작했습니다`}</h3>
-      <p>기다려주셔서 감사합니다. :)</p>
+    <section className={`${styles.notice} ${compact ? styles.compact : ''} ${!showCover || !book.cover ? styles.noCover : ''}`} aria-label={`${book.title} 예약 판매 안내`}>
+      {showCover && book.cover && <Image className={styles.cover} src={book.cover} alt={`${book.title} 표지`} width={120} height={164} unoptimized />}
+      <div className={styles.copy}>
+        <span className={styles.badge}>예약 판매 중</span>
+        <h3>{showCover ? book.title : '종이책 예약 판매를 시작했습니다'}</h3>
+        <p>기다려주셔서 감사합니다. :)</p>
+      </div>
       <nav className={styles.links} aria-label={`${book.title} 예약 구매 서점`}>
         {book.purchase.map((store) => (
           <a key={store.url} href={store.url} target="_blank" rel="noopener noreferrer" aria-label={`${store.label}에서 예약 구매 (새 창)`}>
@@ -26,7 +30,8 @@ export function BookPreorderMobile({ book }: { book: Book }) {
   return (
     <>
       <div className="rd-preorder-mobile" aria-label="도서 예약 판매 안내">
-        <div><b>예약 판매 시작</b><span>《{book.title}》</span></div>
+        {book.cover && <Image src={book.cover} alt={`${book.title} 표지`} width={32} height={44} unoptimized />}
+        <div><b>종이책 예약 판매 중</b><span>{book.title}</span></div>
         <button type="button" data-open="rd-sheet-preorder" aria-haspopup="dialog">서점에서 보기 <ArrowUpRight size={16} aria-hidden="true" /></button>
       </div>
       <dialog className="rd-sheet" id="rd-sheet-preorder" aria-label="도서 예약 구매">

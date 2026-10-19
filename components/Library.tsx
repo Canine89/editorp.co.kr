@@ -54,7 +54,7 @@ export function FreeBooks({ books }: { books: Book[] }) {
                 <BookProgress bookId={book.id} sections={sections} compact />
               </div>
             </div>
-            <BookPreorderNotice book={book} />
+            <BookPreorderNotice book={book} showCover={false} />
           </article>
         );
       })}
