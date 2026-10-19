@@ -7,6 +7,7 @@ import { getSectionMarkdown, type BookSectionMeta } from './books';
 import { sanitizeBookHtml } from './sanitize';
 import { removeEmptyStudyLabels } from './reader-presentation';
 import { COPY_BUTTON_HTML } from './reader-copy';
+import { readerImageScale } from './reader-image-scale';
 
 /**
  * 리더 전용 절 렌더러.
@@ -187,12 +188,15 @@ export async function renderReaderMarkdown(raw: string, options: ReaderMarkdownO
     const size = sizes[img.href];
     const alt = img.text?.trim() || `실습 화면 ${imageNo}`;
     const variants = size?.variants?.filter((v) => safeSrc(v.src) && v.width > 0 && v.width < size.width) ?? [];
-    const displayWidth = Math.min(size?.width ?? 640, 640);
+    const scale = readerImageScale(img.title);
+    const baseWidth = Math.min(size?.width ?? 640, 640);
+    const displayWidth = Math.round(baseWidth * scale / 100);
     const sourceSet = variants.length
-      ? ` srcset="${[...variants.map((v) => `${escapeHtml(v.src)} ${v.width}w`), `${escapeHtml(img.href)} ${size!.width}w`].join(', ')}" sizes="(max-width: ${displayWidth + 40}px) calc(100vw - 40px), ${displayWidth}px" data-original-src="${escapeHtml(img.href)}"`
+      ? ` srcset="${[...variants.map((v) => `${escapeHtml(v.src)} ${v.width}w`), `${escapeHtml(img.href)} ${size!.width}w`].join(', ')}" sizes="(max-width: ${baseWidth + 40}px) calc(${scale}vw - ${40 * scale / 100}px), ${displayWidth}px" data-original-src="${escapeHtml(img.href)}"`
       : '';
     const fallback = variants.find((v) => v.width >= displayWidth)?.src ?? img.href;
-    return `<figure><img src="${escapeHtml(fallback)}"${sourceSet} alt="${escapeHtml(alt)}"${size ? ` width="${size.width}" height="${size.height}"` : ''} loading="lazy" decoding="async"></figure>`;
+    const scaledStyle = scale === 100 ? '' : ` style="width:min(${scale}%, ${displayWidth}px)"`;
+    return `<figure data-image-scale="${scale}"><img src="${escapeHtml(fallback)}"${sourceSet} alt="${escapeHtml(alt)}"${size ? ` width="${size.width}" height="${size.height}"` : ''}${scaledStyle} loading="lazy" decoding="async"></figure>`;
   };
 
   const headings: ReaderHeading[] = [];

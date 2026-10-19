@@ -465,6 +465,16 @@ html.reader-focus .rd-width-settings { display: block; }
 .rd-prose .rd-edit-host { list-style: none; margin: 1em 0; }
 .rd-prose .steps > .rd-edit-host::before { content: none; }
 .rd-edit { border: 1px solid var(--colors-primary); border-radius: var(--rounded-md); padding: 10px; background: var(--colors-canvas); }
+.rd-edit-image { padding: 6px 6px 14px; margin-bottom: 10px; border-bottom: 1px solid var(--colors-hairline); }
+.rd-edit-image-label { display: block; font-size: 14px; font-weight: 600; color: var(--colors-ink); }
+.rd-edit-image-sizes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.rd-edit-image-sizes button { min-width: 64px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--colors-hairline); border-radius: 5px; background: var(--colors-canvas); color: var(--colors-body); font: inherit; font-size: 14px; cursor: pointer; }
+.rd-edit-image-sizes button[aria-pressed='true'] { border-color: var(--colors-primary); background: var(--colors-primary); color: var(--colors-on-primary); }
+.rd-edit-image-sizes button:focus-visible { outline: 2px solid var(--colors-primary); outline-offset: 3px; }
+.rd-edit-image-sizes button:disabled { opacity: .6; cursor: default; }
+.rd-prose .rd-edit-image-help { margin: 8px 0 14px; font-size: 13px; color: var(--colors-muted); line-height: 1.6; }
+.rd-edit-image-preview { overflow: hidden; }
+.rd-edit-image-preview img { display: block; height: auto; }
 .rd-edit textarea {
   display: block; width: 100%; resize: vertical; border: 0; padding: 4px 6px; background: none;
   font: inherit; font-size: 15px; line-height: 1.7; color: var(--colors-ink);

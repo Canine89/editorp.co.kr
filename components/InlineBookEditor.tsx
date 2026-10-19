@@ -3,12 +3,15 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { editableReaderImage, readerImageScale, READER_IMAGE_SCALES, setReaderImageScale } from "@/lib/reader-image-scale";
 
 interface Editing {
   index: number;
   raw: string;
   block: HTMLElement;
   host: HTMLElement;
+  imageSize?: { width: number; height: number };
 }
 
 const PENCIL =
@@ -82,7 +85,9 @@ export function InlineBookEditor({ bookId, sectionId }: { bookId: string; sectio
       host.className = "rd-edit-host";
       block.after(host);
       block.hidden = true;
-      const next = { index, raw: json.raw as string, block, host };
+      const image = block.querySelector<HTMLImageElement>('img');
+      const imageSize = image ? { width: Number(image.getAttribute('width')) || image.naturalWidth || 640, height: Number(image.getAttribute('height')) || image.naturalHeight || 480 } : undefined;
+      const next = { index, raw: json.raw as string, block, host, imageSize };
       current.current = next;
       setDraft(next.raw.trimEnd());
       setError("");
@@ -140,7 +145,7 @@ export function InlineBookEditor({ bookId, sectionId }: { bookId: string; sectio
     }
   };
 
-  const onKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const onKey = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
       event.preventDefault();
       save();
@@ -152,21 +157,38 @@ export function InlineBookEditor({ bookId, sectionId }: { bookId: string; sectio
   };
 
   const code = editing?.raw.startsWith("```");
+  const image = editing ? editableReaderImage(draft) : null;
+  const scale = readerImageScale(image?.title);
+  const previewWidth = Math.round(Math.min(editing?.imageSize?.width || 640, 640) * scale / 100);
+  const safePreview = image && (/^\/(?!\/)/.test(image.href) || /^https:\/\//.test(image.href));
   const rows = Math.min(28, Math.max(3, draft.split("\n").length + 1, Math.ceil(draft.length / 48)));
 
   return (
     <>
       {editing &&
         createPortal(
-          <div className="rd-edit">
+          <div className="rd-edit" onKeyDown={onKey}>
+            {image && (
+              <div className="rd-edit-image">
+                <span className="rd-edit-image-label">이미지 표시 크기</span>
+                <div className="rd-edit-image-sizes" role="group" aria-label="이미지 표시 크기">
+                  {READER_IMAGE_SCALES.map((value) => (
+                    <button key={value} type="button" aria-pressed={scale === value} autoFocus={scale === value} disabled={saving} onClick={() => {
+                      if (value !== scale) setDraft(setReaderImageScale(draft, value));
+                    }}>{value === 100 ? '원본' : `${value}%`}</button>
+                  ))}
+                </div>
+                <p className="rd-edit-image-help">파일 원본은 그대로 두고, 본문에서 보이는 크기만 조절합니다.</p>
+                {safePreview && <div className="rd-edit-image-preview"><Image src={image.href} alt={image.text || '이미지 크기 미리보기'} width={editing.imageSize?.width || 640} height={editing.imageSize?.height || 480} unoptimized style={{ width: `min(${scale}%, ${previewWidth}px)`, height: 'auto' }} /></div>}
+              </div>
+            )}
             <textarea
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={onKey}
               rows={rows}
               className={code ? "mono" : undefined}
               aria-label="블록 원고(마크다운)"
-              autoFocus
+              autoFocus={!image}
               disabled={saving}
             />
             <div className="rd-edit-foot">
