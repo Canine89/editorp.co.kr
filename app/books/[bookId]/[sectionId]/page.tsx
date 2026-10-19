@@ -11,6 +11,7 @@ import { PreviewEnd } from "@/components/BookPurchase";
 import { ParagraphComments } from "@/components/ParagraphComments";
 import { InlineBookEditor } from "@/components/InlineBookEditor";
 import { ManuscriptNotice } from "@/components/ManuscriptNotice";
+import { BookPreorderNotice, BookPreorderMobile } from "@/components/BookPreorder";
 import "../../reader.css";
 
 // 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
@@ -105,7 +106,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
       <div className="rd-progress" aria-hidden="true">
         <i />
       </div>
-      <div className="container rd-reader">
+      <div className={`container rd-reader${book.purchaseStatus === 'preorder' && book.purchase?.length ? ' rd-reader-order' : ''}`}>
         <nav className="rd-toc" aria-label="책 목차">
           <Link className="rd-toc-book" href={`/books/${book.id}`}>
             {book.cover ? <Image src={book.cover} alt="" width={40} height={55} unoptimized /> : <span />}
@@ -189,6 +190,7 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
         </article>
 
         <aside className="rd-aside" aria-label="이 절의 소제목과 읽기 설정">
+          <BookPreorderNotice book={book} compact />
           {rendered.headings.length > 0 && (
             <>
               <h2>이 절에서</h2>
@@ -220,6 +222,8 @@ export default async function BookSectionPage({ params }: { params: Promise<{ bo
           <ManuscriptNotice variant="reader" />
         </aside>
       </div>
+
+      <BookPreorderMobile book={book} />
 
       <dialog className="rd-sheet" id="rd-sheet-toc" aria-label="책 목차">
         <div className="rd-sheet-head">

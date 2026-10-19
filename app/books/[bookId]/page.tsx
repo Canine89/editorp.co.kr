@@ -6,6 +6,7 @@ import { BookProgress } from "@/components/BookProgress";
 import { TocMarks } from "@/components/TocMarks";
 import { PreviewRest } from "@/components/BookPurchase";
 import { ManuscriptNotice } from "@/components/ManuscriptNotice";
+import { BookPreorderNotice } from "@/components/BookPreorder";
 import "../reader.css";
 
 // 관리자 패널의 공개/수정이 재배포 없이 반영되도록 동적 렌더링
@@ -55,6 +56,7 @@ export default async function BookTocPage({ params }: { params: Promise<{ bookId
           <dd data-read-count>{flat.length}절</dd>
         </dl>
         <BookProgress bookId={book.id} sections={sections} toc={false} />
+        <BookPreorderNotice book={book} />
       </div>
 
       <section className="rd-contents" aria-label="목차">

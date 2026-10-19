@@ -700,7 +700,22 @@
     "author": "셀레나·박현규",
     "publishedAt": "2026-06-10",
     "cover": "/covers/python-intro.png",
-    "contentRevision": "python-4proof-09d3214ecd52"
+    "contentRevision": "python-4proof-09d3214ecd52",
+    "purchaseStatus": "preorder",
+    "purchase": [
+      {
+        "label": "교보문고",
+        "url": "https://product.kyobobook.co.kr/detail/S000221696128"
+      },
+      {
+        "label": "예스24",
+        "url": "https://www.yes24.com/product/goods/198891770"
+      },
+      {
+        "label": "알라딘",
+        "url": "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=404730996"
+      }
+    ]
   },
   "roles": [
     {

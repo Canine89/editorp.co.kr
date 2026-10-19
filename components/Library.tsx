@@ -4,6 +4,7 @@ import { flattenSections, sectionLabel, type Book } from "@/lib/books";
 import { getAuthoredBooks, getJoinedBooks, getSelectedBooks } from "@/lib/editorial-content";
 import { BookProgress } from "./BookProgress";
 import { ManuscriptNotice } from "./ManuscriptNotice";
+import { BookPreorderNotice } from "./BookPreorder";
 import styles from "./Library.module.css";
 
 const role = (r: string) => r.replaceAll("/", "·");
@@ -40,7 +41,7 @@ export function FreeBooks({ books }: { books: Book[] }) {
                   {book.author}{published && ` · ${published} 공개`}
                 </p>
                 <p className={styles.desc}>{book.description}</p>
-                {book.purchase?.length ? (
+                {book.purchase?.length && book.purchaseStatus !== 'preorder' ? (
                   <p className={styles.buy}>
                     전체는 책으로
                     {book.purchase.map((p) => (
@@ -53,6 +54,7 @@ export function FreeBooks({ books }: { books: Book[] }) {
                 <BookProgress bookId={book.id} sections={sections} compact />
               </div>
             </div>
+            <BookPreorderNotice book={book} />
           </article>
         );
       })}

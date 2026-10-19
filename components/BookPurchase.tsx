@@ -1,5 +1,6 @@
 import type { Book } from "@/lib/books";
 import { Character } from "./Character";
+import { BookPreorderNotice } from "./BookPreorder";
 
 /** 구매처 버튼. 첫 구매처를 주 버튼으로 둔다 */
 function PurchaseButtons({ book }: { book: Book }) {
@@ -23,6 +24,7 @@ function PurchaseButtons({ book }: { book: Book }) {
 /** 마지막 공개 절 끝: 여기까지가 무료 공개 범위이고, 나머지는 책에서 이어진다 */
 export function PreviewEnd({ book }: { book: Book }) {
   if (!book.purchase?.length) return null;
+  if (book.purchaseStatus === 'preorder' && !book.preview) return <BookPreorderNotice book={book} />;
   return (
     <section className="rd-more" aria-label="책에서 이어지는 내용">
       <div>
@@ -45,6 +47,7 @@ export function PreviewEnd({ book }: { book: Book }) {
 /** 책 소개 목차 아래: 책에서 이어지는 목차(링크 없음)와 구매처 */
 export function PreviewRest({ book }: { book: Book }) {
   if (!book.preview && !book.purchase?.length) return null;
+  if (book.purchaseStatus === 'preorder' && !book.preview) return null;
   return (
     <section className="rd-rest" aria-label="책에서 이어지는 목차">
       <h2>책에서 이어지는 내용</h2>

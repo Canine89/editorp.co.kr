@@ -58,6 +58,8 @@ export interface Book {
   parts: BookPart[];
   /** 종이책·전자책 구매처. 일부만 공개한 책은 마지막 절과 목차에서 안내한다 */
   purchase?: { label: string; url: string }[];
+  /** 예약 판매 안내를 서재·책 소개·읽기 화면에 함께 표시한다. */
+  purchaseStatus?: 'preorder';
   /** 일부만 공개한 책: 공개 범위 설명과, 책에서 이어지는 목차(링크 없음) */
   preview?: { note: string; badge?: string; rest: { title: string; items: string[] }[] };
 }

@@ -303,6 +303,28 @@ html.reader-focus .rd-width-settings { display: block; }
 .rd-seg .rd-size-s { font-size: 13px; }
 .rd-seg .rd-size-l { font-size: 17px; }
 
+/* 예약 판매: 넓은 화면은 오른쪽 안내, 좁은 화면은 하단 서점 선택 버튼. */
+.rd-preorder-mobile { display: none; }
+@media (max-width: 1279px) {
+  .rd-preorder-mobile {
+    display: flex; position: fixed; inset: auto 0 0; z-index: 42; align-items: center; gap: 16px;
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+    background: var(--colors-surface-dark); color: var(--colors-on-dark); border-top: 2px solid var(--colors-yellow);
+  }
+  .rd-preorder-mobile > div { flex: 1; min-width: 0; }
+  .rd-preorder-mobile b { display: block; font-size: 14px; color: var(--colors-yellow); }
+  .rd-preorder-mobile span { display: block; margin-top: 2px; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rd-preorder-mobile button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0; min-height: 44px;
+    padding: 10px 14px; border: 0; border-radius: 5px; background: var(--colors-yellow); color: var(--colors-surface-dark);
+    font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  .rd-preorder-mobile button:focus-visible { outline: 2px solid var(--colors-on-dark); outline-offset: 3px; }
+  .rd-reader.rd-reader-order, html.reader-focus .rd-reader.rd-reader-order { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
+  body:has(.rd-reader-order) .site-footer { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
+  body:has(.rd-pc-bar) .rd-preorder-mobile { display: none; }
+}
+
 /* 일부만 공개한 책: 이어지는 목차와 구매 안내 */
 .rd-buy { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
 .rd-rest { margin-top: 32px; }
