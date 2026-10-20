@@ -3,10 +3,19 @@ export const COPY_BUTTON_HTML = '<button type="button" data-copy aria-label="코
 
 const timers = new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeout>>();
 
+/** 대화형 셸 블록만 프롬프트를 뺀다. 구분 공백 한 칸만 지워 코드의 들여쓰기는 보존한다. */
+export function readerCodeForClipboard(code: string): string {
+  const firstLine = code.split(/\r?\n/).find((line) => line.trim());
+  if (!firstLine || (!/^[\t ]*>>>(?!>)/.test(firstLine) && !/^[\t ]*>[\t ]+python(?:3(?:\.\d+)?)?[\t ]*$/.test(firstLine))) return code;
+  return code.replace(/^[\t ]*(?:>>>(?!>)|\.\.\.(?=[\t \u00a0]|\r?$))[\t \u00a0]?/gm, '');
+}
+
 export async function copyReaderCode(button: HTMLButtonElement) {
   const pending = timers.get(button);
   if (pending) clearTimeout(pending);
-  const code = button.closest('.code')?.querySelector('pre')?.innerText ?? '';
+  const block = button.closest('.code');
+  const text = block?.querySelector('pre')?.innerText ?? '';
+  const code = block?.classList.contains('code-output') ? text : readerCodeForClipboard(text);
   let message: string;
   try {
     await navigator.clipboard.writeText(code);
